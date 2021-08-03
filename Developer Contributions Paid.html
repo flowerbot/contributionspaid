@@ -22,9 +22,9 @@
 
         <!-- subtotal.js libs from ../dist -->
         <!-- base href= "/flowerbot/contributionspaid/blob/main/" -->
-	    <base href= "/">
-        <script type="text/javascript" src="scripts/PivotJS-subtotal/subtotal.js"></script>
-        <link rel="stylesheet" type="text/css" href="scripts/PivotJS-subtotal/subtotal.css">
+	    <!-- base href= "/" -->
+        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
+        <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
 
 
 <!-- needed to dl as Excel -->
@@ -1129,7 +1129,7 @@ function rowLimitChange(el)  {
                                 <option value="Pies">Multiple Pies</option>
 
                             </select>
-                            <input type="image" class='excelImg' value="Visible to Excel"  src="images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visible table as Excel file" />
+                            <input type="image" class='excelImg' value="Visible to Excel"  src="/contributionspaid/images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visible table as Excel file" />
                             <div id='subTotalRowLimitDiv'> Subtotal row limit <input id="subtotalto" onChange="javascript:rowLimitChange(this)" type="number" value= "1" title="change this to increase the depth when viewing subtotal views" /><em>Change this to increase the depth when viewing subtotal views.</em></div>
 
                     </div>
