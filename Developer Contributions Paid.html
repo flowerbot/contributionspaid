@@ -623,6 +623,7 @@ var fromXlOne = false;
 
                 var $table = $('table.pvtTable');
 
+		  try {
              //   console.log($table.closest('.wrapper'));
                     $table.floatThead({
                         scrollContainer: function($table){
@@ -632,6 +633,7 @@ var fromXlOne = false;
                         floatTableClass: 'pivotBody',
                         autoReflow: true
                     });
+		  } catch(ex) {}
 
                     uiVis = localStorage.getItem('uiVisible');
                     console.log("uiVis from saved:" + uiVis);
@@ -714,6 +716,7 @@ var fromXlOne = false;
 
 
 
+		try{
                 var $table = $('table.pvtTable');
                 console.log($table.closest('.wrapper'));
                     $table.floatThead({
@@ -725,7 +728,7 @@ var fromXlOne = false;
                         autoReflow: true
                       
                     });
-
+		} catch (ex) {}
 
                     uiVis = localStorage.getItem('uiVisible');
 
