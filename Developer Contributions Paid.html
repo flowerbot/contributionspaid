@@ -637,7 +637,7 @@ var fromXlOne = false;
                     });
 		  } catch(ex) {}
 
-                    uiVis = localStorage.getItem('uiVisible');
+                    uiVis = localStorage.getItem('uivisible');
                     console.log("uiVis from saved:" + uiVis);
                 if(uiVis == "false" || uiVis == undefined) {
                         btn = document.getElementById("toggleHideUIButton");
@@ -732,7 +732,7 @@ var fromXlOne = false;
                     });
 		} catch (ex) {}
 
-                    uiVis = localStorage.getItem('uiVisible');
+                    uiVis = localStorage.getItem('uivisible');
 
                     console.log("uiVis from new:" + uiVis);
                 if(uiVis == "false" || uiVis == null) {
@@ -812,7 +812,7 @@ var fromXlOne = false;
 
                 $("#output").pivotUI(parsed.data, configobject);
 
-              /*  uiVis = localStorage.getItem('uiVisible');
+              /*  uiVis = localStorage.getItem('uivisible');
                 if(uiVis == "false" || uiVis == undefined) {
                         btn = document.getElementById("toggleHideUIButton");
                         toggleHide(btn);
@@ -969,27 +969,27 @@ function toggleHide(obj) {
     //show_hide_column(1,true);
     console.log("toggling");
     console.log(obj);
-    console.log("uiVisible:" + $(obj).attr("uiVisible"));
+    console.log("uivisible:" + $(obj).attr("uivisible"));
 
-    var uiVisible = $(obj).attr("uiVisible");
+    var uivisible = $(obj).attr("uivisible");
 
-    if(uiVisible == "true") {
+    if(uivisible == "true") {
         $(".pvtAxisContainer").hide();
         $(".pvtUiCell").hide();
-        $(obj).attr("uiVisible","false");
+        $(obj).attr("uivisible","false");
         $(obj).attr("value","Show Chart Settings");
         document.getElementById("subTotalRowLimitDiv").style.display = "none";
 
-        localStorage.setItem("uiVisible","false");
+        localStorage.setItem("uivisible","false");
         var $table = $('table.pvtTable');
         $table.trigger('reflow');
         } else {
         $(".pvtAxisContainer").show();
         $(".pvtUiCell").show();
-        $(obj).attr("uiVisible","true");
+        $(obj).attr("uivisible","true");
         $(obj).attr("value","Hide Chart Settings");
         document.getElementById("subTotalRowLimitDiv").style.display = "block";
-        localStorage.setItem("uiVisible","true");
+        localStorage.setItem("uivisible","true");
         var $table = $('table.pvtTable');
                 $table.trigger('reflow');
     }
@@ -1126,7 +1126,7 @@ function rowLimitChange(el)  {
                                 Data Date: <span id='fileDate'></span>.</p>  
                             <input type="button" class="hidden" value="Export JSON" onClick="dataExport()" /> 
                             <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
-                            <input type="button" value="Show Chart Settings" uiVisible="false" id="toggleHideUIButton" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" /> 
+                            <input type="button" value="Show Chart Settings" uivisible="false" id="toggleHideUIButton" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" /> 
                             <select onchange="selectChange(this)">
                                 <option value=""></option>
                                 <option value="all">Summary View</option>
