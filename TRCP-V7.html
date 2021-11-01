@@ -1,0 +1,1149 @@
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<html>
+	<head><title>TRCP-V7</title></head>
+    <body>
+<!-- external libs from cdnjs -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+<!-- script type="text/javascript" src="/contributionspaid/scripts/jquery.floatTHead.min.js"></script -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/2.2.1/jquery.floatThead.min.js"></script>
+
+<!-- PivotTable.js libs from ../dist -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
+<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script>
+
+
+        <!-- subtotal.js libs from ../dist -->
+        <!-- base href= "/flowerbot/contributionspaid/blob/main/" -->
+	    <!-- base href= "/" -->
+        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
+        <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
+
+
+<!-- needed to dl as Excel -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+
+<style>
+    html {
+        font-size: 10px;
+    }
+    body {font-family: Verdana;
+
+    }
+    th.pvtRowLabel {
+        white-space: nowrap;
+        /* max-width: 100px; */
+    }
+
+    .ms-webpartPage-root {
+        border-spacing: 0px;
+    }
+
+    .desc {
+        padding-bottom: 10px;
+        width: 80vw;
+    }
+
+
+    .rotate {
+       height: 90px;/* fixed height . set fixed width to rotated elements */
+       width: 110px !important;/* a liitle less than parents height */
+       -webkit-transform: rotate(310deg);
+          -moz-transform: rotate(310deg);
+          -ms-transform: rotate(310deg);
+          -o-transform: rotate(310deg);
+        transform: rotate(310deg) translatex(-64%) translatey(56%);
+        transform-origin: top left;
+        margin-right: -73px;
+     }
+
+#inclusions strong {
+    font-weight: 500;
+    color:lightseagreen;
+}
+
+/* extras for floating headers */
+.floatThead-container {
+    overflow: hidden;
+}
+
+.pvtFilterBox {
+    z-index: 2001;
+}
+/* ************************* */
+
+.pvtRowLabel {
+    font-weight: normal;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.HighLevelHeading,
+.pvtColLabel.HighLevelHeading {
+    /* background-color:greenyellow !important; */
+    color: red;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector1,
+.pvtColLabel.Sector1 {
+    background-color: #FF7FFF !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector2,
+.pvtColLabel.Sector2 {
+    background-color: lime !important;
+    font-weight: bold;
+}
+
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector3,
+.pvtColLabel.Sector3 {
+    background-color: #f94c56 !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector4,
+.pvtColLabel.Sector4 {
+    background-color: yellow !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector5,
+.pvtColLabel.Sector5 {
+    background-color: orange !important;
+    font-weight: bold;
+}
+
+/* https://www.color-hex.com/color/b03060 */
+table.pvtTable tbody tr th.pvtRowLabel.Sector6,
+.pvtColLabel.Sector6 {
+    background-color: #b40000 !important;
+    font-weight: bold;
+}
+
+/* https://www.color-hex.com/color/4c4cff */
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector7,
+.pvtColLabel.Sector7 {
+    background-color: rgba(76,76,255, 0.8) !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector8,
+.pvtColLabel.Sector8 {
+    background-color: pink !important;
+
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector9,
+.pvtColLabel.Sector9 {
+    background-color: tan !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector10,
+.pvtColLabel.Sector10 {
+    background-color: palegoldenrod !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector11,
+.pvtColLabel.Sector11 {
+    background-color: SILVER !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.Sector12,
+.pvtColLabel.Sector12 {
+    background-color: tan !important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.LAC1,
+.pvtColLabel.LAC1 {
+    background-color: GREY !important;
+    font-weight: bold;
+}
+
+
+table.pvtTable tbody tr th.pvtRowLabel.LAC2,
+.pvtColLabel.LAC2 {
+    background-color: #FFB2FF!important;
+    font-weight: bold;
+}
+
+table.pvtTable tbody tr th.pvtRowLabel.LAC3,
+.pvtColLabel.LAC3 {
+    background-color: orangered!important;
+    font-weight: bold;
+}
+
+/*https://www.color-hex.com/color/66b266*/
+table.pvtTable tbody tr th.pvtRowLabel.LAC4,
+.pvtColLabel.LAC4 {
+    background-color: #66b266 !important;
+    font-weight: bold;
+}
+
+
+tr.highlight th, table.pvtTable tbody tr th.pvtRowLabel.highlight,
+.pvtColLabel.highlight {
+    background-color: yellow !important;
+    font-style: italic;
+}
+
+/*table.pvtTable tbody tr th.pvtRowLabel.Completed,
+ tr.Completed th.pvtRowLabel, */
+
+ tr.DetailedEstimate th, tr.DetailedEstimate td,  table.pvtTable tbody tr th.pvtRowLabel.DetailedEstimate,
+ .pvtColLabel.DetailedEstimate
+  {
+    background-color: #d4f8d4 !important;
+}
+
+ tr.Completed th, tr.Completed td, table.pvtTable tbody tr th.pvtRowLabel.Completed,
+  .pvtColLabel.Completed
+  {
+    background-color: #d8ffff !important;
+}
+
+
+tr.TRDSNew th, tr.TRDSNew td,  table.pvtTable tbody tr th.pvtRowLabel.TRDSNew,
+ .pvtColLabel.TRDSNew
+  {
+    background-color:pink !important;
+}
+
+ tr.Completed th, tr.Completed td, table.pvtTable tbody tr th.pvtRowLabel.Completed,
+  .pvtColLabel.Completed
+  {
+    background-color: #d8ffff !important;
+}
+
+
+
+tr.ActualCost td
+  {
+    color: red !important;
+}
+
+
+    td.pvtTotal.pvtRowSubtotal, td.pvtVal.pvtRowSubtotal {
+
+        background-color: WhiteSmoke;
+
+}
+
+
+
+@media print {
+.noprint, .pvtUiCell, #suiteBar, #DeltaPlaceHolderSearchArea, #DeltaTopNavigation {
+    display: none;
+}
+/* has no effect */
+/*.floatThead-container {
+    z-index: 100000 !important;
+}*/
+}
+
+</style>
+
+
+<script type="text/javascript">
+
+    debug = false;
+    var dataObj;
+    var config = {};
+
+    var configobject;
+    var configRows;
+    var configCols;
+    var configRenderer;
+    var configInc = {};
+    var configIncDefault = {}; // {Plan: ["19"],
+                   // Type: ["Admin Levy","Expenditure recoupment"]};
+
+    var configRowsDefault = ["High Level","TRCP SECTOR"];
+    var configColsDefault = [];
+    var configIncDefault = {};
+    var hiddenAttributes = ["#22","#23","#24","#25","#26",
+                            "NET SUBTOTAL COST TO TWEED SHIRE COUNCIL TRCP - CONTRIBUTION FROM CONTRIBUTOR",
+                            "NOTES Actual / Assumed Percentage Contribution from Contributor",
+                            "NET AREA TOTALS COST TO TWEED SHIRE COUNCIL TRCP",
+                            "Acquisition/Resumption Costs/Environmental Land Bank (Class 34)Zoning",
+                            "TOTALS"
+                        ];
+    var configRendererDefault = "Table";
+    var configRowsFull;
+
+    // NB:  TODO: MAKE LOOKUP TABLE FOR TRCP SECTOR IN EXCEL, (SECTOR 3 HAS A SPACE AT THE END), THEN REMOVE SPACE FROM END OF TRCP SECTOR ENTRIES
+    // TODO: (2) remove the 'Total' row from the csv before it gets here
+    var sorters = {
+        "High Level": $.pivotUtilities.sortAs(
+            ["URBAN ROADS","COASTAL RURAL ROADS","INLAND RURAL ROADS","LOCAL AREA WORKS"]
+        ), 
+        "TRCP SECTOR": $.pivotUtilities.sortAs(
+            ["SECTOR 1 - TWEED HEADS","SECTOR 2 - TWEED SOUTH","SECTOR 3 - COBAKI", "SECTOR 3 - COBAKI ",
+            "SECTOR 4 - BILAMBIL HEIGHTS","SECTOR 5 - TERRANORA", "SECTOR 6 - KINGSCLIFF", 
+            "SECTOR 7 - DURANBAH/ CABARITA","SECTOR 8 - POTTSVILLE", "SECTOR 9 - MURWILLUMBAH",
+            "SECTOR 10 - KIELVALE","SECTOR 12 - RURAL INNER","LAC 1", "LAC 2", "LAC 3", "LAC 4"]
+        ),
+        "Status": $.pivotUtilities.sortAs(
+            ["TRDS-New","Not Started","Commenced","Completed"]
+        ),
+        "TRDS2017-TRCP": $.pivotUtilities.sortAs(
+            ["Existing","New","EXCL"]
+        )
+
+    }
+
+
+    var configRowsDetails = ["TRCP SECTOR","Id+Tag","Status","TRDS2017-ID"];
+    var configColsDetails = ["In V7"];
+    var configRendererDetails="Table With Subtotal";
+
+    var configRowsScatter = ["High Level","TRCP SECTOR"];
+    var configColsScatter = ["SUBTOTALS($)"];
+    var configIncScatter = {};
+    var configRendererScatter="Scatter Chart";
+    //var configIncDetailsType = ["Admin Levy","Expenditure recoupment"];
+    var configRowsPies = ["TRCP SECTOR","In V7"];
+    var configColsPies = ["Status"];
+    var configRendererPies = "Multiple Pie Chart";
+    var configIncPies = {};
+
+
+    var configRowsStacked = ["Group"];
+    var configColsStacked = ["TRCP SECTOR"];
+    var configRendererStacked = "Stacked Bar Chart";
+    var configIncStacked = {};
+
+    var configRowsCorridor = ["TRCP SECTOR","Road Corridor","Group"];
+    var configColsCorridor = ["High Level"];
+   // var configRendererCorridor = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
+    var configRendererCorridor = "Table";
+    var configIncCorridor = {};
+
+    var configRowsTRDS = ["TRDS2017-ID","TRCP SECTOR","TRDS2017-Project","V6 Item","Project Tag","Status"];
+    var configColsTRDS = ["TRDS2017-TRCP"];
+   // var configRendererCorridor = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
+    var configRendererTRDS = "Table";
+
+    var configIncTRDS = {};
+
+
+    var configRowsTRDSSummary = ["Status"];
+    var configColsTRDSSummary = ["TRDS2017-TRCP"];
+   // var configRendererCorridor = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
+    var configRendererTRDSSummary = "Table";
+
+    var configIncTRDSSummary = {};
+
+   // var storageTag = "-TRCPV7";  // make these unique to each chart
+
+
+    var configRowsTRCPProgram = ["TRCP SECTOR","Road Corridor", "Group","Status","Id+Tag"];
+    var configColsTRCPProgram = ["In V7"];
+   // var configRendererCorridor = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
+    var configRendererTRCPProgram = "Table With Subtotal";
+
+    // IE, EVERYTHING EXCEPT 'EXCL'
+    var configIncTRCPProgram = {"In V7":["Yes"]};
+
+    var storageTag = "-TRCPV7";  // make these unique to each chart
+
+
+
+
+    var configRows;
+    var selectedASet = false;
+  //  var amt = function(data,)
+    ///prac/infrastructure/charts/Expected Contributions.csv
+
+
+    function fetchHeader(url, wch) {
+    try {
+        var req=new XMLHttpRequest();
+        req.open("HEAD", url, false);
+        req.send(null);
+        if(req.status== 200){
+            return req.getResponseHeader(wch);
+        }
+        else return false;
+    } catch(er) {
+        return er.message;
+    }
+}
+
+var fileNameAndPath = "/prac/infrastructure/Working%20Documents/CP04%20Documents/TRCP%20V7.csv";
+
+var fromXlOne = false;
+
+
+
+    $(function(){
+
+
+
+        
+        // CATCH THE SCROLL EVENT
+
+        // would normally be 'document' but this is especially for SharePoint:
+        var docBody = document.getElementById('s4-workspace');
+
+        docBody.addEventListener('scroll', function(e) {
+      //  document.getElementById('showScroll').innerHTML = window.pageYOffset + 'px';
+                var $table = $('table.pvtTable');
+                $table.trigger('reflow');
+        
+    });
+
+
+    $('select').find('option[value='+localStorage.getItem('selectChange')+']').attr('selected','selected');
+
+
+
+        //var sa = $.pivotUtilities.sortAs;
+        // for subototals
+        var dataClass = $.pivotUtilities.SubtotalPivotData;
+        var renderers = $.extend($.pivotUtilities.renderers, 
+        $.pivotUtilities.plotly_renderers, 
+        $.pivotUtilities.subtotal_renderers, 
+        $.pivotUtilities.export_renderers);
+        //var tpl = $.pivotUtilities.aggregatorTemplates;
+
+        var sum = $.pivotUtilities.aggregatorTemplates.sum;
+        var numberFormat = $.pivotUtilities.numberFormat;
+        var intFormat = numberFormat({digitsAfterDecimal: 0});
+       /* var aggregators = {
+            "Amount": function() {
+              return sum(intFormat)(["Amount"]);
+          } */
+
+          var amtSum = function() {
+            return sum(intFormat)(["Amount"]);
+          };
+          
+        // "Balance": function() {return sum(["Balance"])},
+        // "Expected": function() { return sum(intFormat)(["Expected"])},
+    //}  
+
+        var rendererOptions = {
+        //rendererOptions: {
+            table : {
+              /*  clickCallback: function(e, value, filters, pivotData) {
+                var links = [];
+                pivotData.forEachMatchingRecord(filters,
+                function(record) { links.push(record.ProjectLink); });
+
+                if (window.confirm("Visit the project site at: "+ links[0] + " ?"))
+                {
+                    var win = window.open(links[0], '_blank');
+                    win.focus();
+                }
+                } */
+
+            },
+            //config["heatmap"] = {
+
+
+            heatmap: {
+                colorScaleGenerator: function(values) {
+                    return d3.scale.linear()
+                     //   .domain(["1", "100000", "4000000", "9000000"])
+                      //  .domain([600000, 6000000])
+                      .domain([-6000000, 0, 600000])
+                      //  .range(["#FFF", "#FF3D5A"])
+                     //  .range(["#FFF", "#9AFF3D", "#F7FF3D", "#FF3D5A"])
+                        .range(["#9AFF3D", "#FFFFFF", "#FF0000"])
+                //}
+                }
+                },//;//, 
+        };
+
+        savedConfig = localStorage.getItem('pivotdatakey'+storageTag);
+
+
+        if (localStorage.getItem("pivotdatarows"+storageTag) !== null) {
+	            savedRows = localStorage.getItem('pivotdatarows'+storageTag);
+                console.log("savedRows:" + savedRows);
+
+
+		        configRows = (savedRows) ? JSON.parse(savedRows) : configRowsDefault;
+		} else {
+			configRows = configRowsDefault;
+			}
+
+
+            if (localStorage.getItem("pivotdatacols"+storageTag) !== null) {
+	            savedCols = localStorage.getItem('pivotdatacols'+storageTag);
+               // console.log("savedRows:" + savedRows);
+
+
+		        configCols = (savedCols) ? JSON.parse(savedCols) : configColsDefault;
+		} else {
+			configCols = configColsDefault;
+			}
+
+
+
+        if (localStorage.getItem('pivotdatainc'+storageTag) !== null) {
+            //configInc["Type"] = configIncDetailsType;
+            savedinclusions = localStorage.getItem('pivotdatainc'+storageTag);
+            configInc = (savedinclusions) ? JSON.parse(savedinclusions) : configIncDefault;
+        
+
+        } else {
+
+          //  delete configInc["Type"];
+          configInc = configIncDefault;
+
+        }
+
+        if (localStorage.getItem('pivotrenderer'+storageTag) !== null) {
+
+            savedRenderer = localStorage.getItem('pivotrenderer' + storageTag);
+            configRenderer = (savedRenderer) ? JSON.parse(savedRenderer) : configRendererDefault;
+            } else {
+            configRenderer = configRendererDefault;
+            }
+			
+				selectedASet = localStorage.getItem('selectSet'+storageTag);
+
+
+
+        //var config
+
+        if (savedConfig) { // If a saved state found in LocalStorage, then load it
+                console.log("found a config object");
+
+                configobject = JSON.parse(savedConfig); // Make it an object
+
+
+            configobject["renderers"] = renderers;
+            configobject["rendererOptions"] = rendererOptions;
+            configobject["sorters"] = sorters;
+            configobject["dataClass"] = dataClass;
+           
+
+
+            if(selectedASet) {
+                delete configobject["rows"];
+                configobject["rows"] = configRows;
+                delete configobject["cols"];
+                configobject["cols"] = configCols;
+                delete configobject["rendererName"];
+                configobject["rendererName"] = configRenderer;
+                localStorage.removeItem("selectSet"+storageTag);
+               // configobject["inclusions"]["Type"] = configIncDetailsType;
+               configobject["inclusions"] = configInc;  // don't know if its a good idea to reset it it every time or not
+                selectedASet = false;
+            } else {
+               // delete configobject["inclusions"]["Type"]; // revert to all vals
+            }
+
+                //  console.log(JSON.stringify(configobject));
+            console.log(configobject);
+            configobject.onRefresh = function (config) {
+                console.log("save state called");
+                console.log(config);
+                var config_copy = JSON.parse(JSON.stringify(config));
+
+                console.log(config_copy["rendererName"]);
+
+                //delete some values which are functions
+                delete config_copy["aggregators"];
+                delete config_copy["renderers"];
+                //delete some bulky default values
+                delete config_copy["rendererOptions"];
+                delete config_copy["localeStrings"];
+                /// config_copy["renderers"] = renderers;
+                
+
+
+                var params = {};
+
+
+                /*  params["Rows"] = config_copy["rows"];
+                params["Columns"] = config_copy["cols"];
+                params["Values"] = config_copy["vals"]; */
+                /*  params["Aggregator"] = config_copy["aggregatorName"];
+                params["Renderer"] = config_copy["rendererName"]; */
+               // try {
+              //  params["Inclusions"] = config_copy["inclusionsInfo"];
+              //  document.getElementById("inclusions").innerHTML = param["Inclusions"];
+              //  } catch (ex) {console.log("config_copy not found")};
+
+
+              try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]);
+                } catch (ex) {console.log("inclusions not found")};
+
+                //  params["Exclusions"] = config_copy["exclusions"];
+                //console.log(params)
+
+                /// config_copy["renderers"] = renderers;
+                $("#parameters").html(JSON.stringify(params, undefined, 2));
+                //  $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+            //      console.log(params["Inclusions"]) ;
+                localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                var $table = $('table.pvtTable');
+
+                console.log($table.closest('.wrapper'));
+                    $table.floatThead({
+                        scrollContainer: function($table){
+                            return $table.closest('.wrapper');
+                        },
+                         position: 'auto',
+                        floatTableClass: 'pivotBody',
+                        autoReflow: true
+                    });
+
+                    //https://stackoverflow.com/questions/34618116/pivottable-js-conditionally-change-color-on-text
+
+                colorHeadings();
+
+       
+         }
+
+
+
+        } else {
+        
+            // no config found, make it from scratch
+
+            
+
+            configobject = {};
+            configobject["inclusions"] = configInc; // {Plan:["19"]};
+            configobject["exclusions"] ={ "High Level":["Total"], trainingProject:["true"]};
+            configobject["hiddenAttributes"] = hiddenAttributes;
+            configobject["rows"] = configRows;
+            configobject["cols"] = configCols;
+            configobject["vals"] = ["SUBTOTALS($)"];
+            configobject["sorters"] = sorters;
+            //configobject["comments"] = "Total"; //want to skip the Total line .. doesn't wokr
+
+            //configobject["unusedAttrsVertical"] = false;
+            configobject["aggregatorName"] = "Integer Sum";
+           // configobject["aggregator"] = ["Amount"];
+           // configobject["aggregators"] = {"Amount": ["Amount"] };
+         /*   configobject["aggregators"] = {
+                    "Amount": function() {
+                    return sum(intFormat)(["Amount"]);
+                }
+                }*/
+            configobject["rendererName"] =    "Table";
+
+            configobject["renderers"] = renderers;
+            //configobject["filter"] = filterFun;
+            configobject["rendererOptions"] = rendererOptions;
+            configobject["dataClass"] = dataClass;
+           /* configobject["onRefresh"] =  function(config) {
+                                           console.log(JSON.parse(JSON.stringify(config)));
+                                           console.log(config.cols[0]);
+                                           $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                   } */
+
+                try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]);
+                } catch (ex) {console.log("inclusions not found")};
+
+                configobject.onRefresh = function (config) {
+                console.log("new state called");
+
+                var config_copy = JSON.parse(JSON.stringify(config));
+            //var config_copy = configobject;
+                //delete some values which are functions
+                delete config_copy["aggregators"];
+                delete config_copy["renderers"];
+                //delete some bulky default values
+                delete config_copy["rendererOptions"];
+                delete config_copy["localeStrings"];
+
+            var params = {};
+
+
+            try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+            // add exclusions to params if necessary
+
+            localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                console.log(config_copy) ;
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+
+
+                var $table = $('table.pvtTable');
+                console.log($table.closest('.wrapper'));
+                    $table.floatThead({
+                        scrollContainer: function($table){
+                            return $table.closest('.wrapper');
+                        },
+                        position: 'auto',
+                        floatTableClass: 'pivotBody',
+                        autoReflow: true
+                      
+                    });
+
+
+                    colorHeadings();
+
+
+                   }
+
+          
+
+
+
+
+
+        }
+
+
+
+
+
+
+  
+
+
+     
+
+
+
+       // var intFormat = numberFormat({digitsAfterDecimal: 0});
+
+        //var intFormat = numberFormat();
+
+
+        
+        //Papa.parse("/prac/infrastructure/siteassets/scripts/data/DC Recoupments.csv", {
+        Papa.parse(fileNameAndPath, {
+            download: true,
+            skipEmptyLines: true,
+            header: true,
+            newline: "\r\n",
+            complete: function(parsed){
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+              console.log("Parsed:");
+              console.log(parsed.data);
+
+              var fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
+
+                // var dateTest =  fetchHeader("/prac/infrastructure/charts/Expected Contributions Summary1.csv", "Last-Modified");
+
+                const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
+                var localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+
+
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+               // var fileDate = parsed.data[1][6];
+                document.getElementById("fileDate").textContent = localDate;
+
+               // console.log("First Balance:" + parsed.data[1][1]);
+                var fixedData = [];
+
+               // console.log(parsed);
+
+            //    if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
+
+               // dataObj = parsed.data;
+                    var emptyCols = [];
+
+                    document.getElementById("progressTotal").innerHTML = parsed.data.length;
+                    document.getElementById("progress").innerHTML = parsed.data.length;
+   
+
+                dataObj = parsed.data;
+
+       
+
+               // parsed[1].push("DateYear");
+
+                $("#output").pivotUI(parsed.data, configobject);
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+            }
+        });
+       // var jsonData = Papa.parse("/prac/infrastructure/siteassets/scripts/data/AccountBalance.csv");
+       // console.log(jsonData.data);
+     });
+
+
+function dataExport() {
+
+    var myWindow = (window.open("", "", "width=600,height=600,scrollbars=1"));
+    var tableTxt = "";
+    var exportTableTxt = "";
+
+    var tableId = "dataExportTable";
+
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+
+
+    var msgText = "<H2>JSON FORMAT:</H2><p>Save JSON to a text file, or copy it to a JSON viewer, like the one at <a href='https://jsongrid.com/json-grid'target='_blank'>jsongrid.com</a> </p>";
+
+    myWindow.document.title="Export ..";
+
+    myWindow.document.write(msgText + "<pre style='border:1px solid #dddddd;'>" + JSON.stringify(dataObj, null, "   ")+"</pre>");
+
+
+}
+
+
+function sheetJSWorkBook(type, fn, dl) {
+
+
+    var $table = $('table.pvtTable');
+    $table.floatThead('destroy');  // put it back together (unfloat it) for the excel dl
+
+    var elt = document.getElementsByClassName('pvtTable')[0];
+
+
+
+    var wb = XLSX.utils.table_to_book(elt, {sheet:"SWD Data"});
+
+    wb.SheetNames.push("Inclusions");
+
+    var inc = document.getElementById("inclusions").innerHTML;
+
+        var tempTable = document.createElement("table");
+    tempTable.innerHTML = "<tr><td>"+inc + "</td></tr>";
+
+    var ws = XLSX.utils.table_to_sheet(tempTable);
+
+    wb.Sheets["Inclusions"] = ws;
+
+
+    fixHeader(); // float it again
+
+
+    return dl ?
+        XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+        XLSX.writeFile(wb, fn || ('TRDSdata.' + (type || 'xlsx')));
+}
+
+function revert() {
+
+
+localStorage.clear();
+location.reload();
+
+}
+
+
+function fixHeader() {
+
+    var $table = $('table.pvtTable');
+
+
+    $table.floatThead({
+    position: 'fixed',
+
+    }); 
+}
+
+
+function selectChange(el) {
+    console.log(el);
+
+    localStorage.setItem("selectChange",el.value);
+
+
+    if(el.value.length >0) {
+	localStorage.setItem("selectSet"+storageTag,el.value);
+	} else {
+		localStorage.removeItem("selectSet"+storageTag);
+		}
+
+	if(el.value == "recOnly") {
+			configRowsFull = configobject["rows"];
+            //tmpRenderer = configobject["renderer"];
+			localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsDetails, undefined, 2));
+            localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsDetails,undefined,2));
+            //localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncDetailsType,undefined,2));
+            localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererDefault,undefined,2));
+
+            //	localStorage.setItem('pivotdatafullrows',JSON.stringify(configRows, undefined, 2));
+			configRows = configRowsDetails;
+            configCols = configColsDetails;
+            //configInc["Type"] = configIncDetailsType;
+           // configInc = configIncRecoup;
+			
+        }
+    else
+    
+ if(el.value == "Pies") {
+        configRowsFull = configobject["rows"];
+
+        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsPies, undefined, 2));
+        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsPies,undefined,2));
+        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncPies,undefined,2));
+        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererPies,undefined,2));
+
+        // localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncDetailsType,undefined,2));
+
+        //	localStorage.setItem('pivotdatafullrows',JSON.stringify(configRows, undefined, 2));
+        configRows = configRowsPies;
+        configCols = configColsPies;
+       // configInc["Type"] = configIncDetailsType;
+
+
+
+
+		} else 
+	if(el.value == "Scatter") {
+		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
+        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsScatter, undefined, 2));
+        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsScatter,undefined,2));
+        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncScatter,undefined,2));
+        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererScatter,undefined,2));
+		} else 
+
+        if(el.value == "Stacked") {
+		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
+        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsStacked, undefined, 2));
+        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsStacked,undefined,2));
+        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncStacked,undefined,2));
+        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererStacked,undefined,2));
+		} else 
+
+        if(el.value == "Corridor") {
+		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
+        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsCorridor, undefined, 2));
+        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsCorridor,undefined,2));
+        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncCorridor,undefined,2));
+        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererCorridor,undefined,2));
+		} else 
+
+        if(el.value == "TRDS") {
+		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
+        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsTRDS, undefined, 2));
+        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsTRDS,undefined,2));
+        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncTRDS,undefined,2));
+        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererTRDS,undefined,2));
+		} else 
+        if(el.value == "TRDSSummary") {
+		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
+        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsTRDSSummary, undefined, 2));
+        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsTRDSSummary,undefined,2));
+        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncTRDSSummary,undefined,2));
+        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererTRDSSummary,undefined,2));
+		} else 
+        if(el.value == "TRCPProgram") {
+		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
+        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsTRCPProgram, undefined, 2));
+        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsTRCPProgram,undefined,2));
+        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncTRCPProgram,undefined,2));
+        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererTRCPProgram,undefined,2));
+		} else 
+	if(el.value == "all") {
+		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
+			localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRows, undefined, 2));
+			localStorage.setItem('pivotdatafullrows'+storageTag,JSON.stringify(configRowsFull, undefined, 2));
+            localStorage.removeItem('pivotdatacols'+storageTag);
+            localStorage.removeItem('pivotdatainc'+storageTag);
+            localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererDefault,undefined,2));
+
+         //   delete configInc["Type"];
+		} 
+
+
+		
+			location.reload();
+
+
+
+}
+
+function toggleHide(obj) {
+    //   var mytable = $(".pvtUi");
+    //show_hide_column(1,true);
+    console.log(obj);
+    console.log("uiVisible:" + $(obj).attr("uiVisible"));
+
+    var uiVisible = $(obj).attr("uiVisible");
+
+    if(uiVisible == "true") {
+        $(".pvtAxisContainer").hide();
+        $(".pvtUiCell").hide();
+        $(obj).attr("uiVisible","false");
+        $(obj).attr("value","Show Chart Settings");
+        var $table = $('table.pvtTable');
+        $table.trigger('reflow');
+        } else {
+        $(".pvtAxisContainer").show();
+        $(".pvtUiCell").show();
+        $(obj).attr("uiVisible","true");
+        $(obj).attr("value","Hide Chart Settings");
+        var $table = $('table.pvtTable');
+                $table.trigger('reflow');
+    }
+
+}
+
+//this function stores pivatetable config to LocalStorage .. does it do anything?
+function saveState(config) {
+  console.log("save state called");
+  var config_copy = JSON.parse(JSON.stringify(config));
+
+  try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config_copy["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+
+     //delete some values which are functions
+     //delete config_copy["aggregators"];
+     delete config_copy["renderers"];
+     //delete some bulky default values
+    // delete config_copy["rendererOptions"];
+     delete config_copy["localeStrings"];
+     localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2));
+
+
+
+
+}
+
+
+
+function colorHeadings() {
+
+    var $headLabels = $(".pvtColLabel");
+    for(k=0; k<$headLabels.length; k++) {
+        // console.log($headLabels[k].textContent);
+
+        if ($headLabels[k].innerHTML.match(/COASTAL RURAL ROADS|INLAND RURAL ROADS|LOCAL AREA WORKS|URBAN ROADS/g))  $('.pvtColLabel').eq(k).addClass("HighLevelHeading");
+
+
+        if ($headLabels[k].innerHTML.match(/SECTOR 1 - /g))  $('.pvtColLabel').eq(k).addClass("Sector1");
+        if ($headLabels[k].innerHTML.match(/SECTOR 2/g))  $('.pvtColLabel').eq(k).addClass("Sector2");
+        if ($headLabels[k].innerHTML.match(/SECTOR 3/g)) $('.pvtColLabel').eq(k).addClass("Sector3");
+        if ($headLabels[k].innerHTML.match(/SECTOR 4/g)) $('.pvtColLabel').eq(k).addClass("Sector4");
+        if ($headLabels[k].innerHTML.match(/SECTOR 5/g)) $('.pvtColLabel').eq(k).addClass("Sector5");
+        if ($headLabels[k].innerHTML.match(/SECTOR 6/g)) $('.pvtColLabel').eq(k).addClass("Sector6");
+        if ($headLabels[k].innerHTML.match(/SECTOR 7/g)) $('.pvtColLabel').eq(k).addClass("Sector7");
+        if ($headLabels[k].innerHTML.match(/SECTOR 8/g)) $('.pvtColLabel').eq(k).addClass("Sector8");
+        if ($headLabels[k].innerHTML.match(/SECTOR 9/g)) $('.pvtColLabel').eq(k).addClass("Sector9");
+        if ($headLabels[k].innerHTML.match(/SECTOR 10/g)) $('.pvtColLabel').eq(k).addClass("Sector10");
+        if ($headLabels[k].innerHTML.match(/SECTOR 11/g)) $('.pvtColLabel').eq(k).addClass("Sector11");
+        if ($headLabels[k].innerHTML.match(/SECTOR 12/g)) $('.pvtColLabel').eq(k).addClass("Sector12");
+        if ($headLabels[k].innerHTML.match(/LAC 1/g)) $('.pvtColLabel').eq(k).addClass("LAC1");
+        if ($headLabels[k].innerHTML.match(/LAC 2/g)) $('.pvtColLabel').eq(k).addClass("LAC2");
+        if ($headLabels[k].innerHTML.match(/LAC 3/g)) $('.pvtColLabel').eq(k).addClass("LAC3");
+        if ($headLabels[k].innerHTML.match(/LAC 4/g)) $('.pvtColLabel').eq(k).addClass("LAC4");
+
+
+        if ($headLabels[k].innerHTML.match(/Commenced/)) $('.pvtColLabel').eq(k).addClass("DetailedEstimate");
+        if ($headLabels[k].innerHTML.match(/Completed/)) $('.pvtColLabel').eq(k).addClass("Completed");
+
+    }
+    
+
+    var $labels = $(".pvtRowLabel");
+
+    for (var i=0; i<$labels.length; i++) {
+        if ($labels[i].innerHTML.match(/COASTAL RURAL ROADS|INLAND RURAL ROADS|LOCAL AREA WORKS|URBAN ROADS/g))  $('.pvtRowLabel').eq(i).addClass("HighLevelHeading");
+        if ($labels[i].innerHTML.match(/SECTOR 1 - TWEED HEADS/g))  $('.pvtRowLabel').eq(i).addClass("Sector1");
+        if ($labels[i].innerHTML.match(/SECTOR 2 - TWEED SOUTH/g)) $('.pvtRowLabel').eq(i).addClass("Sector2");
+        if ($labels[i].innerHTML.match(/SECTOR 3 - COBAKI/g)) $('.pvtRowLabel').eq(i).addClass("Sector3");
+        if ($labels[i].innerHTML.match(/SECTOR 4 - BILAMBIL HEIGHTS/g)) $('.pvtRowLabel').eq(i).addClass("Sector4");
+        if ($labels[i].innerHTML.match(/SECTOR 5 - TERRANORA/g)) $('.pvtRowLabel').eq(i).addClass("Sector5");
+        if ($labels[i].innerHTML.match(/SECTOR 6 - KINGSCLIFF/g)) $('.pvtRowLabel').eq(i).addClass("Sector6");
+        if ($labels[i].innerHTML.match(/SECTOR 7 - DURANBAH/g)) $('.pvtRowLabel').eq(i).addClass("Sector7");
+        if ($labels[i].innerHTML.match(/SECTOR 8 - POTTSVILLE/g)) $('.pvtRowLabel').eq(i).addClass("Sector8");
+        if ($labels[i].innerHTML.match(/SECTOR 9 - MURWILLUMBAH/g)) $('.pvtRowLabel').eq(i).addClass("Sector9");
+        if ($labels[i].innerHTML.match(/SECTOR 10 - KIELVALE/g)) $('.pvtRowLabel').eq(i).addClass("Sector10");
+        if ($labels[i].innerHTML.match(/SECTOR 11/g)) $('.pvtRowLabel').eq(i).addClass("Sector11");
+        if ($labels[i].innerHTML.match(/SECTOR 12/g)) $('.pvtRowLabel').eq(i).addClass("Sector12");
+        if ($labels[i].innerHTML.match(/LAC 1/g)) $('.pvtRowLabel').eq(i).addClass("LAC1");
+        if ($labels[i].innerHTML.match(/LAC 2/g)) $('.pvtRowLabel').eq(i).addClass("LAC2");
+        if ($labels[i].innerHTML.match(/LAC 3/g)) $('.pvtRowLabel').eq(i).addClass("LAC3");
+        if ($labels[i].innerHTML.match(/LAC 4/g)) $('.pvtRowLabel').eq(i).addClass("LAC4");
+
+        if ($labels[i].innerHTML.match(/Detailed Estimate/)) $('.pvtRowLabel').eq(i).parent('tr').addClass("DetailedEstimate");
+        if ($labels[i].innerHTML.match(/Commenced/)) $('.pvtRowLabel').eq(i).parent('tr').addClass("DetailedEstimate");
+        if ($labels[i].innerHTML.match(/Commenced/)) $('.pvtRowLabel').eq(i).addClass("DetailedEstimate");
+
+        if ($labels[i].innerHTML.match(/Completed/)) $('.pvtRowLabel').eq(i).parent('tr').addClass("Completed");
+        if ($labels[i].innerHTML.match(/Completed/)) $('.pvtRowLabel').eq(i).addClass("Completed");
+        
+        if ($labels[i].innerHTML.match(/Actual Cost/)) $('.pvtRowLabel').eq(i).parent('tr').addClass("ActualCost");
+
+        //if ($labels[i].innerHTML.match(/TRDS/g)) $('.pvtRowLabel').eq(i).addClass("highlight");
+
+        if ($labels[i].innerHTML.match(/TRDS-New/)) $('.pvtRowLabel').eq(i).parent('tr').addClass("TRDSNew");
+        if ($labels[i].innerHTML.match(/TRDS-New/)) $('.pvtRowLabel').eq(i).addClass("TRDSNew");
+
+    };
+
+}
+
+
+
+        </script>
+             <div class="desc"><h2>Data Date: <span id='fileDate'></span>. <span class="noprint"> Use the drop down arrow beside each parameter to filter the chart results. 
+                <a href="http://tscps/prac/infrastructure/Working%20Documents/CP04 Documents" 
+                target="_blank" 
+                title="Run 'export to CSV' button (macro) in TRCP Schedule 5 Version 6-Cleaned.xlsm"><img src="/prac/infrastructure/siteassets/images/excel_1255186.png" height="20" width="20" /></a> </span>
+                            </h2>
+                            <h3 class="noprint">Data source is CSV file derived from Excel Schedule and is named TRCP V7.csv (folder link above) - note that macro removes new lines from the CSV - this must be done if wanting to export the CSV manually .</h3>
+                            
+                            <h3 id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span></h3>  
+                            <div class="noprint">
+                            <input type="button" value="Export JSON" onClick="dataExport()" /> 
+                            <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
+                            <input type="button" value="Hide Chart Settings" uiVisible="true" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" /> 
+                            <select onchange="selectChange(this)">
+                                <option value=""></option>
+                                <option value="all">Sector Summary</option>
+                                <option value="recOnly">Project details</option>
+                                <option value="TRCPProgram">TRCP Program ('In V7') </option>
+                                <option value="Corridor" title="Change to 'Table with Subtotal' after render, for more flexibility">By Road Corridor</option>
+                                <option value="TRDS" "view by Tweed Road Devt Strategy">TRDS View</option>
+                                <option value="TRDSSummary">TRDS Summary</option>
+
+                                <option value="Pies">Multiple Pies</option>
+                                <option value="Stacked">Stacked Bar Chart</option>
+                                <option value="Scatter">Scatter Chart</option>
+                            </select>
+                            <input type="image" value="Visible to Excel"  src="http://tscps/prac/infrastructure/SiteAssets/scripts/icons/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visiblet table as Excel file" />
+                            </div>
+                        </div>
+        <div id="output"></div>
+
+
+       
+
+</body>
+</html>
