@@ -641,7 +641,7 @@ var fromXlOne = false;
                     console.log("uiVis from saved:" + uiVis);
                 if(uiVis == "false" || uiVis == undefined) {
                         btn = document.getElementById("toggleHideUIButton");
-                        toggleHide(btn);
+                        toggleHide(btn, false);
                 }
 
 
@@ -737,7 +737,7 @@ var fromXlOne = false;
                     console.log("uiVis from new:" + uiVis);
                 if(uiVis == "false" || uiVis == null) {
                         btn = document.getElementById("toggleHideUIButton");
-                        toggleHide(btn);
+                        toggleHide(btn, false);
                 }
 
                     colorLevy();
@@ -964,7 +964,7 @@ function selectChange(el) {
 
 }
 
-function toggleHide(obj) {
+function toggleHide(obj, toggle) {
     //   var mytable = $(".pvtUi");
     //show_hide_column(1,true);
     console.log("toggling");
@@ -972,26 +972,38 @@ function toggleHide(obj) {
     console.log("uivisible:" + $(obj).attr("uivisible"));
 
     var uivisible = $(obj).attr("uivisible");
+    var $table = $('table.pvtTable');
 
-    if(uivisible == "true") {
-        $(".pvtAxisContainer").hide();
-        $(".pvtUiCell").hide();
-        $(obj).attr("uivisible","false");
-        $(obj).attr("value","Show Chart Settings");
-        document.getElementById("subTotalRowLimitDiv").style.display = "none";
+    if(toggle == true) {
+        if(uivisible == "true") {
+            $(".pvtAxisContainer").hide();
+            $(".pvtUiCell").hide();
+            $(obj).attr("uivisible","false");
+            $(obj).attr("value","Show Chart Settings");
+            document.getElementById("subTotalRowLimitDiv").style.display = "none";
 
-        localStorage.setItem("uivisible","false");
-        var $table = $('table.pvtTable');
-        $table.trigger('reflow');
-        } else {
-        $(".pvtAxisContainer").show();
-        $(".pvtUiCell").show();
-        $(obj).attr("uivisible","true");
-        $(obj).attr("value","Hide Chart Settings");
-        document.getElementById("subTotalRowLimitDiv").style.display = "block";
-        localStorage.setItem("uivisible","true");
-        var $table = $('table.pvtTable');
-                $table.trigger('reflow');
+            localStorage.setItem("uivisible","false");
+      //      var $table = $('table.pvtTable');
+            $table.trigger('reflow');
+            } else {
+            $(".pvtAxisContainer").show();
+            $(".pvtUiCell").show();
+            $(obj).attr("uivisible","true");
+            $(obj).attr("value","Hide Chart Settings");
+            document.getElementById("subTotalRowLimitDiv").style.display = "block";
+            localStorage.setItem("uivisible","true");
+
+                    $table.trigger('reflow');
+        }
+    }
+    else {
+
+        console.log("uivisible triggering after refresh");
+            $(".pvtAxisContainer").hide();
+            $(".pvtUiCell").hide();
+            document.getElementById("subTotalRowLimitDiv").style.display = "none";
+            $table.trigger('reflow');
+        
     }
 
 }
@@ -1126,7 +1138,7 @@ function rowLimitChange(el)  {
                                 Data Date: <span id='fileDate'></span>.</p>  
                             <input type="button" class="hidden" value="Export JSON" onClick="dataExport()" /> 
                             <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
-                            <input type="button" value="Show Chart Settings" uivisible="false" id="toggleHideUIButton" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" /> 
+                            <input type="button" value="Show Chart Settings" uivisible="false" id="toggleHideUIButton" onclick="toggleHide(this, true)" title="Click to toggle hide/show chart settings" /> 
                             <select onchange="selectChange(this)">
                                 <option value=""></option>
                                 <option value="all">Summary View</option>
