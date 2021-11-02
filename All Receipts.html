@@ -1,0 +1,595 @@
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<html>
+	<head><title>All Receipts</title></head>
+    <body>
+<!-- external libs from cdnjs -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+<!-- script type="text/javascript" src="/contributionspaid/scripts/jquery.floatTHead.min.js"></script -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/2.2.1/jquery.floatThead.min.js"></script>
+
+
+<!-- PivotTable.js libs from ../dist -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
+<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script>
+
+
+      <!-- subtotal.js libs from ../dist -->
+        <!-- base href= "/flowerbot/contributionspaid/blob/main/" -->
+	    <!-- base href= "/" -->
+        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
+        <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
+
+
+<style>
+    body {font-family: Verdana;}
+    th.pvtRowLabel {
+        white-space: nowrap;
+    }
+
+    .ms-webpartPage-root {
+        border-spacing: 0px;
+    }
+
+    .desc {
+        padding-bottom: 10px;
+        width: 80vw;
+    }
+
+
+    .rotate {
+      /* height: 90px; */ /* fixed height . set fixed width to rotated elements */
+       /* width: 110px !important;/* a liitle less than parents height */
+      /* -webkit-transform: rotate(310deg);
+          -moz-transform: rotate(310deg);
+          -ms-transform: rotate(310deg);
+          -o-transform: rotate(310deg);
+        transform: rotate(310deg) translatex(-64%) translatey(56%);
+        transform-origin: top left;
+        margin-right: -73px;*/
+        font-size: 14px;
+     }
+
+#inclusions strong {
+    font-weight: 500;
+    color:lightseagreen;
+}
+
+.pvtVal, .pvtTotal, .pvtRowLabel, .pvtGrandTotal {
+    font-size: 12pt;
+}
+
+.pvtTotal {
+    background-color: WhiteSmoke !important;
+    font-weight: 500 !important;
+}
+
+ th.pvtRowLabel {
+    font-size: 11pt !important;
+    font-weight: 500 !important;
+}
+
+.colTotal {
+    border-top: 2px solid #C8C8C8 !important;
+    border-bottom: 4px double gray !important;
+}
+
+
+
+.rowTotal {
+    border-left: 2px solid #C8C8C8 !important;
+}
+
+.pvtGrandTotal {
+    border-top: 2px solid #C8C8C8 !important;
+    border-left: 2px solid #C8C8C8 !important;
+    border-bottom: 4px double gray !important;
+}
+
+/* extras for floating headers */
+.floatThead-container {
+    overflow: hidden;
+}
+
+.pvtFilterBox {
+    z-index: 2001;
+}
+/* ************************* */
+
+
+</style>
+
+
+
+<script type="text/javascript">
+
+    debug = false;
+    var dataObj;
+    var config = {};
+  //  var amt = function(data,)
+    ///prac/infrastructure/charts/Expected Contributions.csv
+
+
+    function fetchHeader(url, wch) {
+    try {
+        var req=new XMLHttpRequest();
+        req.open("HEAD", url, false);
+        req.send(null);
+        if(req.status== 200){
+            return req.getResponseHeader(wch);
+        }
+        else return false;
+    } catch(er) {
+        return er.message;
+    }
+}
+
+var fileNameAndPath = "/contributionspaid/data/DC Receipts.csv";
+
+var fromXlOne = false;
+
+
+
+    $(function(){
+
+
+         // CATCH THE SCROLL EVENT
+
+        // would normally be 'document' but this is especially for SharePoint:
+     /*   var docBody = document.getElementById('s4-workspace');
+
+        docBody.addEventListener('scroll', function(e) {
+      //  document.getElementById('showScroll').innerHTML = window.pageYOffset + 'px';
+                var $table = $('table.pvtTable');
+                $table.trigger('reflow');
+        
+    }); */
+
+        // for subototals
+        var dataClass = $.pivotUtilities.SubtotalPivotData;
+        var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers, $.pivotUtilities.export_renderers, $.pivotUtilities.subtotal_renderers);
+        var sum = $.pivotUtilities.aggregatorTemplates.sum;
+        var numberFormat = $.pivotUtilities.numberFormat;
+        var intFormat = numberFormat({digitsAfterDecimal: 0});
+       /* var aggregators = {
+            "Amount": function() {
+              return sum(intFormat)(["Amount"]);
+          } */
+
+          var amtSum = function() {
+            return sum(intFormat)(["Amount"]);
+          };
+          
+        // "Balance": function() {return sum(["Balance"])},
+        // "Expected": function() { return sum(intFormat)(["Expected"])},
+    //}  
+
+        var rendererOptions = {
+        //rendererOptions: {
+            table : {
+              /*  clickCallback: function(e, value, filters, pivotData) {
+                var links = [];
+                pivotData.forEachMatchingRecord(filters,
+                function(record) { links.push(record.ProjectLink); });
+
+                if (window.confirm("Visit the project site at: "+ links[0] + " ?"))
+                {
+                    var win = window.open(links[0], '_blank');
+                    win.focus();
+                }
+                } */
+
+            },
+            //config["heatmap"] = {
+
+
+            heatmap: {
+                colorScaleGenerator: function(values) {
+                    return d3.scale.linear()
+                      //  .domain(["1", "100000", "4000000", "9000000"])
+                      //  .domain([600000, 6000000])
+                      .domain([-900000, 0, 40000])
+                      //  .range(["#FFF", "#FF3D5A"])
+                     //  .range(["#FFF", "#9AFF3D", "#F7FF3D", "#FF3D5A"])
+                        .range(["#9AFF3D", "#FFFFFF", "#FF0000"])
+                //}
+                }
+                },//;//, 
+        };
+
+        savedConfig = localStorage.getItem('pivotdatakey');
+        //var config
+
+        if (savedConfig) { // If a saved state found in LocalStorage, then load it
+                console.log("found a config object");
+
+                var configobject = JSON.parse(savedConfig); // Make it an object
+
+
+            configobject["renderers"] = renderers;
+            configobject["rendererOptions"] = rendererOptions;
+
+            configobject["dataClass"] = dataClass;
+                //  console.log(JSON.stringify(configobject));
+            console.log(configobject);
+            configobject.onRefresh = function (config) {
+                console.log("save state called");
+                console.log(config);
+                var config_copy = JSON.parse(JSON.stringify(config));
+                //delete some values which are functions
+                delete config_copy["aggregators"];
+                delete config_copy["renderers"];
+                //delete some bulky default values
+                delete config_copy["rendererOptions"];
+                delete config_copy["localeStrings"];
+                /// config_copy["renderers"] = renderers;
+
+
+                var params = {};
+
+
+                /*  params["Rows"] = config_copy["rows"];
+                params["Columns"] = config_copy["cols"];
+                params["Values"] = config_copy["vals"]; */
+                /*  params["Aggregator"] = config_copy["aggregatorName"];
+                params["Renderer"] = config_copy["rendererName"]; */
+               // try {
+              //  params["Inclusions"] = config_copy["inclusionsInfo"];
+              //  document.getElementById("inclusions").innerHTML = param["Inclusions"];
+              //  } catch (ex) {console.log("config_copy not found")};
+
+                try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) ;
+                } catch (ex) {console.log("inclusions not found")};
+
+                //  params["Exclusions"] = config_copy["exclusions"];
+                //console.log(params)
+
+                /// config_copy["renderers"] = renderers;
+                $("#parameters").html(JSON.stringify(params, undefined, 2));
+                //  $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+            //      console.log(params["Inclusions"]) ;
+                localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+                fixHeader();
+       
+
+                btn = document.getElementById("toggleHideUIButton");
+                        toggleHide(btn);
+
+         }
+
+
+
+
+        } else {
+        
+            // no config found, make it from scratch
+
+
+            var configobject = {};
+           // configobject["inclusions"] = {Plan:["19"]};
+            configobject["exclusions"] ={ Month:[""], Account:[""], 
+                                        Ledger:["DC01ACT", "DC02ACT","DC03ACT","DC04ACT","DC05ACT","DC06ACT","DC07ACT","DC08ACT","DC09ACT","DC10ACT","DC11ACT", ""]};
+            configobject["rows"] = ["Month"];
+            configobject["cols"] = ["Ledger"];
+            configobject["vals"] = ["Amount"];
+            configobject["hiddenAttributes"] = ["Month Num", "Month Text", "Fiscal Month","", "DateYear"];
+            configobject["aggregatorName"] = "Integer Sum";
+           // configobject["aggregator"] = ["Amount"];
+           // configobject["aggregators"] = {"Amount": ["Amount"] };
+         /*   configobject["aggregators"] = {
+                    "Amount": function() {
+                    return sum(intFormat)(["Amount"]);
+                }
+                }*/
+            configobject["rendererName"] =    "Row Heatmap";
+
+            configobject["renderers"] = renderers;
+            //configobject["filter"] = filterFun;
+            configobject["rendererOptions"] = rendererOptions;
+            configobject["dataClass"] = dataClass;
+           /* configobject["onRefresh"] =  function(config) {
+                                           console.log(JSON.parse(JSON.stringify(config)));
+                                           console.log(config.cols[0]);
+                                           $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                   } */
+
+                try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+
+            configobject.onRefresh = function (config) {
+            console.log("new state called");
+
+            var config_copy = JSON.parse(JSON.stringify(config));
+        //var config_copy = configobject;
+            //delete some values which are functions
+            delete config_copy["aggregators"];
+            delete config_copy["renderers"];
+            //delete some bulky default values
+            delete config_copy["rendererOptions"];
+            delete config_copy["localeStrings"];
+
+            var params = {};
+
+
+            try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+            // add exclusions to params if necessary
+
+            localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                console.log(config_copy) ;
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                fixHeader();
+
+                btn = document.getElementById("toggleHideUIButton");
+                        toggleHide(btn);
+
+                   }
+
+          
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+     
+
+
+
+       // var intFormat = numberFormat({digitsAfterDecimal: 0});
+
+        //var intFormat = numberFormat();
+
+
+        
+
+        Papa.parse(fileNameAndPath, {
+            download: true,
+            skipEmptyLines: true,
+            complete: function(parsed){
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+              
+              var fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
+
+                // var dateTest =  fetchHeader("/prac/infrastructure/charts/Expected Contributions Summary1.csv", "Last-Modified");
+
+                const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
+                var localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+
+
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+               // var fileDate = parsed.data[1][6];
+                document.getElementById("fileDate").textContent = localDate;
+
+               // console.log("First Balance:" + parsed.data[1][1]);
+                var fixedData = [];
+
+               // console.log(parsed);
+
+                if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
+
+               // dataObj = parsed.data;
+
+                jQuery.each(parsed.data, function(j, v) {
+                   /// console.log(y)
+
+                    var tmpRow = [];
+                    var thisRow = v;
+                   // console.log(j);
+                  //  if (v[0] == "FORMAT XLONE REPORT" || v[0] == "h.SET")
+                //    {
+                 //       //skip it
+                   // } else {
+                       // console.log("XLONE:" + fromXLOne);
+                        //if (fromXlOne) {
+                            if(j >= 2) {
+                                console.log("j > 2");
+                            tmpRow = thisRow.shift(); // XLone has phantom first cell: LIST
+                            console.log(thisRow);
+                            fixedData.push(thisRow);
+                           // fixedData.push(tmpRow)
+                            }
+                       // } else {
+                        //    console.log("pushing normal");
+                        //    tmpRow = thisRow;
+                        //    fixedData.push(tmpRow);
+                       // }
+
+                      
+
+                   // }
+                });
+
+                dataObj = fixedData;
+
+                jQuery.each(fixedData, function(k, val) {
+
+                    document.getElementById("progressTotal").innerHTML = fixedData.length;
+                    document.getElementById("progress").innerHTML = k+1;
+                   if(debug) console.log(val);
+                //  newVal = val[1].replace(/,/g,"");
+                    val[7] = val[7].replace(/,/g,"");  // this takes the commas out of the Amount value, because 
+                                                      // pivot.js doesn't handle thousand separators, although it does display them in results
+                    val.push(val[2]+"-"+val[3]);
+                  // console.log(val.key);
+
+                  if(k==0) {
+                      fixedData[k].push("DateYear"); // heading
+                  } else {
+                  var dateArr = val[5].split("/"); // date is value number 5
+                    var yearPart = parseInt(dateArr[2]); 
+                  if(yearPart < 25)  {
+                      yearPart += 2000;
+                  }
+
+                  var trDate = new Date(yearPart,dateArr[0]-1,dateArr[1]); // is coming out in stupid US format, except for 2 blank rows
+                  var trDateYear = (trDate.getFullYear()).toString();
+                  if(debug) console.log(trDate);
+                  if(debug) console.log(trDateYear);
+
+                 fixedData[k].push(trDateYear);
+                }
+                   // val[i] = parseInt(newVal);
+                })
+
+               // parsed[1].push("DateYear");
+
+                $("#output").pivotUI(fixedData, configobject);
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+            }
+        });
+       // var jsonData = Papa.parse("/prac/infrastructure/siteassets/scripts/data/AccountBalance.csv");
+       // console.log(jsonData.data);
+     });
+
+
+     function dataExport() {
+
+var myWindow = (window.open("", "", "width=600,height=600,scrollbars=1"));
+var tableTxt = "";
+var exportTableTxt = "";
+
+var tableId = "dataExportTable";
+
+var downloadLink;
+var dataType = 'application/vnd.ms-excel';
+
+
+var msgText = "<H2>JSON FORMAT:</H2><p>Save JSON to a text file, or copy it to a JSON viewer, like the one at <a href='https://jsongrid.com/json-grid'target='_blank'>jsongrid.com</a> </p>";
+
+myWindow.document.title="Export ..";
+
+myWindow.document.write(msgText + "<pre style='border:1px solid #dddddd;'>" + JSON.stringify(dataObj, null, "   ")+"</pre>");
+
+
+}
+
+
+function fixHeader() {
+
+var $table = $('table.pvtTable');
+
+/*
+// to use this flavor, you have to set .pvtRendererArea to a fixed height I think
+$table.floatThead({
+    scrollContainer: function($table){
+        return $table.closest('.pvtRendererArea');
+    },
+    position: 'fixed',
+    autoReflow: true
+}); 
+
+*/
+
+   $table.floatThead({
+  position: 'fixed',
+    //autoReflow: true
+}); 
+}
+
+
+function revert() {
+
+
+localStorage.clear();
+location.reload();
+
+}
+
+function toggleHide(obj) {
+    //   var mytable = $(".pvtUi");
+    //show_hide_column(1,true);
+    console.log(obj);
+    console.log("uiVisible:" + $(obj).attr("uiVisible"));
+
+    var uiVisible = $(obj).attr("uiVisible");
+
+    if(uiVisible == "true") {
+        $(".pvtAxisContainer").hide();
+        $(".pvtUiCell").hide();
+        $(obj).attr("uiVisible","false");
+        $(obj).attr("value","Show Chart Settings");
+        var $table = $('table.pvtTable');
+        $table.trigger('reflow');
+        } else {
+        $(".pvtAxisContainer").show();
+        $(".pvtUiCell").show();
+        $(obj).attr("uiVisible","true");
+        $(obj).attr("value","Hide Chart Settings");
+        var $table = $('table.pvtTable');
+        $table.trigger('reflow');
+    }
+
+}
+
+//this function stores pivatetable config to LocalStorage .. does it do anything?
+function saveState(config) {
+  console.log("save state called");
+  var config_copy = JSON.parse(JSON.stringify(config));
+     //delete some values which are functions
+     //delete config_copy["aggregators"];
+     delete config_copy["renderers"];
+     //delete some bulky default values
+    // delete config_copy["rendererOptions"];
+     delete config_copy["localeStrings"];
+     localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2));
+}
+
+
+
+        </script>
+             <div class="desc"><p>Data Date: <span id='fileDate'></span>.  Use the drop down arrow beside each parameter to filter the chart results. <a href="http://tscps/prac/infrastructure/SitePages/DC%20Ledger%20Report%20-%20XLOne.aspx" target="_blank" title="Upload Excel File to update the data in this chart (Excel source: Paul Drew/Bryan Unwin)"><img src="/contributionspaid/images/excel.jpg" height="20" width="20" /></a> 
+             </p>
+                            <p id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span></p>  
+                            <input type="button" value="Export JSON" onClick="dataExport()" /> 
+                            <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
+                            <input type="button" value="Hide Chart Settings" uiVisible="true" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" id="toggleHideUIButton" />    
+                        </div>
+        <div id="output"></div>
+
+
+</body>
+</html>
+
