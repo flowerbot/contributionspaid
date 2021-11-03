@@ -1,12 +1,17 @@
-<script>
-    $.ajax({
-  url: "https://api.github.com/users/flowerbot/repos/contributionspaid/commits?path=AccountBalances.html",
-  jsonp: true,
-  method: "GET",
-  dataType: "json",
-  success: function(res) {
-    console.log(res)
-  }
-});
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            $.ajax({
+                url: "https://api.github.com/users/flowerbot/repos/contributionspaid/commits?path=AccountBalances.html",
+                jsonp: true,
+                method: "GET",
+                dataType: "json",
+                success: function(res) {
+                    console.log(res)
+                }
+                });
+
+        });
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
