@@ -1,0 +1,527 @@
+<!-- currently not in use - saved for future editing potential -->
+<!-- can this be remade with the SP pivot?  or something similar ?-->
+<script src="/siteassets/scripts/tippy/classListPolyFill.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/SpRestLib@1.9.0/dist/sprestlib.bundle.js"></script>
+
+
+<!-- external libs from cdnjs -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="/prac/infrastructure/siteassets/scripts/jquery.floatTHead.min.js"></script>
+
+
+<!-- PivotTable.js libs from ../dist -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
+
+        <!-- subtotal.js libs from ../dist -->
+        <script type="text/javascript" src="/siteassets/scripts/PivotJS-subtotal/subtotal.js"></script>
+        <link rel="stylesheet" type="text/css" href="/siteassets/scripts/PivotJS-subtotal/subtotal.css">
+
+
+<style>
+    .pvtRowLabel {
+        font-weight:lighter;
+        text-align: left;
+    }
+
+    .rotate {
+       height: 90px;/* fixed height . set fixed width to rotated elements */
+       width: 110px !important;/* a liitle less than parents height */
+       -webkit-transform: rotate(310deg);
+          -moz-transform: rotate(310deg);
+          -ms-transform: rotate(310deg);
+          -o-transform: rotate(310deg);
+    transform: rotate(310deg) translatex(-64%) translatey(56%);
+      transform-origin: top left;
+      margin-right: -73px;
+     }
+
+     .alignRt {
+         text-align: right;
+     }
+
+     @media print {
+         .noprint {
+             display: none;
+         }
+     }
+
+
+/* extras for floating headers */
+.floatThead-container {
+    overflow: hidden;
+}
+
+.pvtFilterBox {
+    z-index: 2001;
+}
+/* ************************* */
+
+
+/* don't need anything more sophisticated than this */
+/* however it doesn't handle empty cells very well */
+.pvtTable thead tr th {
+
+position: sticky;
+top: 0;
+
+}
+
+</style>
+
+<script>
+
+var programList = "S94 Program";
+var spBaseUrl;
+var dataObj;
+
+
+
+//function startPivot() {
+    $(function(){
+
+
+
+
+              // CATCH THE SCROLL EVENT
+
+        // would normally be 'document' but this is especially for SharePoint:
+        var docBody = document.getElementById('s4-workspace');
+
+          docBody.addEventListener('scroll', function(e) {
+        //  document.getElementById('showScroll').innerHTML = window.pageYOffset + 'px';
+                  var $table = $('table.pvtTable');
+                  $table.trigger('reflow');
+          
+      });
+
+
+     spBaseUrl = _spPageContextInfo.webAbsoluteUrl;    
+
+
+
+    sprLib.list({name: programList,
+           // listCols:['Title', 'CascadeGoal','CascadeGoalLink','Owner/Id','Owner/Title','StrategicReviewFlag','StrategicReviewStatus','NextAction'],
+           // listCols: ['Audience','CommunicationChannel','TargetAudience', 'Date',  'AssignedToId', 'AssignedTo'],
+          // baseUrl: spBaseUrl}).items({queryFilter: 'Id eq \'' + itemIdINT + '\''}).then(function(arrRes) { 
+            baseUrl: spBaseUrl}).items({ queryLimit:5000 })
+            .then(function(arrRes) { 
+
+              //  console.log(arrRes);
+
+                var arrResStr = JSON.stringify(arrRes);
+
+                    arrResStr = arrResStr.replace(/_x0020_/g," ");
+
+
+
+                dataObj = JSON.parse(arrResStr);
+
+                console.log(dataObj);
+
+                // first get rid of 'not required' elements:
+
+                dataObj = dataObj.filter(function(el) {
+                    return el["Not Required"] != true && el["Ended"] == null;
+                });
+                
+                // then make a combo element for neater viewing
+                dataObj.forEach(function(d,i){
+
+                      var tempTitle = d["Title"];
+                      var tempItem = d["Item"];
+                      var tempSubitem = d["Subitem"];
+                      var subText = "";
+                      if(tempSubitem != null && tempSubitem != "") {
+                          if(tempSubitem.length > 30) { tempSubitem = tempSubitem.substring(0,30) + (" ...")}
+                          subText = " ("+ tempSubitem + ")";
+                      }
+                      dataObj[i]["Plan"] = d["S94 Plan Num"]; // just so its a smaller column name
+                      dataObj[i]["Type"] = d["Infrastructure Type"];
+                      var tempIndexDate = d["IndexDate"];
+                     // console.log(tempIndexDate);
+                      if(tempIndexDate != null) {
+                      dataObj[i]["Index Year"]=tempIndexDate.substring(0,7);
+                      } else {
+                        dataObj[i]["Index Year"]="none";
+                      }
+                      if(tempTitle.localeCompare(tempItem)!= 0) {
+                    dataObj[i]["Item Detail"] = d["Title"] + ": " + d["Item"] + subText;
+                      }
+                      else
+                      {
+                          dataObj[i]["Item Detail"] = d["Title"] + subText;
+                      }
+
+                }); 
+
+                console.log(dataObj);
+            }).then(function(){
+
+
+
+
+                  // for subototals
+        var dataClass = $.pivotUtilities.SubtotalPivotData;
+        //var renderer = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
+        //var renderer =  $.pivotUtilities.subtotal_renderers["Table With Subtotal Row Heatmap"];
+
+        var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.c3_renderers, $.pivotUtilities.export_renderers, $.pivotUtilities.subtotal_renderers);
+
+
+
+        var rendererOptions = {
+        //rendererOptions: {
+            table : {
+                clickCallback: function(e, value, filters, pivotData) {
+                var links = [];
+                pivotData.forEachMatchingRecord(filters,
+              //  function(record) { links.push(record.ProjectLink); });
+
+                //http://tscps/prac/infrastructure/Lists/S94%20Program/DispForm.aspx?ID=
+                function(record) { links.push(record.ID); });
+
+
+               // if (window.confirm("open the program item: "+ links[0] + " ?"))
+                if (window.confirm("open the Program List item?"))
+                {
+                    var win = window.open("http://tscps/prac/infrastructure/Lists/S94%20Program/DispForm.aspx?ID="+links[0], '_blank');
+                    win.focus();
+                }
+                } 
+
+            },
+            //config["heatmap"] = {
+
+
+            heatmap: {
+                colorScaleGenerator: function(values) {
+                    return d3.scale.linear()
+                     //   .domain(["1", "100000", "4000000", "9000000"])
+                      //  .domain([600000, 6000000])
+                      .domain([-6000000, 0, 600000])
+                      //  .range(["#FFF", "#FF3D5A"])
+                     //  .range(["#FFF", "#9AFF3D", "#F7FF3D", "#FF3D5A"])
+                        .range(["#9AFF3D", "#FFFFFF", "#FF0000"])
+                //}
+                }
+                },//;//, 
+        };
+
+
+        savedConfig = localStorage.getItem('pivotdatakey');
+
+
+
+    if (savedConfig) { // If a saved state found in LocalStorage, then load it
+         console.log("found a config object");
+
+        var configobject = JSON.parse(savedConfig); // Make it an object
+
+
+        configobject["renderers"] = renderers;
+        configobject["rendererOptions"] = rendererOptions;
+            //  console.log(JSON.stringify(configobject));
+        console.log(configobject);
+        configobject.onRefresh = function (config) {
+          console.log("save state called");
+          console.log(config);
+          var config_copy = JSON.parse(JSON.stringify(config));
+             //delete some values which are functions
+             delete config_copy["aggregators"];
+             delete config_copy["renderers"];
+             //delete some bulky default values
+             delete config_copy["rendererOptions"];
+             delete config_copy["localeStrings"];
+             
+            /// config_copy["renderers"] = renderers;
+
+
+            var params = {};
+
+
+          /*  params["Rows"] = config_copy["rows"];
+            params["Columns"] = config_copy["cols"];
+            params["Values"] = config_copy["vals"]; */
+          /*  params["Aggregator"] = config_copy["aggregatorName"];
+            params["Renderer"] = config_copy["rendererName"]; */
+            try {
+            params["Inclusions"] = config_copy["inclusionsInfo"];
+          } catch (ex) {console.log("config_copy not found")};
+          //  params["Exclusions"] = config_copy["exclusions"];
+          //console.log(params)
+
+           /// config_copy["renderers"] = renderers;
+             $("#parameters").html(JSON.stringify(params, undefined, 2));
+             $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+           //  fixHeader();
+
+             /*
+
+             // TODO: ONLY DOES THE FIRST CELL ... AND SEEMS OT MAKE THINGS V SLOW, IN IE AT LAST
+             // ok it depends on whether there's another grouped column as to which cell number it is
+             var AmountColNum = $(".pvtTable thead tr th").filter(function(i)
+                {return ($(this).text() == "Amount")}
+            ).index();
+          if(AmountColNum >=0) {
+              $(".pvtTable tbody tr th:nth-child("+(AmountColNum)+")").wrapInner("<div class='alignRt'></div>");
+          }
+         console.log("AmountColNum:" + AmountColNum);
+*/
+      //      console.log(params["Inclusions"]) ;
+             localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+            // console.log("ready now");
+         //    $(document).find(".se-pre-con").fadeOut("slow");
+    }
+
+  /*  $("#output").pivotUI(data, {
+      //onRefresh: function (config){
+      configobject
+  //    }
+    });
+    */
+            $("#output").pivotUI(dataObj, configobject);
+
+        }
+        else { // state not found in LocalStorage, so create a saved state
+
+
+
+
+  console.log("config object not found");
+    var configobject = {};
+           //configobject["exclusions"] ={ DeliveryYear:["Unknown"], trainingProject:["true"]};
+    configobject["rows"] = ["Plan", "Type","Item Detail","Amount","Index Year","IndexAmount"];
+    configobject["cols"] = ["IndexType"];
+    configobject["vals"] = ["Total"];
+   // configobject["aggregatorName"] = "Sum";
+    configobject["aggregatorName"] = "Integer Sum";
+    configobject["rendererName"] =    "Heatmap";
+    configobject["hiddenAttributes"] = ["Id","S94 PlanId","Data Date", "OData__OldID","OData__UIVersionString","FileSystemObjectType","ContentTypeId","Ended","EndedText","File Type0","Workflow Instance ID","Url Path","EditorId","AuthorId","Encoded Absolute URL","Not Required","GUID","Infrastructure Type","Path","URL Path","Attachments","Content Type"];
+
+
+      configobject["renderers"] = renderers;
+    //configobject["filter"] = filterFun;
+      configobject["rendererOptions"] = rendererOptions;
+
+
+      //    configobject["ExclusionsInfo"] ={trainingProject:["true"]};
+
+            //  console.log(JSON.stringify(configobject));
+    //          console.log(configobject);
+    configobject.onRefresh = function (config) {
+      console.log("new state called");
+    //  console.log(config);
+        var config_copy = JSON.parse(JSON.stringify(config));
+      //var config_copy = configobject;
+         //delete some values which are functions
+         delete config_copy["aggregators"];
+         delete config_copy["renderers"];
+         //delete some bulky default values
+         delete config_copy["rendererOptions"];
+         delete config_copy["localeStrings"];
+         //delete config_copy["hiddenAttributes"];
+
+         $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+        // fixHeader();
+
+         var AmountColNum = $(".pvtTable thead tr th").filter(function(i)
+            {return ($(this).text() == "Amount")}
+         ).index();
+
+         console.log("AmountColNum:" + AmountColNum);
+         //console.log($(AmountColNum).index());
+
+         var params = {};
+
+
+         localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                     console.log(config_copy) ;
+         //console.log("ready now");
+        // $(document).find(".se-pre-con").fadeOut("slow");
+        }
+
+        try {
+        params["Inclusions"] = configObject["inclusionsInfo"];
+        params["hiddenAttributes"] = configObject["hiddenAttributes"];
+
+        } catch (ex) {console.log("no inclusionsInfo found")};
+
+            $("#output").pivotUI(dataObj, configobject);
+            try {
+         $("#parameters").html(JSON.stringify(params, undefined, 2));
+        } catch (ex) {};
+
+     //   $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+      } //end if
+
+//************************************************
+
+
+/*
+        var sum = $.pivotUtilities.aggregatorTemplates.sum;
+        var numberFormat = $.pivotUtilities.numberFormat;
+       // var intFormat = numberFormat({digitsAfterDecimal: 0});
+
+        //var intFormat = numberFormat();
+        var intFormat = numberFormat({digitsAfterDecimal: 0});
+
+
+                $("#output").pivotUI(dataObj, {
+                   // renderers: $.pivotUtilities.d3_renderers,
+                   dataClass: dataClass,
+                //   rows: ["Plan","Title"], cols: ["Type"],
+                 //  rows: ["S94_x0020_Plan_x0020_Num","Title"], cols: ["Infrastructure_x0020_Type"],
+                   rows: ["Plan", "Type","Item Detail","Amount","Index Year","IndexType","IndexAmount"], cols: [],
+                  //  rows: ["Plan","Charge Control"], cols: ["ExpectedYear"],
+                    vals: ["Total"],
+                    renderers: renderers,
+                   // renderer: renderer,
+                    rendererOptions: rendererOptions,
+                   // exclusions: { Decision:["Refused","Surrenderd",""]},
+                    rendererName: "Row Heatmap",
+                    hiddenAttributes: ["Id","S94 PlanId","Data Date", "OData__OldID","OData__UIVersionString","FileSystemObjectType","ContentTypeId","Ended","EndedText","File Type0","Workflow Instance ID","Url Path","EditorId","AuthorId","Encoded Absolute URL","Not Required","GUID"],
+                  //  aggregator:sum(intFormat)(["Sum of Expected*"])
+                    aggregators:{
+      
+                        "Total": function() {
+                            //consol
+                         //   var balNum = parseFloat(["Balance"]);
+                            return sum(intFormat)(["Total"]);
+                        },
+                        "Amount": function() {
+                            //consol
+                         //   var balNum = parseFloat(["Balance"]);
+                            return sum(intFormat)(["Amount"]);
+                        },
+                       // "Balance": function() {return sum(["Balance"])},
+                       // "Expected": function() { return sum(intFormat)(["Expected"])},
+                    },
+                    onRefresh:
+                                           function(config) {
+                                           console.log(JSON.parse(JSON.stringify(config)));
+                                           console.log(config.cols[0]);
+                                           $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                   }
+                });
+                */
+
+            }); 
+
+          //  $("table th.pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+})
+
+
+function fixHeader() {
+    var $table = $('table.pvtTable');
+
+console.log($table.closest('.wrapper'));
+    $table.floatThead({
+        scrollContainer: function($table){
+            return $table.closest('.wrapper');
+        },
+         position: 'auto',
+        floatTableClass: 'pivotBody',
+        autoReflow: true
+    });
+}
+
+
+function dataExport() {
+
+        var myWindow = (window.open("", "", "width=600,height=600,scrollbars=1"));
+        var tableTxt = "";
+        var exportTableTxt = "";
+
+        var tableId = "dataExportTable";
+
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+
+
+        var msgText = "<H2>JSON FORMAT:</H2><p>Save JSON to a text file, or copy it to a JSON viewer, like the one at <a href='https://jsongrid.com/json-grid'target='_blank'>jsongrid.com</a> </p>";
+
+        myWindow.document.title="Export ..";
+
+        myWindow.document.write(msgText + "<pre style='border:1px solid #dddddd;'>" + JSON.stringify(dataObj, null, "   ")+"</pre>");
+
+
+}
+
+function revert() {
+
+
+    localStorage.clear();
+    location.reload();
+
+}
+
+function toggleHide(obj) {
+ //   var mytable = $(".pvtUi");
+ //show_hide_column(1,true);
+ console.log(obj);
+ console.log("uiVisible:" + $(obj).attr("uiVisible"));
+
+ var uiVisible = $(obj).attr("uiVisible");
+
+    if(uiVisible == "true") {
+        $(".pvtAxisContainer").hide();
+        $(".pvtUiCell").hide();
+        $(obj).attr("uiVisible","false");
+        $(obj).attr("value","Show Chart Settings");
+       // var $table = $('table.pvtTable');
+       // $table.trigger('reflow');
+    } else {
+        $(".pvtAxisContainer").show();
+        $(".pvtUiCell").show();
+        $(obj).attr("uiVisible","true");
+        $(obj).attr("value","Hide Chart Settings");
+        //var $table = $('table.pvtTable');
+        //        $table.trigger('reflow');
+    }
+
+}
+/*
+function show_hide_column(col_no, do_show,) {
+
+    var stl;
+    if (do_show) stl = 'block'
+    else         stl = 'none';
+
+    var tbl  = $("table.pvtUi")[0];
+    var rows = tbl.getElementsByTagName('tr');
+
+    for (var row=0; row<rows.length;row++) {
+    var cels = rows[row].getElementsByTagName('td')
+    cels[col_no].style.display=stl;
+    }
+}
+*/
+//Sys.Application.add_load(startPivot);
+
+</script>
+<div class='noprint'>
+<input type="button" value="Export JSON" onClick="dataExport()" /> 
+<input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
+<input type="button" value="Hide Chart Settings" uiVisible="true" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" />
+
+<div>Notes: <ul><li>This data is read directly from the SharePoint list called <a href='http://tscps/prac/infrastructure/Lists/S94%20Program/AllItems.aspx' target="_blank">S94 Program</a> 
+    and is filtered to exclude 'Ended' and 'Not Required' items.</li>
+   <li>  The view/edit form for individual line items can be opened by clicking the 'aggregated' cell for the item (usually 'Totals'.) </li>
+<li>"Item Detail" consists of 'Title' + 'Item' + 'Subitem'.</li>
+<li>"Amount" = original works program amount; "TotalExAdmin" = indexed Amount before 5% admin; "Total" = indexed Amount plus 5% admin</li>
+<li>* Recoupments are not up to date as at 20/5/2020</li>
+</ul>
+</div>
+</div>
+<div id="parameters"></div>
+<div id="output"></div>

@@ -1,0 +1,770 @@
+<!-- from CITransactionsPivot.js-->
+<!-- data is in ChargeTransactions Query.csv -->
+<!-- sql is in xxxx -->
+<!-- external libs from cdnjs -->
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+
+<!-- script type="text/javascript" src="/contributionspaid/scripts/jquery.floatTHead.min.js"></script -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/2.2.1/jquery.floatThead.min.js"></script>
+
+
+<!-- PivotTable.js libs from ../dist -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
+<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script>
+
+     <!-- subtotal.js libs from ../dist -->
+        <!-- base href= "/flowerbot/contributionspaid/blob/main/" -->
+	    <!-- base href= "/" -->
+        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
+        <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
+
+
+<style>
+    body {font-family: Verdana;}
+    th.pvtRowLabel {
+        white-space: nowrap;
+    }
+
+    .ms-webpartPage-root {
+        border-spacing: 0px;
+    }
+
+    .desc {
+        padding-bottom: 10px;
+        width: 80vw;
+    }
+
+
+    .rotate {
+       height: 90px;/* fixed height . set fixed width to rotated elements */
+       width: 110px !important;/* a liitle less than parents height */
+       -webkit-transform: rotate(310deg);
+          -moz-transform: rotate(310deg);
+          -ms-transform: rotate(310deg);
+          -o-transform: rotate(310deg);
+        transform: rotate(310deg) translatex(-64%) translatey(56%);
+        transform-origin: top left;
+        margin-right: -73px;
+     }
+
+#inclusions strong {
+    font-weight: 500;
+    color:lightseagreen;
+}
+
+.hidden {
+    display: none;
+}
+
+.popup {
+    color: blue;
+}
+
+/* extras for floating headers */
+.floatThead-container {
+    overflow: hidden;
+}
+
+.pvtFilterBox {
+    z-index: 2001;
+}
+/* ************************* */
+
+.pointer, .popup {
+    cursor: pointer;
+
+}
+
+
+.pointer:hover, .popup:hover {
+    color: blue;
+    text-decoration: underline;
+    background: url("/contributionspaid/icons/yellow.gif");
+}
+
+
+</style>
+
+
+<script type="text/javascript">
+
+    debug = false;
+    var dataObj;
+    var config = {};
+    var config_copy = {};
+  //  var amt = function(data,)
+    ///prac/infrastructure/charts/Expected Contributions.csv
+
+    $(function(){
+
+
+
+        /*
+                 // CATCH THE SCROLL EVENT
+
+        // would normally be 'document' but this is especially for SharePoint:
+        var docBody = document.getElementById('s4-workspace');
+
+        docBody.addEventListener('scroll', function(e) {
+      //  document.getElementById('showScroll').innerHTML = window.pageYOffset + 'px';
+                var $table = $('table.pvtTable');
+                $table.trigger('reflow');
+        
+    });
+ */
+
+        // for subototals
+        var dataClass = $.pivotUtilities.SubtotalPivotData;
+        var renderers = $.extend($.pivotUtilities.renderers, 
+            $.pivotUtilities.d3_renderers, 
+            $.pivotUtilities.plotly_renderers, 
+            $.pivotUtilities.subtotal_renderers,
+            $.pivotUtilities.export_renderers);
+        var tpl = $.pivotUtilities.aggregatorTemplates;
+        // nb: aggregators not used, because Paul's pc didn't like them, using default aggregators instead
+        var aggregators = {
+              "Units": function() {return tpl.sum()(["VALUE1"]) },
+              "Transaction Amount": function() {return tpl.sum()(["transAmount"])},
+              "Charge Amount": function() {return tpl.sum()(["chargeAmount"])}
+           // }
+          }
+        var sum = $.pivotUtilities.aggregatorTemplates.sum;
+        var numberFormat = $.pivotUtilities.numberFormat;
+        var intFormat = numberFormat({digitsAfterDecimal: 0});
+       /* var aggregators = {
+            "Amount": function() {
+              return sum(intFormat)(["Amount"]);
+          } */
+
+          var amtSum = function() {
+            return sum(intFormat)(["Amount"]);
+          };
+          
+        // "Balance": function() {return sum(["Balance"])},
+        // "Expected": function() { return sum(intFormat)(["Expected"])},
+    //}  
+
+        var rendererOptions = {
+        //rendererOptions: {
+            table : {
+                clickCallback: function(e, value, filters, pivotData) {
+                var links = [];
+                pivotData.forEachMatchingRecord(filters,
+                function(record) { links.push(record.AppNum); });
+
+                if (window.confirm("Open the consent register for APPLICATION_NO: "+ links[0] + " ?"))
+                {
+                    var win = window.open("http://staffintranet/ConsentRegister/RegisterDetail.asp?ID=" + links[0], '_blank');
+                    win.focus();
+                }
+                } 
+
+            },
+            //config["heatmap"] = {
+
+
+            heatmap: {
+                colorScaleGenerator: function(values) {
+                    return d3.scale.linear()
+                     //   .domain(["1", "100000", "4000000", "9000000"])
+                      //  .domain([600000, 6000000])
+                      .domain([-1, 10, 20])
+                      //  .range(["#FFF", "#FF3D5A"])
+                     //  .range(["#FFF", "#9AFF3D", "#F7FF3D", "#FF3D5A"])
+                        .range(["#9AFF3D", "#FFFFFF", "#FF0000"])
+                //}
+                }
+                },//;//, 
+        };
+
+        savedConfig = localStorage.getItem('pivotdatakey');
+        //var config
+
+        if (savedConfig) { // If a saved state found in LocalStorage, then load it
+                console.log("found a config object");
+
+                var configobject = JSON.parse(savedConfig); // Make it an object
+
+            //configobject["rendererName"] =    "Table With Subtotal Heatmap";
+
+            //console.log(configobject["rendererName"]);
+
+            configobject["renderers"] = renderers;
+            configobject["rendererOptions"] = rendererOptions;
+
+            configobject["dataClass"] = dataClass;
+           // configobject["aggregators"] = aggregators;
+          
+
+          //  if((configobject["rendererName"]) == null) configobject["rendererName"] =    "Table With Subtotal Heatmap";
+                //  console.log(JSON.stringify(configobject));
+            console.log(configobject);
+            configobject.onRefresh = function (config) {
+                console.log("save state called");
+                console.log(config);
+               // var 
+                config_copy = JSON.parse(JSON.stringify(config));
+                //delete some values which are functions
+                delete config_copy["aggregators"];
+                delete config_copy["renderers"];
+                //delete some bulky default values
+                delete config_copy["rendererOptions"];
+                delete config_copy["localeStrings"];
+                /// config_copy["renderers"] = renderers;
+
+
+                var params = {};
+
+
+                /*  params["Rows"] = config_copy["rows"];
+                params["Columns"] = config_copy["cols"];
+                params["Values"] = config_copy["vals"]; */
+                /*  params["Aggregator"] = config_copy["aggregatorName"];
+                params["Renderer"] = config_copy["rendererName"]; */
+               // try {
+              //  params["Inclusions"] = config_copy["inclusionsInfo"];
+              //  document.getElementById("inclusions").innerHTML = param["Inclusions"];
+              //  } catch (ex) {console.log("config_copy not found")};
+
+                try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+
+                //  params["Exclusions"] = config_copy["exclusions"];
+                //console.log(params)
+
+                /// config_copy["renderers"] = renderers;
+                $("#parameters").html(JSON.stringify(params, undefined, 2));
+                //  $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+            //      console.log(params["Inclusions"]) ;
+                localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                fixHeader();
+       
+         }
+
+
+
+        } else {
+        
+            // no config found, make it from scratch
+
+           
+
+            var configobject = {};
+            configobject["inclusions"] = {Plan:["S94-23"],LikelyExpired:["Expired"],"trAccountPrefix":[""]};
+           // configobject["exclusions"] ={ Plan:["89","90","91","92","93","94","95","96", "97","98","99"], trainingProject:["true"]};
+           //configobject["exclusions"] ={ accountPrefix:["ZFR"
+            configobject["rows"] = ["Plan", "Description","LikelyExpired","APPLICATION_REFERENCE","chargeAcPrefix", "transAc"];
+            configobject["cols"] = ["VALUEFIRST_LABEL"];
+            configobject["vals"] = ["VALUEFIRST", "V1", "V2", "V3", "V4", "chargeAmount", "transAmount-Payment"];
+
+           // configobject["aggregatorName"] = "Integer Sum";
+          //  configobject["aggregator"] = ["transAmount"] ;
+        
+         /* configobject["aggregators"] = {
+              "Units": function() {return tpl.sum()(["VALUE1"]) },
+              "Transaction Amount": function() {return tpl.sum()(["transAmount"])},
+              "Charge Amount": function() {return tpl.sum()(["chargeAmount"])}
+           // }
+          } */
+            //configobject["aggregators"] = {"Interger Sum": ["VALUE1","chargeAmount", "transAmount"] };
+           // configobject["aggregator"] = ["chargeAmount"];
+           // configobject["aggregators"] = {"Amount": ["Amount"] };
+         /*   configobject["aggregators"] = {
+                    "Amount": function() {
+                    return sum(intFormat)(["Amount"]);
+                }
+                }*/
+            
+           // configobject["rendererName"] =    "Table With Subtotal Heatmap";
+
+           configobject["aggregatorName"] = "Sum";
+            configobject["renderers"] = renderers;
+         //   configobject["aggregators"] = aggregators;
+            //configobject["filter"] = filterFun;
+            configobject["rendererOptions"] = rendererOptions;
+            configobject["dataClass"] = dataClass;
+
+            configobject["rendererName"] =    "Row Heatmap";
+
+           /* configobject["onRefresh"] =  function(config) {
+                                           console.log(JSON.parse(JSON.stringify(config)));
+                                           console.log(config.cols[0]);
+                                           $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                   } */
+
+                try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+
+            configobject.onRefresh = function (config) {
+            console.log("new state called");
+
+            var config_copy = JSON.parse(JSON.stringify(config));
+        //var config_copy = configobject;
+            //delete some values which are functions
+            delete config_copy["aggregators"];
+            delete config_copy["renderers"];
+            //delete some bulky default values
+            delete config_copy["rendererOptions"];
+            delete config_copy["localeStrings"];
+
+            var params = {};
+
+
+            try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+            // add exclusions to params if necessary
+
+            localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                console.log(config_copy) ;
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                fixHeader();
+
+                   }
+
+          
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+     
+
+
+
+       // var intFormat = numberFormat({digitsAfterDecimal: 0});
+
+        //var intFormat = numberFormat();
+
+
+        
+
+        Papa.parse("/contributionspaid/data/ChargeTransactions Query.csv", {
+            download: true,
+            skipEmptyLines: true,
+            header: true,
+            complete: function(parsed){
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+                //var fileDate = parsed.data[1][9];
+
+                var fileDate = fetchHeader("/contributionspaid/data/ChargeTransactions Query.csv", "Last-Modified");
+
+               // var dateTest =  fetchHeader("/prac/infrastructure/charts/Expected Contributions Summary1.csv", "Last-Modified");
+
+               const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
+                var localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+                //var localDateTest = new Date(dateTest);
+                
+                //console.log("local date:" + localDateTest);
+
+               // document.getElementById("fileDate").textContent = fileDate;
+                document.getElementById("fileDate").textContent = localDate;
+
+               // console.log("First Balance:" + parsed.data[1][1]);
+                var fixedData = [];
+
+               // console.log(parsed);
+
+                dataObj = parsed.data;
+
+               // console.log(parsed.data);
+               // console.log(dataObj);
+
+              //  var result2 = dataObj.filter(obj => {
+               // return obj["Application"] == "DA02/1599";
+               // });
+
+               // console.log("RESULT2:");
+                //console.log(result2);
+
+               // parsed[1].push("DateYear");
+
+                $("#output").pivotUI(parsed.data, configobject);
+              //  $("#output").pivotUI(dataObj, configobject);
+                dataCellListeners();
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+            }
+        });
+       // var jsonData = Papa.parse("/prac/infrastructure/siteassets/scripts/data/AccountBalance.csv");
+       // console.log(jsonData.data);
+     });
+
+
+     function dataExport() {
+
+            var myWindow = (window.open("", "", "width=600,height=600,scrollbars=1"));
+            var tableTxt = "";
+            var exportTableTxt = "";
+
+            var tableId = "dataExportTable";
+
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+
+
+            var msgText = "<H2>JSON FORMAT:</H2><p>Save JSON to a text file, or copy it to a JSON viewer, like the one at <a href='https://jsongrid.com/json-grid'target='_blank'>jsongrid.com</a> </p>";
+
+            
+
+            myWindow.document.write(msgText + "<pre style='border:1px solid #dddddd;'>" + JSON.stringify(dataObj, null, "   ")+"</pre>");
+            myWindow.document.title="Export ..";
+
+            }
+
+function revert() {
+
+
+localStorage.clear();
+location.reload();
+
+}
+
+
+function fixHeader() {
+
+    var $table = $('table.pvtTable');
+
+    /*
+    // to use this flavor, you have to set .pvtRendererArea to a fixed height I think
+    $table.floatThead({
+        scrollContainer: function($table){
+            return $table.closest('.pvtRendererArea');
+        },
+        position: 'fixed',
+        autoReflow: true
+    }); 
+
+    */
+
+    $table.floatThead({
+    position: 'fixed',
+        //autoReflow: true
+    }); 
+}
+
+
+
+function fetchHeader(url, wch) {
+    try {
+        var req=new XMLHttpRequest();
+        req.open("HEAD", url, false);
+        req.send(null);
+        if(req.status== 200){
+            return req.getResponseHeader(wch);
+        }
+        else return false;
+    } catch(er) {
+        return er.message;
+    }
+}
+
+
+function moreInfo() {
+    var styleStr = "<link rel='stylesheet' type='text/css' href='/prac/infrastructure/siteassets/scripts/attributeTableStyles.css'>";
+                var win = (window.open("", "", "resizable=1,width=600,height=500,scrollbars=1"));
+
+                var infoText = `<ul> 
+                    <li>Data is drawn from CI Rules Charges and related transactions, summarised by application > charge > transaction account. 
+                            <ul><li>'chAccount' (charge account) always contains a value and represents the initial charge transaction applied to a development consent;</li>
+                                <li>'trAccount' (transaction account) only contains a value if payments were made and, if present, represents one or more receipt transactions, summed.</li></ul>
+                                 </li>
+                                 <li>
+                                    Data source is named <a href='http://tscps/prac/infrastructure/Charts' target='_blank' title='click to open location'>ChargeTransactions Query.csv</a>.  It can be generated by either
+                                    <ul>
+                                        <li>Running <a href='http://tscps/prac/infrastructure/siteassets/scripts/SQL CODE FOR MS ACCESS-CI ATTRIBUTES.txt' target='_blank' title='click to open a text file containing the sql query'>this query</a> in MS Access (provided the required tables from CI have been connected) .. OR ...</li>
+                                        <li>Running the 'Attributes' Query on this node server:  <a href='http://CPU047514:5005' target='_blank'>http://CPU047514:5005</a> (server may not be running - if not, it can be fired up on Linda's pc - call 2729). </li>
+                                        </ul>
+                                        There's a slight discrepancy in results between the 2 methods, the node server version is more accurate.  In short, the MS Access method results in duplication of a (very) few charges.  The discrepancy is so small as to be insignificant.
+                                        In both cases the resulting data must be saved as CSV to <a href='http://tscps/prac/infrastructure/Charts' target='_blank'>http://tscps/prac/infrastructure/Charts</a>.
+                                    </li>
+                                    <li><strong>Paid/Unpaid:  </strong>If there were payments, there will be an entry in these columns: transAcPrefix, transAc, transAmount (transAc = 'transaction account').  If there has been no payment, these columns will be empty.</li>
+                                <li> <strong>Attributes:  </strong>All infrastructure charges are set up to use a charge attribute and may use one or more of VALUES 1-4.  
+                                    The first used value and label has been copied into a new field called "VALUEFIRST" AND "VALUEFIRST_LABEL" so that multiple plans can be reviewed in the same output.  Note that where plans use more than one value on the same attribute those additional values will have to be summed separately. 
+                                    <br /><br />Click the 'attribute list' link on the main report page to view all possible attributes.</li>
+
+                                <li><strong>Default view:  </strong>The default view (click 'Revert') shows Plan 23 rows with NO PAYMENTS and indicates likely EXPIRED consents:
+                                    <ul> 
+                                        <li>DA consents were issued and charges were raised, but no payment has yet been made.  </li>
+                                    <li>VALUEFIRST contains the charge attribute's VALUE1 in this case -this records the number of spaces originally input to calculate the charge. </li> 
+                                    <li>VALUEFIRST_LABEL contains the charge attribute's VALUE1_LABEL and is how we know that VALUE1 contains '# Car Spaces' in this case.</li>
+                                    <li>Expired consents are calculated from the date of the original charge, assuming the charge was created at the time of issuing the consent.</li>
+                                </ul>
+                                   <li><strong>Subtotal view limits:  </strong>The default view is 'Row Heatmap', change the view to 'Table with Subtotal' to get quick access to summary totals. 
+                                        Unfortunately the 'Table with Subtotal' views don't save properly so when returning to the report, click 'Revert' to refresh the report, or remember to change 
+                                        to a non-subtotal view before leaving the page. <i>Check <a href='https://github.com/nagarajanchinnasamy/subtotal/issues/70' target="_blank">author's issue page</a> item re 'configuration' for future fixes.</i></li>
+                                </i>
+                               </ul>`
+                win.document.write(styleStr + "<table>" + infoText + "</table>");
+                win.document.title = "More Info ..";
+}
+
+function valueInfo() {
+    //alert("something");
+
+    Papa.parse("/prac/infrastructure/charts/DAInfAtt Values Used.csv", {
+            download: true,
+            skipEmptyLines: true,
+            complete: function(parsed){
+
+                attObj = parsed.data;
+                var tableTxt = "";
+                jQuery.each(attObj, function(k,val) {
+                    console.log(val);
+                    tableTxt += "<tr>";
+                    val.forEach((v,i,arr) => {
+                        tableTxt += ("<td>" + v + "</td>");
+                    })
+                        tableTxt += "</tr>";
+
+                })
+
+                var styleStr = "<link rel='stylesheet' type='text/css' href='/prac/infrastructure/siteassets/scripts/attributeTableStyles.css'>";
+                var win = (window.open("", "", "width=720,height=580,scrollbars=1"));
+                //win.document.title = "Possible Attributes ..";
+                win.document.write(styleStr + "<table>" + tableTxt + "</table>"); //.title = "blah2";
+                win.document.title = "Possible Attributes ..";
+                
+                //var tableT
+            }
+        });
+}
+
+function toggleHide(obj) {
+    //   var mytable = $(".pvtUi");
+    //show_hide_column(1,true);
+    console.log(obj);
+    console.log("uiVisible:" + $(obj).attr("uiVisible"));
+
+    var uiVisible = $(obj).attr("uiVisible");
+
+    if(uiVisible == "true") {
+        $(".pvtAxisContainer").hide();
+        $(".pvtUiCell").hide();
+        $(obj).attr("uiVisible","false");
+        $(obj).attr("value","Show Chart Settings");
+        var $table = $('table.pvtTable');
+        $table.trigger('reflow');
+        } else {
+        $(".pvtAxisContainer").show();
+        $(".pvtUiCell").show();
+        $(obj).attr("uiVisible","true");
+        $(obj).attr("value","Hide Chart Settings");
+        var $table = $('table.pvtTable');
+        $table.trigger('reflow');
+    }
+
+}
+
+//this function stores pivatetable config to LocalStorage .. does it do anything?
+function saveState(config) {
+  console.log("save state called");
+  var config_copy = JSON.parse(JSON.stringify(config));
+     //delete some values which are functions
+     delete config_copy["aggregators"];
+     delete config_copy["renderers"];
+     //delete some bulky default values
+    // delete config_copy["rendererOptions"];
+     delete config_copy["localeStrings"];
+     localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2));
+}
+
+function climbTo(element,tagname){
+    var pa=element.parentNode;
+    while(pa.tagName.toLowerCase()!=tagname.toLowerCase()){
+    pa=pa.parentNode;
+    }
+    return pa;
+}
+
+function dataCellListeners() {
+	console.log("dataCellListeners started");
+	document.addEventListener("click", function(evt) {
+		if (evt.target.classList.contains("pvtRowLabel")) {
+			theaders = [];
+			numcols = 0;
+			var wholeTable = climbTo(evt.target, "table");
+			var checkFloatingHeader = document.querySelectorAll(".floatThead-container");
+			var headerSection;
+			if (checkFloatingHeader.length == 0) {
+				headerSection = wholeTable.querySelector("thead");
+			} else {
+				headerSection = checkFloatingHeader[0].querySelector("thead");
+			}
+			var headerRow = headerSection.rows[headerSection.rows.length - 1];
+			//  console.log(wholeTable.querySelectorAll("tr")[0]);
+			headerRow.querySelectorAll("th").forEach(function(x) {
+				//  console.log(x.textContent);
+				theaders.push(x.innerHTML);
+			})
+			numcols = theaders.length;
+			//console.log("index:" + evt.target.cellIndex);
+			index = evt.target.cellIndex;
+			//var column = theaders[evt.target.cellIndex];
+			var parentRow = climbTo(evt.target, "tr");
+			var rowCells = parentRow.querySelectorAll("th");
+			numRowCells = rowCells.length;
+			//var column = evt.target.headerCells;
+			//console.log(parentRow);
+			var addI = numcols - numRowCells - 1;
+			var header = theaders[index + addI];
+			  console.log(header);
+			cellLink(header, evt.target.innerHTML);
+		}
+		//  console.log(evt.target);
+	});
+	document.addEventListener("mouseover", function(evt) {
+		if (evt.target.classList.contains("pvtRowLabel")) {
+			//  console.log(evt.target);
+			theaders = [];
+			numcols = 0;
+			// alert("table clicked");
+			//  console.log(evt);
+			var wholeTable = climbTo(evt.target, "table");
+			// console.log(wholeTable);
+			var headerSection; // = wholeTable.querySelector("thead");
+			var checkFloatingHeader = document.querySelectorAll(".floatThead-container");
+		//	var headerSection;
+			if (checkFloatingHeader.length == 0) {
+				headerSection = wholeTable.querySelector("thead");
+			} else {
+				headerSection = checkFloatingHeader[0].querySelector("thead");
+			}
+			var headerRow = headerSection.rows[headerSection.rows.length - 1];
+			//  console.log(wholeTable.querySelectorAll("tr")[0]);
+			headerRow.querySelectorAll("th").forEach(function(x) {
+				//   console.log(x.textContent);
+				theaders.push(x.textContent);
+			})
+			numcols = theaders.length;
+			// console.log("index:" + evt.target.cellIndex);
+			index = evt.target.cellIndex;
+			//var column = theaders[evt.target.cellIndex];
+			var parentRow = climbTo(evt.target, "tr");
+			var rowCells = parentRow.querySelectorAll("th");
+			numRowCells = rowCells.length;
+			var addI = numcols - numRowCells - 1;
+			var header = theaders[index + addI];
+			// console.log(header);
+			cellHover(header, evt.target);
+		}
+	});
+} // end dataCellListeners Function
+
+
+
+function cellHover(type, el) {
+
+    var hoverTypes = ["Application", "PropNum"];
+
+    if (hoverTypes.indexOf(type) >-1 ) {
+
+            el.classList.add("pointer");
+        }
+}
+
+function cellLink(type,value) {
+
+    console.log("type:" + type + "; value:" + value);
+   // console.log(dataObj);
+    var result = dataObj.filter(obj2 => {
+        return obj2[type] == value;
+        });
+
+
+    //console.log("RESULT:");
+    //console.log(result);
+
+    var url = "";
+     if(type == "Application") {
+         // console.log("type:" + type + ":value:" + value);
+          url = "http://staffintranet/ConsentRegister/registerDetail.asp?ID=" + result[0]["AppNum"];
+
+
+
+          } else 
+    if(type == "PropNum") {
+
+            url = "http://srv-mbah-wvprd:8080/weave/basemap.html?search=search.usrgis&property_no=" + result[0]["PropNum"];
+
+        } else
+    if(type == "LandNum") {
+            url = "http://srv-mbah-wvprd:8080/weave/basemap.html?search=search.usrgis&land_no=" + result[0]["LandNum"];
+        }
+
+            //    console.log(url);
+
+            if (url != "") {
+
+                window.open(url, '_blank');
+
+                }
+
+    }
+
+
+
+        </script>
+             <div class="desc"><p>Data Date: <span id='fileDate'></span>.  Use the drop down arrow beside each parameter to filter the chart results. 
+                <a class="hidden" href="http://tscps/prac/infrastructure/SitePages/Upload%20Financial%20Data.aspx" target="_blank" title="Upload Excel File to update the data in this chart (Excel source: Paul Drew/Bryan Unwin)"><img src="/contributionspaid/images/excel.jpg" height="20" width="20" /></a> 
+             </p>
+                            
+                            
+                               <p> Uses summarised infrastructure charge transactions in CI by charge. This data set displays a single and separate row for each infrastructure charge applied to an application (DA or DWY). <i class='popup' onclick='moreInfo()' title="click to view detailed info about this chart">more info</i> ~ <i title='Click for possible attributes' class='popup' onclick="valueInfo()">attribute list</i></p>
+                              
+                            
+                            <p id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span></p>  
+                            <input type="button" value="Export JSON" onClick="dataExport()" /> 
+                            <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
+                            <input type="button" value="Hide Chart Settings" uiVisible="true" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" />    
+                        </div>
+        <div id="output"></div>
+
+
+       
+
