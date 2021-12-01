@@ -101,7 +101,9 @@
     var configRows;
     var configCols;
     var configRenderer;
+    var hiddenAttributes = ["FileDate","FileDateNum","DataDate"];
     var configInc = {};
+
     var configIncDefault = {Plan: ["19"],
                     Type: ["Admin Levy","Expenditure recoupment"]};
 
@@ -140,10 +142,29 @@
     }
 }
 
-var fileNameAndPath = "/contributionspaid/data/DC Recoupments.csv";
+var fileNameAndPath = "/contributionspaid/data/DC RecoupmentsClean.csv";
 
 var fromXlOne = false;
 
+
+function ExcelDateToJSDate(serial) {
+   var utc_days  = Math.floor(serial - 25569);
+   var utc_value = utc_days * 86400;                                        
+   var date_info = new Date(utc_value * 1000);
+
+   var fractional_day = serial - Math.floor(serial) + 0.0000001;
+
+   var total_seconds = Math.floor(86400 * fractional_day);
+
+   var seconds = total_seconds % 60;
+
+   total_seconds -= seconds;
+
+   var hours = Math.floor(total_seconds / (60 * 60));
+   var minutes = Math.floor(total_seconds / 60) % 60;
+
+   return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+}
 
 
     $(function(){
@@ -285,6 +306,9 @@ var fromXlOne = false;
             configobject["rendererOptions"] = rendererOptions;
 
             configobject["dataClass"] = dataClass;
+            configobject["hiddenAttributes"] = hiddenAttributes;
+
+            
 
 
             if(selectedASet) {
@@ -375,6 +399,7 @@ var fromXlOne = false;
             
 
             configobject = {};
+            configobject["hiddenAttributes"] = hiddenAttributes;
             configobject["inclusions"] = configInc; // {Plan:["19"]};
             configobject["exclusions"] ={ Plan:["89","90","91","92","93","94","95","96", "97","98","99"], trainingProject:["true"]};
             configobject["rows"] = configRows;
@@ -463,25 +488,10 @@ var fromXlOne = false;
 
 
 
-
-
-
-  
-
-
-     
-
-
-
-       // var intFormat = numberFormat({digitsAfterDecimal: 0});
-
-        //var intFormat = numberFormat();
-
-
         
-        //Papa.parse("/prac/infrastructure/siteassets/scripts/data/DC Recoupments.csv", {
         Papa.parse(fileNameAndPath, {
             download: true,
+            header: true,
             skipEmptyLines: true,
             complete: function(parsed){
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
@@ -493,141 +503,34 @@ var fromXlOne = false;
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
+                   // hour: 'numeric',
+                  //  minute: 'numeric',
                     timeZoneName: 'short'
                     };
 
 
+                var fixedData = parsed.data;
                 var curPath = window.location.href;
                 var fileDate = "";
                 var localDate = "";
 
-                if(curPath.indexOf("github")>=0) {
 
-                    fileDate = "<a href='https://github.com/flowerbot/contributionspaid/blob/main/data/DC%20Recoupments.csv' target='_blank'>See GitHub commit date</a>";
-                    localDate = fileDate;
-
-                } else {
-
-                 fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
+                fileDate= ExcelDateToJSDate(parseFloat(fixedData[0].DataDate));
                 localDate = new Date(fileDate).toLocaleDateString('en-au', options);
-                }
 
+                var dataLen = fixedData.length;
 
-              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
-               // var fileDate = parsed.data[1][6];
                 document.getElementById("fileDate").innerHTML = localDate;
+      
+                document.getElementById("progress").innerHTML = dataLen;
 
-               // console.log("First Balance:" + parsed.data[1][1]);
-                var fixedData = [];
-
-               // console.log(parsed);
-
-                if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
-
-               // dataObj = parsed.data;
-                    var emptyCols = [];
-                jQuery.each(parsed.data, function(j, v) {
-                   /// console.log(y)
-
-                    var tmpRow = [];
-                    var tmpRow1 = [];
-                    var thisRow = v;
-                   // console.log(j);
-                  //  if (v[0] == "FORMAT XLONE REPORT" || v[0] == "h.SET")
-                //    {
-                 //       //skip it
-                   // } else {
-                       // console.log("XLONE:" + fromXLOne);
-                        //if (fromXlOne) {
-                            if(j >= 2) {
-                           //     console.log("j > 2");
-                            tmpRow = thisRow.shift(); // XLone has phantom first cell: LIST
-                           // console.log(thisRow);
-
-                          // console.log(thisRow);
-
-                           if (tmpRow[0] == "*") {
-
-                            thisRow.forEach((col,x) => {
-                                if(col == "") {
-                                    emptyCols.push(x);
-                                  //  console.log(emptyCols);
-                                } else {
-                                    tmpRow1.push(col);
-                                }
-                            })
-
-                           } else {
-                               thisRow.forEach((col, x) => {
-                                   if(!(x in emptyCols)) {
-                                       tmpRow1.push(col);
-                                   }
-                               })
-                           };
-                            
-                          // console.log(tmpRow1);
-                          // console.log(thisRow);
-                            fixedData.push(thisRow);
-                           // fixedData.push(tmpRow1);
-                            }
-                       // } else {
-                        //    console.log("pushing normal");
-                        //    tmpRow = thisRow;
-                        //    fixedData.push(tmpRow);
-                       // }
-
-                      
-
-                   // }
-                });
-
-                dataObj = fixedData;
-
-                jQuery.each(fixedData, function(k, val) {
-
-                    document.getElementById("progressTotal").innerHTML = fixedData.length;
-                    document.getElementById("progress").innerHTML = k+1;
-                   if(debug) console.log(val);
-                //  newVal = val[1].replace(/,/g,"");
-                try {
-                    val[7] = val[7].replace(/,/g,"");  // this takes the commas out of the Amount value, because 
-                                                      // pivot.js doesn't handle thousand separators, although it does display them in results
-                } catch (ex) {}
-                    val.push(val[2]+"-"+val[3]);
-                  // console.log(val.key);
-
-                  if(k==0) {
-                      fixedData[k].push("DateYear"); // heading
-                  } else {
-                      try {
-                            var dateArr = val[5].split("/"); // date is value number 5
-                                var yearPart = parseInt(dateArr[2]); 
-                            if(yearPart < 25)  {
-                                yearPart += 2000;
-                            }
-
-                            var trDate = new Date(yearPart,dateArr[0]-1,dateArr[1]); // is coming out in stupid US format, except for 2 blank rows
-                            var trDateYear = (trDate.getFullYear()).toString();
-                            if(debug) console.log(trDate);
-                            if(debug) console.log(trDateYear);
-                            } catch (ex) {}
-
-                 fixedData[k].push(trDateYear);
-                }
-                   // val[i] = parseInt(newVal);
-                })
-
-               // parsed[1].push("DateYear");
+                document.getElementById("progressTotal").innerHTML = dataLen;
 
                 $("#output").pivotUI(fixedData, configobject);
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             }
         });
-       // var jsonData = Papa.parse("/prac/infrastructure/siteassets/scripts/data/AccountBalance.csv");
-       // console.log(jsonData.data);
      });
 
 
