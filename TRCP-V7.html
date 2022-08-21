@@ -757,12 +757,7 @@ var fromXlOne = false;
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
               console.log("Parsed:");
               console.log(parsed.data);
-
-              var fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
-
-                // var dateTest =  fetchHeader("/prac/infrastructure/charts/Expected Contributions Summary1.csv", "Last-Modified");
-
-                const options = {
+              const options = {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
@@ -771,12 +766,27 @@ var fromXlOne = false;
                     minute: 'numeric',
                     timeZoneName: 'short'
                     };
-                var localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+
+
+                var curPath = window.location.href;
+                var fileDate = "";
+                var localDate = "";
+
+                if(curPath.indexOf("github")>=0) {
+
+                    fileDate = "<a href='https://github.com/flowerbot/contributionspaid/blob/main/data/TRCP%20V7.csv' target='_blank'>See GitHub commit date</a>";
+                    localDate = fileDate;
+
+                } else {
+
+                 fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
+                localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+                }
 
 
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
                // var fileDate = parsed.data[1][6];
-                document.getElementById("fileDate").textContent = localDate;
+                document.getElementById("fileDate").innerHTML = localDate;
 
                // console.log("First Balance:" + parsed.data[1][1]);
                 var fixedData = [];

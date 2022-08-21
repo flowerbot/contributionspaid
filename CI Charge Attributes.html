@@ -388,11 +388,7 @@
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
                 //var fileDate = parsed.data[1][9];
 
-                var fileDate = fetchHeader("/contributionspaid/data/ChargeTransactions Query.csv", "Last-Modified");
-
-               // var dateTest =  fetchHeader("/prac/infrastructure/charts/Expected Contributions Summary1.csv", "Last-Modified");
-
-               const options = {
+                const options = {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
@@ -401,13 +397,25 @@
                     minute: 'numeric',
                     timeZoneName: 'short'
                     };
-                var localDate = new Date(fileDate).toLocaleDateString('en-au', options);
-                //var localDateTest = new Date(dateTest);
-                
-                //console.log("local date:" + localDateTest);
 
-               // document.getElementById("fileDate").textContent = fileDate;
-                document.getElementById("fileDate").textContent = localDate;
+
+                var curPath = window.location.href;
+                var fileDate = "";
+                var localDate = "";
+
+                if(curPath.indexOf("github")>=0) {
+
+                    fileDate = "<a href='https://github.com/flowerbot/contributionspaid/blob/main/data/ChargeTransactions%20Query.csv' target='_blank'>See GitHub commit date</a>";
+                    localDate = fileDate;
+
+                } else {
+
+                 fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
+                localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+                }
+
+
+                document.getElementById("fileDate").innerHTML = localDate;
 
                // console.log("First Balance:" + parsed.data[1][1]);
                 var fixedData = [];
