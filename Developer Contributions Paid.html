@@ -422,6 +422,16 @@ var fileNameAndPath = "/contributionspaid/data/Summarised Charges Query-ZFRI ONL
 var fromXlOne = false;
 
 
+function getFileDate(path) {
+    fetch(path)
+.then(response => response.blob())
+.then(blob => {
+  const file = new File([blob], blob.name);
+  console.log(file.lastModifiedDate, file.lastModified);
+  document.getElementById("fileDate").innerHTML = file.lastModifiedDate;
+  return file.lastModifiedDate;
+});
+}
 
     $(function(){
 
@@ -785,10 +795,10 @@ var fromXlOne = false;
 
 
                 var curPath = window.location.href;
-                var fileDate = "";
+                //var fileDate = "";
                 var localDate = "";
 
-                if(curPath.indexOf("github")>=0) {
+                /*if(curPath.indexOf("github")>=0) {
 
                     fileDate = "<a href='https://github.com/flowerbot/contributionspaid/blob/main/data/Summarised%20Charges%20Query-ZFRI%20ONLY-DPI%20Report.txt' target='_blank'>See GitHub commit date</a>";
                     localDate = fileDate;
@@ -797,13 +807,13 @@ var fromXlOne = false;
 
                  fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
                 localDate = new Date(fileDate).toLocaleDateString('en-au', options);
-                }
+                }*/
 
-
+                fileDate = getFileDate(fileNameAndPath);
 
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
                // var fileDate = parsed.data[1][6];
-                document.getElementById("fileDate").innerHTML = localDate;
+                //document.getElementById("fileDate").innerHTML = localDate;
 
                // console.log("First Balance:" + parsed.data[1][1]);
                 var fixedData = [];
