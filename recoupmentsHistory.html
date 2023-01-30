@@ -164,11 +164,22 @@ function ExcelDateToJSDate(serial) {
    return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
 }
 
+function getFileDate(path) {
+    fetch(path)
+.then(response => response.blob())
+.then(blob => {
+  const file = new File([blob], blob.name);
+  console.log(file.lastModifiedDate, file.lastModified);
+  document.getElementById("fileDate").innerHTML = file.lastModifiedDate;
+  return file.lastModifiedDate;
+});
+}
+
 
     $(function(){
 
 
-
+        getFileDate(fileNameAndPath);
 /*        
         // CATCH THE SCROLL EVENT
 
@@ -513,12 +524,12 @@ function ExcelDateToJSDate(serial) {
                 var localDate = "";
 
 
-                fileDate= ExcelDateToJSDate(parseFloat(fixedData[0].DataDate));
-                localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+                //fileDate= ExcelDateToJSDate(parseFloat(fixedData[0].DataDate));
+                localDate = getFileDate(fileNameAndPath);//new Date(fileDate).toLocaleDateString('en-au', options);
 
                 var dataLen = fixedData.length;
 
-                document.getElementById("fileDate").innerHTML = localDate;
+                //document.getElementById("fileDate").innerHTML = localDate;
       
                 document.getElementById("progress").innerHTML = dataLen;
 
