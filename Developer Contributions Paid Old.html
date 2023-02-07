@@ -161,8 +161,6 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     var dataObj;
     var config = {};
 
-    var yearArray = [String(new Date().getFullYear()-2), String(new Date().getFullYear()-1), String(new Date().getFullYear())];
-
     var configobject;
     var configRows;
     var configCols;
@@ -179,7 +177,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     var configRowsApplications = ["ApprovalYear", "Application ID", "Short Description", "locality"];
     var configColsApplications = ["Purpose"];
     var configRendererApplications = ["Table"];
-    var configIncApplicationsType = yearArray;//["Admin Levy","Expenditure Applicationsment"];
+    var configIncApplicationsType = [];//["Admin Levy","Expenditure Applicationsment"];
     var configRowsPies = ["Levy"];
     var configColsPies = ["Purpose"];
     var configRendererPies = "Multiple Pie Chart";
@@ -191,8 +189,6 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     var selectedASet = false;
   //  var amt = function(data,)
     ///prac/infrastructure/charts/Expected Contributions.csv
-
-    console.log("appType:", configIncApplicationsType);
 
     var sorters = {
         "Purpose": $.pivotUtilities.sortAs(
@@ -421,7 +417,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     }
 }
 
-var fileNameAndPath = "/contributionspaid/data/Summarised Charges Query Improved.csv";
+var fileNameAndPath = "/contributionspaid/data/Summarised Charges Query-ZFRI ONLY-DPI Report.txt";
 
 var fromXlOne = false;
 
@@ -551,7 +547,7 @@ function getFileDate(path) {
 
 
         if (localStorage.getItem('pivotdatainc'+storageTag) !== null) {
-            configInc["ApprovalYear"] = configIncApplicationsType;
+            configInc["Type"] = configIncApplicationsType;
             savedinclusions = localStorage.getItem('pivotdatainc'+storageTag);
             configInc = (configInc) ? JSON.parse(savedinclusions) : configIncDefault;
         
@@ -598,7 +594,7 @@ function getFileDate(path) {
                 delete configobject["rendererName"];
                 configobject["rendererName"] = configRenderer;
                 localStorage.removeItem("selectSet"+storageTag);
-                configobject["inclusions"]["ApprovalYear"] = configIncApplicationsType;
+                configobject["inclusions"]["Type"] = configIncApplicationsType;
               // configobject["inclusions"] = configInc;  // don't know if its a good idea to reset it it every time or not
                 selectedASet = false;
             } else {
@@ -651,19 +647,12 @@ function getFileDate(path) {
                     });
 		  } catch(ex) {}
 
-                    let uiVis = localStorage.getItem('uivisible') === null ? "true" : localStorage.getItem('uivisible');
+                    uiVis = localStorage.getItem('uivisible');
                     console.log("uiVis from saved:" + uiVis);
-                    btn = document.getElementById("toggleHideUIButton");
-                if(uiVis == "false" ) {
-                        
-                        $(btn).attr("value", "Show Chart Settings");
-                        $(btn).attr("uivisible", "false");
-                        localStorage.setItem("uiVisible","false");
-                       toggleHide(btn, uiVis);
-                        
+                if(uiVis == "false" || uiVis == undefined) {
+                        btn = document.getElementById("toggleHideUIButton");
+                        toggleHide(btn, false);
                 }
-
-                
 
 
 
@@ -680,7 +669,7 @@ function getFileDate(path) {
 
             configobject = {};
             configobject["inclusions"] = configInc; // {Plan:["19"]};
-            configobject["exclusions"] = { PAID: ["0.000000"]}; //{ Plan:["89","90","91","92","93","94","95","96", "97","98","99"], trainingProject:["true"]};
+            configobject["exclusions"] = {}; //{ Plan:["89","90","91","92","93","94","95","96", "97","98","99"], trainingProject:["true"]};
             configobject["rows"] = configRows;
             configobject["cols"] = configCols;
             configobject["vals"] = ["PAID"];
@@ -753,19 +742,13 @@ function getFileDate(path) {
                     });
 		} catch (ex) {}
 
-                    //uiVis = localStorage.getItem('uivisible');
-                    let uiVis = localStorage.getItem('uivisible') === null ? "true" : localStorage.getItem('uivisible');
+                    uiVis = localStorage.getItem('uivisible');
 
                     console.log("uiVis from new:" + uiVis);
-                //if(uiVis == "false" || uiVis != null) {
-                    if(uiVis == "false") {
+                if(uiVis == "false" || uiVis == null) {
                         btn = document.getElementById("toggleHideUIButton");
-                       // $(btn).attr("value", "Show Chart Settings");
-                       // $(btn).attr("uivisible", "false");
-                        toggleHide(btn, uiVis);
+                        toggleHide(btn, false);
                 }
-
-
 
                     colorLevy();
 
@@ -842,24 +825,15 @@ function getFileDate(path) {
                // dataObj = parsed.data;
                     var emptyCols = [];
          
-                // i[15] is the 'PAID' column
-                let dataObj = parsed.data.filter(function(i) {
-                    return i[15] != "0.000000";
-                });
 
-            
-                console.log("dataOBJ:");
-                console.log(dataObj);
+                dataObj = parsed.data;
 
-                document.getElementById("progressTotal").innerHTML = dataObj.length;
-                    document.getElementById("progress").innerHTML = dataObj.length;
+                document.getElementById("progressTotal").innerHTML = parsed.data.length;
+                    document.getElementById("progress").innerHTML = parsed.data.length;
 
  
-                  //  $("#output").pivotUI(parsed.data, configobject);
 
-                $("#output").pivotUI(parsed.data.filter(function(i) {
-                    return i[15] != "0.000000";
-                }), configobject); 
+                $("#output").pivotUI(parsed.data, configobject);
 
               /*  uiVis = localStorage.getItem('uivisible');
                 if(uiVis == "false" || uiVis == undefined) {
@@ -971,7 +945,7 @@ function selectChange(el) {
             //	localStorage.setItem('pivotdatafullrows',JSON.stringify(configRows, undefined, 2));
 			configRows = configRowsApplications;
             configCols = configColsApplications;
-            configInc["ApplicationYear"] = configIncApplicationsType;
+            configInc["Type"] = configIncApplicationsType;
            // configInc = configIncApplications;
 			
         }
@@ -1187,7 +1161,7 @@ function rowLimitChange(el)  {
                                 Data Date: <span id='fileDate'></span>.</p>  
                             <input type="button" class="hidden" value="Export JSON" onClick="dataExport()" /> 
                             <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
-                            <input type="button" value="Hide Chart Settings" uivisible=true id="toggleHideUIButton" onclick="toggleHide(this, true)" title="Click to toggle hide/show chart settings" /> 
+                            <input type="button" value="Show Chart Settings" uivisible="false" id="toggleHideUIButton" onclick="toggleHide(this, true)" title="Click to toggle hide/show chart settings" /> 
                             <select onchange="selectChange(this)">
                                 <option value=""></option>
                                 <option value="all">Summary View</option>
