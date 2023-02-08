@@ -181,7 +181,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     var configRows;
     var configCols;
     var configRenderer;
-    var configExcl = {}; // { PAID: ["0.000000","0.00",0, 0.00], LEVIED: ["0.000000","0.00",0, 0.00] }; //filtered out of data set
+    var configExcl = { PAID: ["0.000000","0.00",0, 0.00], LEVIED: ["0.000000","0.00",0, 0.00] };
     var configInc = {};
     //var configIncDefault = {}; //{Plan: ["19"],
                     //Type: ["Admin Levy","Expenditure Applicationsment"]};
@@ -453,6 +453,22 @@ var fileNameAndPath = "/contributionspaid/data/Summarised Charges Query Improved
 
 var fromXlOne = false;
 
+/*
+// 'lastModified' is no longer supported
+function getFileDate(path) {
+    fetch(path)
+.then(response => response.blob())
+.then(blob => {
+  const file = new File([blob], blob.name);
+  console.log(file);
+  console.log(file.lastModifiedDate, new Date(file.lastModified));
+  document.getElementById("fileDate").innerHTML = file.lastModifiedDate;
+
+  return file.lastModifiedDate;
+  //return new Date(file.lastModified);
+});
+}
+*/
 
 
 function getFileDate(path) {
@@ -849,8 +865,8 @@ function getFileDate(path) {
             skipEmptyLines: true,
             complete: function(parsed){
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
-             // console.log("Parsed:");
-              console.log("records parsed: ", parsed.data.length);
+              console.log("Parsed:");
+              console.log(parsed.data);
 
      
               const options = {
@@ -881,15 +897,14 @@ function getFileDate(path) {
                // dataObj = parsed.data;
                     var emptyCols = [];
          
-                //i[14] is the 'LEVIED' column
                 // i[15] is the 'PAID' column
                 let dataObj = parsed.data.filter(function(i) {
-                    return i[15] != "0.00"&& i[14] != "0.00";;
+                    return i[15] != "0.000000";
                 });
 
             
-                console.log("records filtered to:", dataObj.length);
-                //console.log(dataObj);
+                console.log("dataOBJ:");
+                console.log(dataObj);
 
                 document.getElementById("progressTotal").innerHTML = dataObj.length;
                     document.getElementById("progress").innerHTML = dataObj.length;
@@ -897,11 +912,9 @@ function getFileDate(path) {
  
                   //  $("#output").pivotUI(parsed.data, configobject);
 
-               /* $("#output").pivotUI(parsed.data.filter(function(i) {
-                    return i[15] != "0.00" && i[14] != "0.00";
-                }), configobject); */
-
-                $("#output").pivotUI(dataObj, configobject); 
+                $("#output").pivotUI(parsed.data.filter(function(i) {
+                    return i[15] != "0.00";
+                }), configobject); 
 
               /*  uiVis = localStorage.getItem('uivisible');
                 if(uiVis == "false" || uiVis == undefined) {

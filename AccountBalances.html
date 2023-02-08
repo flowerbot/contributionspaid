@@ -32,6 +32,11 @@
 
 <style>
     body {font-family: Verdana;}
+
+    #progressHeading {
+    color: grey;
+    font-size: smaller;
+    }
     th.pvtRowLabel {
         white-space: nowrap;
     }
@@ -129,7 +134,12 @@ var fileNameAndPath = "/contributionspaid/data/DC Balances by Plan Activity Sect
 
 var fromXlOne = false;
 
+var storageTag = "-actBals";
 
+let configShowUI = localStorage.getItem('showUi'+storageTag) === null ? false : JSON.parse(localStorage.getItem('showUi'+storageTag));
+
+
+/*
 function ExcelDateToJSDate(serial) {
    var utc_days  = Math.floor(serial - 25569);
    var utc_value = utc_days * 86400;                                        
@@ -148,8 +158,51 @@ function ExcelDateToJSDate(serial) {
 
    return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
 }
+*/
+
+function getFileDate(path) {
+
+    $.ajaxSetup({cache: false});
+    $.ajax({
+        type: "GET",
+        async: true,
+        timeout: 5000,
+        url : path,
+        dataType : "text",
+        success: function(data, textStatus, request){
+    var lastModified = new Date(request.getResponseHeader("Last-Modified"));
+    document.getElementById("fileDate").innerHTML = lastModified.toString();
+
+    },
+        error: function(ex) {
+            console.log(ex);
+        }
+    });
+}
+
+function toggleConfigHide(obj) {
+    //console.log('toggling new ', $(obj).val);
+
+   //console.log('showUi'+storageTag+":", localStorage.getItem('showUi'+storageTag))
+    let prevVis = localStorage.getItem('showUi'+storageTag) === null ? true : localStorage.getItem('showUi'+storageTag);
+   // console.log("previVis:", prevVis);
+    let newVis = !JSON.parse(prevVis);
+    //console.log("newVis:", newVis);
+    localStorage.setItem('showUi'+storageTag, String(newVis));
+    //console.log("NEW VIS: ", newVis);
+
+    // can't see above logs unless we don't reloat
+     location.reload();
+    
+}
+
+function revert() {
 
 
+    localStorage.clear();
+    location.reload();
+
+}
 
 
     $(function(){
@@ -169,6 +222,15 @@ function ExcelDateToJSDate(serial) {
         
     }); */
 
+   
+
+
+    if(configShowUI == true) {
+        document.getElementById('toggleHideUIButton').value= "Hide Chart Settings";
+
+            } else {
+                document.getElementById('toggleHideUIButton').value = "Show Chart Settings";
+            }
 
         // for subototals
         var dataClass = $.pivotUtilities.SubtotalPivotData;
@@ -247,10 +309,15 @@ function ExcelDateToJSDate(serial) {
                     var fixedData = parsed.data;
 
                 var curPath = window.location.href;
-                var fileDate = "";
-                var localDate = "";
+               // var fileDate = "";
+               // var localDate = "";
 
-                fileDate= ExcelDateToJSDate(parseFloat(fixedData[0].DataDate));
+               // fileDate= ExcelDateToJSDate(parseFloat(fixedData[0].DataDate));
+
+               getFileDate(fileNameAndPath);
+               document.getElementById("progressTotal").innerHTML = fixedData.length;
+                    document.getElementById("progress").innerHTML = fixedData.length;
+
 
                 /*
                 //removed because now getting date from data set
@@ -268,11 +335,14 @@ function ExcelDateToJSDate(serial) {
 // var dateTest =  fetchHeader("/prac/infrastructure/charts/Expected Contributions Summary1.csv", "Last-Modified");
 
 
- var localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+ //var localDate = new Date(fileDate).toLocaleDateString('en-au', options);
 
-                document.getElementById("fileDate").innerHTML = localDate;
+               // document.getElementById("fileDate").innerHTML = localDate;
 
-               
+               savedConfig = JSON.parse(localStorage.getItem('pivotdatakey'+storageTag));
+
+               console.log("savedConfig:");
+               if(savedConfig) console.log(savedConfig);
  
 
                 $("#output").pivotUI(fixedData, {
@@ -280,14 +350,17 @@ function ExcelDateToJSDate(serial) {
                    // renderers: $.pivotUtilities.d3_renderers,
                    dataClass: dataClass,
                   // rows: ["Activity Description"], cols: ["Plan-Plan Description"],
-                   rows: ["Activity Description"], cols: [],
+                   rows: (savedConfig) ? savedConfig.rows : ["Activity Description"], 
+                   cols: (savedConfig) ? savedConfig.cols : [],
                   //  rows: ["Plan","Charge Control"], cols: ["ExpectedYear"],
                     vals: ["Balance"],
                     renderers: renderers,
                    // renderer: renderer,
                     rendererOptions: rendererOptions,
                     exclusions: { Plan:["91","92","95",""]},
-                    rendererName: "Row Heatmap",
+                    showUI: configShowUI,
+                    inclusions: (savedConfig) ? savedConfig.inclusions : {},
+                    rendererName: (savedConfig) ? savedConfig.rendererName : "Row Heatmap",
                     hiddenAttributes: ["FileDate","FileDateNum","DataDate", ""],
                   //  aggregator:sum(intFormat)(["Sum of Expected*"])
                     aggregators:{
@@ -302,13 +375,16 @@ function ExcelDateToJSDate(serial) {
                     },
                     onRefresh:
                                            function(config) {
-                                           console.log(JSON.parse(JSON.stringify(config)));
-                                           console.log(config.cols[0]);
+                                           //console.log(JSON.parse(JSON.stringify(config)));
+                                           localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config, undefined, 2)); // Add callback function for onRefresh
+                                           //console.log(config.cols[0]);
                                            $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
                                            fixHeader();
 
                    }
                 });
+
+
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
 
@@ -319,14 +395,16 @@ function ExcelDateToJSDate(serial) {
        // console.log(jsonData.data);
      });
         </script>
-             <div class="desc"><p>Data Date: <span id='fileDate' title='When this paged is served by GitHub, this date will not be accurate, check github commit date.'></span>.  Use the drop down arrow beside each parameter to filter the chart results. 
-                <a href="http://tscps/prac/infrastructure/SitePages/DC%20Ledger%20Report%20-%20XLOne.aspx" target="_blank" 
-                title="Click for instructions for updating the data for this report.">
-                <img src="/contributionspaid/images/excel.jpg" height="20" width="20" /></a> 
-                <a href="https://flowerbot.github.io/contributionspaid/AccountBalances.html" target="_blank" title="Break out of Teams/SP">Source</a>
-             </p> 
-                            <p><i>When data is refreshed, see also the <a href="http://tscps/prac/infrastructure/SitePages/Update%20Plan%20List%20with%20Account%20Balance.aspx" target="_blank">page which updates the plan balance held in the Plan List</a>.</i></p>     
+ <div>
+    <p>How to use: Select a preset from the menu (coming soon), or click 'Show Chart Settings' and drag data elements to the required axis/use the drop down arrow beside each data element to filter the chart results.  </p>
+             <p id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span><br />
+                Data Date: <span id='fileDate'></span>.</p>  
                         </div>
+                        <div>
+                        <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
+
+                        <input type="button" value="Show Chart Settings" id="toggleHideUIButton" onclick="toggleConfigHide(this)" title="Click to toggle hide/show chart settings" /> 
+                    </div>
         <div id="output"></div>
 
 
