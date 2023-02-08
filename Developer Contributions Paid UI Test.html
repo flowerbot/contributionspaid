@@ -181,7 +181,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     var configRows;
     var configCols;
     var configRenderer;
-    var configExcl = { PAID: ["0.000000","0.00",0, 0.00], LEVIED: ["0.000000","0.00",0, 0.00] };
+    var configExcl = {}; // { PAID: ["0.000000","0.00",0, 0.00], LEVIED: ["0.000000","0.00",0, 0.00] }; //filtered out of data set
     var configInc = {};
     //var configIncDefault = {}; //{Plan: ["19"],
                     //Type: ["Admin Levy","Expenditure Applicationsment"]};
@@ -224,7 +224,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
 
     var sorters = {
         "Purpose": $.pivotUtilities.sortAs(
-            ["Community Facilities","Roads","Drainage","Open Space"]
+            ["Community Facilities","Open Space", "Roads","Drainage"]
         )
 
     }
@@ -435,6 +435,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
             ];
 
 
+/*
     function fetchHeader(url, wch) {
     try {
         var req=new XMLHttpRequest();
@@ -447,28 +448,12 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     } catch(er) {
         return er.message;
     }
-}
+} */
 
 var fileNameAndPath = "/contributionspaid/data/Summarised Charges Query Improved.csv";
 
 var fromXlOne = false;
 
-/*
-// 'lastModified' is no longer supported
-function getFileDate(path) {
-    fetch(path)
-.then(response => response.blob())
-.then(blob => {
-  const file = new File([blob], blob.name);
-  console.log(file);
-  console.log(file.lastModifiedDate, new Date(file.lastModified));
-  document.getElementById("fileDate").innerHTML = file.lastModifiedDate;
-
-  return file.lastModifiedDate;
-  //return new Date(file.lastModified);
-});
-}
-*/
 
 
 function getFileDate(path) {
@@ -592,97 +577,99 @@ function getFileDate(path) {
  
         };
 
-        savedConfig = localStorage.getItem('pivotdatakey'+storageTag);
-
-
-        if (localStorage.getItem("pivotdatarows"+storageTag) !== null) {
-	            savedRows = localStorage.getItem('pivotdatarows'+storageTag);
-              //  console.log("savedRows:" + savedRows);
-
-
-		        configRows = (savedRows) ? JSON.parse(savedRows) : configRowsDefault;
-		} else {
-			configRows = configRowsDefault;
-			}
-
-
-            if (localStorage.getItem("pivotdatacols"+storageTag) !== null) {
-	            savedCols = localStorage.getItem('pivotdatacols'+storageTag);
-               // console.log("savedRows:" + savedRows);
-
-
-		        configCols = (savedCols) ? JSON.parse(savedCols) : configColsDefault;
-		} else {
-			configCols = configColsDefault;
-			}
+        savedConfig = JSON.parse(localStorage.getItem('pivotdatakey'+storageTag));
 
 
 
-        if (localStorage.getItem('pivotdatainc'+storageTag) !== null) {
-            configInc["LatestTransactionYear"] = configIncApplicationsType;
-            savedinclusions = localStorage.getItem('pivotdatainc'+storageTag);
-            configInc = (configInc) ? JSON.parse(savedinclusions) : configIncDefault;
-        
-
-        } else {
-
-          //  delete configInc["Type"];
-          configInc = configIncDefault;
-
-        }
-
-        if (localStorage.getItem('pivotrenderer'+storageTag) !== null) {
-
-            savedRenderer = localStorage.getItem('pivotrenderer' + storageTag);
-            configRenderer = (savedRenderer) ? JSON.parse(savedRenderer) : configRendererDefault;
-            } else {
-            configRenderer = configRendererDefault;
-            }
-			
-				selectedASet = localStorage.getItem('selectSet'+storageTag);
+     
 
 
 
-        //var config
+        Papa.parse(fileNameAndPath, {
+            download: true,
+            skipEmptyLines: true,
+            complete: function(parsed){
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+             // console.log("Parsed:");
+              console.log("records parsed: ", parsed.data.length);
 
-        if (savedConfig) { // If a saved state found in LocalStorage, then load it
-                console.log("found a config object");
-
-                configobject = JSON.parse(savedConfig); // Make it an object
-
-
-            configobject["renderers"] = renderers;
-            configobject["rendererOptions"] = rendererOptions;
-            configobject["sorters"] = sorters;
-
-            configobject["dataClass"] = dataClass;
-            configobject["exclusions"] = configExcl; //{ Plan:["89","90","91","92","93","94","95","96", "97","98","99"], trainingProject:["true"]};
-
-            configobject["menuLimit"] = 3000;
-            configobject["showUI"] = configShowUI;
+     
+              const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
 
 
-            if(selectedASet) {
-                delete configobject["rows"];
-                configobject["rows"] = configRows;
-                delete configobject["cols"];
-                configobject["cols"] = configCols;
-                delete configobject["rendererName"];
-                configobject["rendererName"] = configRenderer;
-                delete configobject["showUI"];
-                configobject["showUI"] = configShowUI;
-                localStorage.removeItem("selectSet"+storageTag);
-                configobject["inclusions"]["LatestTransactionYear"] = yearArray;
-              // configobject["inclusions"] = configInc;  // don't know if its a good idea to reset it it every time or not
-                selectedASet = false;
-            } else {
-               // delete configobject["inclusions"]["Type"]; // revert to all vals
-            }
+                var curPath = window.location.href;
+                //var fileDate = "";
+                var localDate = "";
 
-                //  console.log(JSON.stringify(configobject));
-            console.log(configobject);
-            configobject.onRefresh = function (config) {
-                console.log("save state called");
+                getFileDate(fileNameAndPath);
+
+
+               // console.log("First Balance:" + parsed.data[1][1]);
+                var fixedData = [];
+
+               // console.log(parsed);
+
+                if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
+
+               // dataObj = parsed.data;
+                    var emptyCols = [];
+         
+                //i[14] is the 'LEVIED' column
+                // i[15] is the 'PAID' column
+                let dataObj = parsed.data.filter(function(i) {
+                    return i[15] != "0.00"&& i[14] != "0.00";;
+                });
+
+            
+                console.log("records filtered to:", dataObj.length);
+                //console.log(dataObj);
+
+                document.getElementById("progressTotal").innerHTML = dataObj.length;
+                    document.getElementById("progress").innerHTML = dataObj.length;
+
+ 
+                  //  $("#output").pivotUI(parsed.data, configobject);
+
+               /* $("#output").pivotUI(parsed.data.filter(function(i) {
+                    return i[15] != "0.00" && i[14] != "0.00";
+                }), configobject); */
+
+                $("#output").pivotUI(dataObj, {  dataClass: dataClass,
+                  // rows: ["Activity Description"], cols: ["Plan-Plan Description"],
+                   rows: (savedConfig) ? savedConfig.rows : ["Activity Description"], 
+                   cols: (savedConfig) ? savedConfig.cols : [],
+                  //  rows: ["Plan","Charge Control"], cols: ["ExpectedYear"],
+                    vals: ["PAID"],
+                    renderers: renderers,
+                   // renderer: renderer,
+                    rendererOptions: rendererOptions,
+                    sorters: sorters,
+                    exclusions: { Plan:["91","92","95",""]},
+                    showUI: configShowUI,
+                    inclusions: (savedConfig) ? savedConfig.inclusions : {},
+                    rendererName: (savedConfig) ? savedConfig.rendererName : "Row Heatmap",
+                   // hiddenAttributes: ["FileDate","FileDateNum","DataDate", ""],
+                  //  aggregator:sum(intFormat)(["Sum of Expected*"])
+                   aggregators:{
+      
+                        "PAID": function() {
+                            //consol
+                         //   var balNum = parseFloat(["Balance"]);
+                            return sum(intFormat)(["PAID"]);
+                        },
+                        "BALANCE": function() {return sum(intFormat)(["BALANCE"])},
+                        "LEVIED": function() { return sum(intFormat)(["LEVIED"])},
+                    }, 
+                    onRefresh: function (config) {
+               // console.log("save state called");
                 console.log(config);
                 var config_copy = JSON.parse(JSON.stringify(config));
 
@@ -690,11 +677,12 @@ function getFileDate(path) {
 
                 //delete some values which are functions
                 delete config_copy["aggregators"];
-                delete config_copy["renderers"];
+               delete config_copy["renderers"];
                 //delete some bulky default values
                 delete config_copy["rendererOptions"];
-                delete config_copy["localeStrings"];
                 /// config_copy["renderers"] = renderers;
+                localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy)); // Add callback function for onRefresh
+
 
 
                 var params = {};
@@ -708,7 +696,7 @@ function getFileDate(path) {
                 $("#parameters").html(JSON.stringify(params, undefined, 2));
                 //  $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             //      console.log(params["Inclusions"]) ;
-                localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
+                //localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
 
                 var $table = $('table.pvtTable');
@@ -743,178 +731,7 @@ function getFileDate(path) {
                     colorLevy();
          }
 
-
-
-        } else {
-        
-            // no config found, make it from scratch
-
-            
-
-            configobject = {};
-            configobject["inclusions"] = configInc; // {Plan:["19"]};
-            configobject["exclusions"] = configExcl; //{ Plan:["89","90","91","92","93","94","95","96", "97","98","99"], trainingProject:["true"]};
-            configobject["rows"] = configRowsApplications;
-            configobject["cols"] = configColsApplications;
-            configobject["vals"] = ["PAID"];
-            configobject["aggregatorName"] = "Integer Sum";
-
-            configobject["showUI"] = configShowUI;
-           // configobject["aggregator"] = ["Amount"];
-           // configobject["aggregators"] = {"Amount": ["Amount"] };
-         /*   configobject["aggregators"] = {
-                    "Amount": function() {
-                    return sum(intFormat)(["Amount"]);
-                }
-                }*/
-            configobject["rendererName"] =    configRendererApplications;
-
-            configobject["renderers"] = renderers;
-            configobject["sorters"] = sorters;
-            //configobject["filter"] = filterFun;
-            configobject["rendererOptions"] = rendererOptions;
-            configobject["dataClass"] = dataClass;
-           /* configobject["onRefresh"] =  function(config) {
-                                           console.log(JSON.parse(JSON.stringify(config)));
-                                           console.log(config.cols[0]);
-                                           $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
-
-                   } */
-
-                try {
-               // params["Inclusions"] = config["inclusionsInfo"];
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) + " ";
-                } catch (ex) {console.log("inclusions not found")};
-
-                configobject.onRefresh = function (config) {
-                console.log("new state called");
-
-                var config_copy = JSON.parse(JSON.stringify(config));
-            //var config_copy = configobject;
-                //delete some values which are functions
-                delete config_copy["aggregators"];
-                delete config_copy["renderers"];
-                //delete some bulky default values
-                delete config_copy["rendererOptions"];
-                delete config_copy["localeStrings"];
-
-            var params = {};
-
-
-            try {
-               // params["Inclusions"] = config["inclusionsInfo"];
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " ";
-                } catch (ex) {console.log("inclusions not found")};
-            // add exclusions to params if necessary
-
-            localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
-                console.log(config_copy) ;
-
-                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
-
-
-
-		try{
-                var $table = $('table.pvtTable');
-                console.log($table.closest('.wrapper'));
-                    $table.floatThead({
-                        scrollContainer: function($table){
-                            return $table.closest('.wrapper');
-                        },
-                        position: 'auto',
-                        floatTableClass: 'pivotBody',
-                        autoReflow: true
-                      
-                    });
-		} catch (ex) {}
-
-       // btn = document.getElementById("toggleHideUIButton");
-
-
-                    //************TOGGLE SHOW HIDE ME ****************//
-                   // toggleConfigHide(btn, "from new");
-
-
-
-                    colorLevy();
-
-                   }
-
-          
-
-
-
-
-
-        }
-
-
-
-
-
-
-  
-
-
-     
-
-
-
-        Papa.parse(fileNameAndPath, {
-            download: true,
-            skipEmptyLines: true,
-            complete: function(parsed){
-              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
-              console.log("Parsed:");
-              console.log(parsed.data);
-
-     
-              const options = {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    timeZoneName: 'short'
-                    };
-
-
-                var curPath = window.location.href;
-                //var fileDate = "";
-                var localDate = "";
-
-                getFileDate(fileNameAndPath);
-
-
-               // console.log("First Balance:" + parsed.data[1][1]);
-                var fixedData = [];
-
-               // console.log(parsed);
-
-                if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
-
-               // dataObj = parsed.data;
-                    var emptyCols = [];
-         
-                // i[15] is the 'PAID' column
-                let dataObj = parsed.data.filter(function(i) {
-                    return i[15] != "0.000000";
-                });
-
-            
-                console.log("dataOBJ:");
-                console.log(dataObj);
-
-                document.getElementById("progressTotal").innerHTML = dataObj.length;
-                    document.getElementById("progress").innerHTML = dataObj.length;
-
- 
-                  //  $("#output").pivotUI(parsed.data, configobject);
-
-                $("#output").pivotUI(parsed.data.filter(function(i) {
-                    return i[15] != "0.00";
-                }), configobject); 
+                }); 
 
               /*  uiVis = localStorage.getItem('uivisible');
                 if(uiVis == "false" || uiVis == undefined) {

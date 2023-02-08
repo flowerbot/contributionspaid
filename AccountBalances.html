@@ -204,6 +204,72 @@ function revert() {
 
 }
 
+function selectChange(obj){
+
+
+        var tConfig = $("#output").data("pivotUIOptions");
+
+
+
+    if($("#chartType").val() == "summary") {
+
+        delete tConfig["rows"];
+        delete tConfig["cols"];
+        delete tConfig["rendererName"];
+
+        tConfig["rows"] = ['Activity Description'];
+        tConfig["cols"] = [];
+        tConfig["rendererName"] = "Row Heatmap";
+
+    } else
+
+    if($("#chartType").val() == "planView") {
+
+        delete tConfig["rows"];
+        delete tConfig["cols"];
+        delete tConfig["rendererName"];
+
+        tConfig["rows"] = ['Activity Description', 'Plan Description'];
+        tConfig["cols"] = [];
+        tConfig["rendererName"] = "Table With Subtotal Row Heatmap";
+
+        } else
+
+    if($("#chartType").val() == "Chart") {
+
+        delete tConfig["rows"];
+        delete tConfig["cols"];
+        delete tConfig["rendererName"];
+
+        tConfig["rows"] = ['Activity Description'];
+        tConfig["cols"] = ['Plan Description'];
+        tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
+
+   }
+
+   else
+
+    if($("#chartType").val() == "TSV") {
+
+        delete tConfig["rendererName"];
+
+        tConfig["rendererName"] = "TSV Export";
+
+   }
+
+   console.log("tConfig");
+        console.log(tConfig);
+
+        localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
+
+$("#output").pivotUI(fixedData, tConfig, true);
+
+
+
+   // localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config, undefined, 2));
+  //  location.reload();
+}
+
 
     $(function(){
 
@@ -306,7 +372,7 @@ function revert() {
                     timeZoneName: 'short'
                     };
 
-                    var fixedData = parsed.data;
+                     fixedData = parsed.data;
 
                 var curPath = window.location.href;
                // var fileDate = "";
@@ -340,6 +406,7 @@ function revert() {
                // document.getElementById("fileDate").innerHTML = localDate;
 
                savedConfig = JSON.parse(localStorage.getItem('pivotdatakey'+storageTag));
+              // savedRows = (savedConfig && savedRows) ? savedConfig.Rows;
 
                console.log("savedConfig:");
                if(savedConfig) console.log(savedConfig);
@@ -376,7 +443,16 @@ function revert() {
                     onRefresh:
                                            function(config) {
                                            //console.log(JSON.parse(JSON.stringify(config)));
-                                           localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config, undefined, 2)); // Add callback function for onRefresh
+                                           //var config_copy = JSON.parse(JSON.stringify(config));
+
+                                           //delete config_copy["aggregators"];
+                                           // delete config_copy["renderers"];
+                                            //delete some bulky default values
+                                            //delete config_copy["rendererOptions"];
+                                            //delete config_copy["localeStrings"];
+                                          //  localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config, undefined, 2)); // Add callback function for onRefresh
+                                          
+                                           localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
                                            //console.log(config.cols[0]);
                                            $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
                                            fixHeader();
@@ -404,6 +480,14 @@ function revert() {
                         <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
 
                         <input type="button" value="Show Chart Settings" id="toggleHideUIButton" onclick="toggleConfigHide(this)" title="Click to toggle hide/show chart settings" /> 
+                        <select id="chartType" onchange="selectChange(this)">
+                            <option value=""></option>
+                            <option value="summary">Summary View</option>
+                            <option value="planView">View By Plan</option>
+                            <option value="Chart">Bar Chart</option>
+                            <option value="TSV">Export Selected Data</option>
+
+                        </select>
                     </div>
         <div id="output"></div>
 
