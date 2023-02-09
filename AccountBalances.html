@@ -180,21 +180,39 @@ function getFileDate(path) {
     });
 }
 
-function toggleConfigHide(obj) {
-    //console.log('toggling new ', $(obj).val);
 
-   //console.log('showUi'+storageTag+":", localStorage.getItem('showUi'+storageTag))
-    let prevVis = localStorage.getItem('showUi'+storageTag) === null ? true : localStorage.getItem('showUi'+storageTag);
-   // console.log("previVis:", prevVis);
-    let newVis = !JSON.parse(prevVis);
-    //console.log("newVis:", newVis);
-    localStorage.setItem('showUi'+storageTag, String(newVis));
-    //console.log("NEW VIS: ", newVis);
+function toggleButtonText(val) {
 
-    // can't see above logs unless we don't reloat
-     location.reload();
-    
+
+        if(val) {
+        document.getElementById('toggleHideUIButton').value= "Hide Chart Settings";
+        } else {
+            document.getElementById('toggleHideUIButton').value= "Show Chart Settings";
+        }
+
+
 }
+
+function toggleConfigHide(obj, toggle) {
+        console.log('toggling new ', toggle);
+
+        var tConfig = $("#output").data("pivotUIOptions");
+   
+        console.log('showUi'+storageTag+":", localStorage.getItem('showUi'+storageTag))
+
+
+        var newVis = !JSON.parse(tConfig["showUI"]);
+        delete tConfig["showUI"];
+        tConfig["showUI"] = newVis;
+
+        toggleButtonText(newVis);
+
+        localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
+
+        $("#output").pivotUI(fixedData, tConfig, true);
+        
+    }
+
 
 function revert() {
 
@@ -410,6 +428,12 @@ $("#output").pivotUI(fixedData, tConfig, true);
 
                console.log("savedConfig:");
                if(savedConfig) console.log(savedConfig);
+
+               if(savedConfig) {
+
+                toggleButtonText(savedConfig.showUI);
+
+                    }
  
 
                 $("#output").pivotUI(fixedData, {
@@ -425,7 +449,7 @@ $("#output").pivotUI(fixedData, tConfig, true);
                    // renderer: renderer,
                     rendererOptions: rendererOptions,
                     exclusions: { Plan:["91","92","95",""]},
-                    showUI: configShowUI,
+                    showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
                     inclusions: (savedConfig) ? savedConfig.inclusions : {},
                     rendererName: (savedConfig) ? savedConfig.rendererName : "Row Heatmap",
                     hiddenAttributes: ["FileDate","FileDateNum","DataDate", ""],

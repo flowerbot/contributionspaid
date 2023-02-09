@@ -101,7 +101,7 @@
     var configRows;
     var configCols;
     var configRenderer;
-    var hiddenAttributes = ["FileDate","FileDateNum","DataDate"];
+    var hiddenAttributes = ["FileDate","FileDateNum","DataDate", ""];
     var configInc = {};
 
     var configIncDefault = {Plan: ["19"],
@@ -112,35 +112,20 @@
     var configIncDefault = {Plan: ["19"]};
     var configRendererDefault = "Row Heatmap";
     var configRowsFull;
-    var configRowsRecoup = ["Plan", "Fiscal Year","Narr1"];
+    var configRowsRecoup = ["Plan", "LedgerName","Narr1"];
     var configColsRecoup = ["Activity"];
     var configIncRecoupType = ["Admin Levy","Expenditure recoupment"];
-    var configRowsPies = ["Plan"];
+    var configRowsPies = ["LedgerName"];
     var configColsPies = ["Activity"];
     var configRendererPies = "Multiple Pie Chart";
+    //not used:
     var configIncPies = {Plan: ["01,","02","04","05","06","07","10","11","12","13","14","15","16","18","19","20","21","22","23","25","26","27","28"],
                     Type: ["Admin Levy","Expenditure recoupment"]};
     var storageTag = "-rec";  // make these unique to each chart
 
     var configRows;
-    var selectedASet = false;
-  //  var amt = function(data,)
-    ///prac/infrastructure/charts/Expected Contributions.csv
 
 
-    function fetchHeader(url, wch) {
-    try {
-        var req=new XMLHttpRequest();
-        req.open("HEAD", url, false);
-        req.send(null);
-        if(req.status== 200){
-            return req.getResponseHeader(wch);
-        }
-        else return false;
-    } catch(er) {
-        return er.message;
-    }
-}
 
 var fileNameAndPath = "/contributionspaid/data/DC RecoupmentsClean.csv";
 
@@ -166,6 +151,10 @@ function ExcelDateToJSDate(serial) {
    return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
 }
 
+savedConfig = JSON.parse(localStorage.getItem('pivotdatakey'+storageTag));
+
+console.log("savedConfig:");
+console.log(savedConfig);
 
     $(function(){
 
@@ -197,18 +186,11 @@ function ExcelDateToJSDate(serial) {
         var sum = $.pivotUtilities.aggregatorTemplates.sum;
         var numberFormat = $.pivotUtilities.numberFormat;
         var intFormat = numberFormat({digitsAfterDecimal: 0});
-       /* var aggregators = {
-            "Amount": function() {
-              return sum(intFormat)(["Amount"]);
-          } */
-
           var amtSum = function() {
             return sum(intFormat)(["Amount"]);
           };
           
-        // "Balance": function() {return sum(["Balance"])},
-        // "Expected": function() { return sum(intFormat)(["Expected"])},
-    //}  
+
 
         var rendererOptions = {
         //rendererOptions: {
@@ -243,44 +225,9 @@ function ExcelDateToJSDate(serial) {
                 },//;//, 
         };
 
-        savedConfig = localStorage.getItem('pivotdatakey'+storageTag);
+       
 
 
-        if (localStorage.getItem("pivotdatarows"+storageTag) !== null) {
-	            savedRows = localStorage.getItem('pivotdatarows'+storageTag);
-                console.log("savedRows:" + savedRows);
-
-
-		        configRows = (savedRows) ? JSON.parse(savedRows) : configRowsDefault;
-		} else {
-			configRows = configRowsDefault;
-			}
-
-
-            if (localStorage.getItem("pivotdatacols"+storageTag) !== null) {
-	            savedCols = localStorage.getItem('pivotdatacols'+storageTag);
-               // console.log("savedRows:" + savedRows);
-
-
-		        configCols = (savedCols) ? JSON.parse(savedCols) : configColsDefault;
-		} else {
-			configCols = configColsDefault;
-			}
-
-
-
-        if (localStorage.getItem('pivotdatainc'+storageTag) !== null) {
-            configInc["Type"] = configIncRecoupType;
-            savedinclusions = localStorage.getItem('pivotdatainc'+storageTag);
-            configInc = (configInc) ? JSON.parse(savedinclusions) : configIncDefault;
-        
-
-        } else {
-
-          //  delete configInc["Type"];
-          configInc = configIncDefault;
-
-        }
 
         if (localStorage.getItem('pivotrenderer'+storageTag) !== null) {
 
@@ -290,201 +237,8 @@ function ExcelDateToJSDate(serial) {
             configRenderer = configRendererDefault;
             }
 			
-				selectedASet = localStorage.getItem('selectSet'+storageTag);
-
-
-
-        //var config
-
-        if (savedConfig) { // If a saved state found in LocalStorage, then load it
-                console.log("found a config object");
-
-                configobject = JSON.parse(savedConfig); // Make it an object
-
-
-            configobject["renderers"] = renderers;
-            configobject["rendererOptions"] = rendererOptions;
-
-            configobject["dataClass"] = dataClass;
-            configobject["hiddenAttributes"] = hiddenAttributes;
-
-            
-
-
-            if(selectedASet) {
-                delete configobject["rows"];
-                configobject["rows"] = configRows;
-                delete configobject["cols"];
-                configobject["cols"] = configCols;
-                delete configobject["rendererName"];
-                configobject["rendererName"] = configRenderer;
-                localStorage.removeItem("selectSet"+storageTag);
-                configobject["inclusions"]["Type"] = configIncRecoupType;
-              // configobject["inclusions"] = configInc;  // don't know if its a good idea to reset it it every time or not
-                selectedASet = false;
-            } else {
-               // delete configobject["inclusions"]["Type"]; // revert to all vals
-            }
-
-                //  console.log(JSON.stringify(configobject));
-            console.log(configobject);
-            configobject.onRefresh = function (config) {
-                console.log("save state called");
-                console.log(config);
-                var config_copy = JSON.parse(JSON.stringify(config));
-
-
-
-                //delete some values which are functions
-                delete config_copy["aggregators"];
-                delete config_copy["renderers"];
-                //delete some bulky default values
-                delete config_copy["rendererOptions"];
-                delete config_copy["localeStrings"];
-                /// config_copy["renderers"] = renderers;
-
-
-                var params = {};
-
-
-                /*  params["Rows"] = config_copy["rows"];
-                params["Columns"] = config_copy["cols"];
-                params["Values"] = config_copy["vals"]; */
-                /*  params["Aggregator"] = config_copy["aggregatorName"];
-                params["Renderer"] = config_copy["rendererName"]; */
-               // try {
-              //  params["Inclusions"] = config_copy["inclusionsInfo"];
-              //  document.getElementById("inclusions").innerHTML = param["Inclusions"];
-              //  } catch (ex) {console.log("config_copy not found")};
-
-
-              try {
-               // params["Inclusions"] = config["inclusionsInfo"];
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
-                } catch (ex) {console.log("inclusions not found")};
-
-                //  params["Exclusions"] = config_copy["exclusions"];
-                //console.log(params)
-
-                /// config_copy["renderers"] = renderers;
-                $("#parameters").html(JSON.stringify(params, undefined, 2));
-                //  $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
-            //      console.log(params["Inclusions"]) ;
-                localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
-                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
-
-                var $table = $('table.pvtTable');
-
-                console.log($table.closest('.wrapper'));
-                    $table.floatThead({
-                        scrollContainer: function($table){
-                            return $table.closest('.wrapper');
-                        },
-                         position: 'auto',
-                        floatTableClass: 'pivotBody',
-                        autoReflow: true
-                    });
-
-                    btn = document.getElementById("toggleHideUIButton");
-                        toggleHide(btn);
-       
-         }
-
-
-
-        } else {
-        
-            // no config found, make it from scratch
-
-            
-
-            configobject = {};
-            configobject["hiddenAttributes"] = hiddenAttributes;
-            configobject["inclusions"] = configInc; // {Plan:["19"]};
-            configobject["exclusions"] ={ Plan:["89","90","91","92","93","94","95","96", "97","98","99"], trainingProject:["true"]};
-            configobject["rows"] = configRows;
-            configobject["cols"] = configCols;
-            configobject["vals"] = ["Amount"];
-            configobject["aggregatorName"] = "Integer Sum";
-           // configobject["aggregator"] = ["Amount"];
-           // configobject["aggregators"] = {"Amount": ["Amount"] };
-         /*   configobject["aggregators"] = {
-                    "Amount": function() {
-                    return sum(intFormat)(["Amount"]);
-                }
-                }*/
-            configobject["rendererName"] =    "Row Heatmap";
-
-            configobject["renderers"] = renderers;
-            //configobject["filter"] = filterFun;
-            configobject["rendererOptions"] = rendererOptions;
-            configobject["dataClass"] = dataClass;
-           /* configobject["onRefresh"] =  function(config) {
-                                           console.log(JSON.parse(JSON.stringify(config)));
-                                           console.log(config.cols[0]);
-                                           $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
-
-                   } */
-
-                try {
-               // params["Inclusions"] = config["inclusionsInfo"];
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) + " (Change the included Plan(s) below if required)";
-                } catch (ex) {console.log("inclusions not found")};
-
-                configobject.onRefresh = function (config) {
-                console.log("new state called");
-
-                var config_copy = JSON.parse(JSON.stringify(config));
-            //var config_copy = configobject;
-                //delete some values which are functions
-                delete config_copy["aggregators"];
-                delete config_copy["renderers"];
-                //delete some bulky default values
-                delete config_copy["rendererOptions"];
-                delete config_copy["localeStrings"];
-
-            var params = {};
-
-
-            try {
-               // params["Inclusions"] = config["inclusionsInfo"];
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
-                } catch (ex) {console.log("inclusions not found")};
-            // add exclusions to params if necessary
-
-            localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
-                console.log(config_copy) ;
-
-                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
-
-
-
-                var $table = $('table.pvtTable');
-                console.log($table.closest('.wrapper'));
-                    $table.floatThead({
-                        scrollContainer: function($table){
-                            return $table.closest('.wrapper');
-                        },
-                        position: 'auto',
-                        floatTableClass: 'pivotBody',
-                        autoReflow: true
-                      
-                    });
-
-
-                    btn = document.getElementById("toggleHideUIButton");
-                        toggleHide(btn);
-
-
-                   }
-
-          
-
-
-
-
-
-        }
+	
+   
 
 
 
@@ -509,7 +263,7 @@ function ExcelDateToJSDate(serial) {
                     };
 
 
-                var fixedData = parsed.data;
+                fixedData = parsed.data;
                 var curPath = window.location.href;
                 var fileDate = "";
                 var localDate = "";
@@ -526,7 +280,50 @@ function ExcelDateToJSDate(serial) {
 
                 document.getElementById("progressTotal").innerHTML = dataLen;
 
-                $("#output").pivotUI(fixedData, configobject);
+                $("#output").pivotUI(fixedData, {  
+                    dataClass: dataClass,
+                   rows: (savedConfig) ? savedConfig.rows : configRowsDefault, 
+                   cols: (savedConfig) ? savedConfig.cols : configColsDefault,
+                    vals: (savedConfig) ? savedConfig.vals : ["Amount"],
+                    renderers: renderers,
+                    rendererOptions: rendererOptions,
+                    hiddenAttributes: hiddenAttributes,
+                    //sorters: sorters,
+                    exclusions: (savedConfig) ? savedConfig.exclusions : { Plan:["89","90","91","92","93","94","95","96", "97","98","99"] },
+                    showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
+                    inclusions: (savedConfig) ? savedConfig.inclusions : configIncDefault,
+                    rendererName: (savedConfig) ? savedConfig.rendererName : "Table",
+                   aggregators:{
+      
+                        "Amount": function() { return sum(intFormat)(["Amount"]); },
+
+                    }, 
+                    onRefresh: function(config) {
+
+                        localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
+
+
+                        try {
+               // params["Inclusions"] = config["inclusionsInfo"];
+                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
+                } catch (ex) {console.log("inclusions not found")};
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                var $table = $('table.pvtTable');
+
+                console.log($table.closest('.wrapper'));
+                    $table.floatThead({
+                        scrollContainer: function($table){
+                            return $table.closest('.wrapper');
+                        },
+                         position: 'auto',
+                        floatTableClass: 'pivotBody',
+                        autoReflow: true
+                    });
+
+                    } 
+                });
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             }
@@ -550,7 +347,7 @@ function dataExport() {
 
     myWindow.document.title="Export ..";
 
-    myWindow.document.write(msgText + "<pre style='border:1px solid #dddddd;'>" + JSON.stringify(dataObj, null, "   ")+"</pre>");
+    myWindow.document.write(msgText + "<pre style='border:1px solid #dddddd;'>" + JSON.stringify(fixedData, null, "   ")+"</pre>");
 
 
 }
@@ -609,90 +406,108 @@ function fixHeader() {
 }
 
 
+
+
 function selectChange(el) {
     console.log(el);
 
-    if(el.value.length >0) {
-	localStorage.setItem("selectSet"+storageTag,el.value);
-	} else {
-		localStorage.removeItem("selectSet"+storageTag);
-		}
+    var tConfig = $("#output").data("pivotUIOptions");
+
+    localStorage.setItem('selectedOption'+storageTag,el.value);
+
+    if(el.value == "TSV") {
+
+        delete tConfig["rendererName"];
+        tConfig["rendererName"] = "TSV Export";
+
+    } else
 
 	if(el.value == "recOnly") {
-			configRowsFull = configobject["rows"];
-            //tmpRenderer = configobject["renderer"];
-			localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsRecoup, undefined, 2));
-            localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsRecoup,undefined,2));
-            localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncRecoupType,undefined,2));
-            //localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererDefault,undefined,2));
 
-            //	localStorage.setItem('pivotdatafullrows',JSON.stringify(configRows, undefined, 2));
-			configRows = configRowsRecoup;
-            configCols = configColsRecoup;
-            configInc["Type"] = configIncRecoupType;
-           // configInc = configIncRecoup;
+        delete tConfig["rows"];
+        delete tConfig["cols"];
+        delete tConfig["inclusions"]["Type"];
+        delete tConfig["rendererName"];
+
+        tConfig["rows"] = configRowsRecoup;
+        tConfig["cols"] = configColsRecoup;
+        tConfig["inclusions"]["Type"] =  configIncRecoupType;
+        tConfig["rendererName"] = configRendererDefault;
+
 			
         }
     else
     
  if(el.value == "Pies") {
-        configRowsFull = configobject["rows"];
 
-        localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsPies, undefined, 2));
-        localStorage.setItem('pivotdatacols'+storageTag, JSON.stringify(configColsPies,undefined,2));
-        localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncPies,undefined,2));
-        localStorage.setItem('pivotrenderer'+storageTag, JSON.stringify(configRendererPies,undefined,2));
+        delete tConfig["rows"];
+        delete tConfig["cols"];
+        //delete tConfig["inclusions"];
+        delete tConfig["rendererName"];
 
-        // localStorage.setItem('pivotdatainc'+storageTag, JSON.stringify(configIncRecoupType,undefined,2));
-
-        //	localStorage.setItem('pivotdatafullrows',JSON.stringify(configRows, undefined, 2));
-        configRows = configRowsPies;
-        configCols = configColsPies;
-       // configInc["Type"] = configIncRecoupType;
-
+        tConfig["rows"] = configRowsPies;
+        tConfig["cols"] = configColsPies;
+       // tConfig["inclusions"] = configIncPies;
+        tConfig["rendererName"] = configRendererPies;
 
 
 
 		} else 
 	if(el.value == "all") {
-		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
-			localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRows, undefined, 2));
-			localStorage.setItem('pivotdatafullrows'+storageTag,JSON.stringify(configRowsFull, undefined, 2));
-            localStorage.removeItem('pivotdatacols'+storageTag);
-            localStorage.removeItem('pivotdatainc'+storageTag);
-            delete configInc["Type"];
+
+        delete tConfig["rows"];
+        delete tConfig["cols"];
+        delete tConfig["inclusions"];
+        delete tConfig["rendererName"];
+
+        tConfig["rows"] = configRowsDefault;
+        tConfig["cols"] = configColsDefault;
+        tConfig["inclusions"] = configIncDefault;
+        tConfig["rendererName"] = configRendererDefault;
+       
+
 		} 
 
 		
-			location.reload();
+
+
+            localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
+
+$("#output").pivotUI(fixedData, tConfig, true);
 
 
 
 }
 
-function toggleHide(obj) {
-    //   var mytable = $(".pvtUi");
-    //show_hide_column(1,true);
-    console.log(obj);
-    console.log("uiVisible:" + $(obj).attr("uiVisible"));
+function toggleButtonText(val) {
 
-    var uiVisible = $(obj).attr("uiVisible");
 
-    if(uiVisible == "true") {
-        $(".pvtAxisContainer").hide();
-        $(".pvtUiCell").hide();
-        $(obj).attr("uiVisible","false");
-        $(obj).attr("value","Show Chart Settings");
-        var $table = $('table.pvtTable');
-        $table.trigger('reflow');
-        } else {
-        $(".pvtAxisContainer").show();
-        $(".pvtUiCell").show();
-        $(obj).attr("uiVisible","true");
-        $(obj).attr("value","Hide Chart Settings");
-        var $table = $('table.pvtTable');
-                $table.trigger('reflow');
-    }
+if(val) {
+document.getElementById('toggleHideUIButton').value= "Hide Chart Settings";
+} else {
+    document.getElementById('toggleHideUIButton').value= "Show Chart Settings";
+}
+
+
+}
+
+function toggleConfigHide(obj, toggle) {
+console.log('toggling new ', toggle);
+
+var tConfig = $("#output").data("pivotUIOptions");
+
+console.log('showUi'+storageTag+":", localStorage.getItem('showUi'+storageTag))
+
+
+var newVis = !JSON.parse(tConfig["showUI"]);
+delete tConfig["showUI"];
+tConfig["showUI"] = newVis;
+
+toggleButtonText(newVis);
+
+localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
+
+$("#output").pivotUI(fixedData, tConfig, true);
 
 }
 
@@ -729,16 +544,16 @@ function saveState(config) {
                             <p id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span></p>  
                             <input type="button" value="Export JSON" onClick="dataExport()" /> 
                             <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
-                            <input type="button" id="toggleHideUIButton" value="Hide Chart Settings" uiVisible="true" onclick="toggleHide(this)" title="Click to toggle hide/show chart settings" /> 
+                            <input type="button" id="toggleHideUIButton" value="Show Chart Settings" uiVisible="true" onclick="toggleConfigHide(this)" title="Click to toggle hide/show chart settings" /> 
                             <select onchange="selectChange(this)">
                                 <option value=""></option>
-                                <option value="all">Show all default columns</option>
+                                <option value="all" selected>Show all default columns</option>
                                 <option value="recOnly">Expenditure details</option>
                                 <option value="Pies">Multiple Pies</option>
+                                <option value="TSV">Export Visible</option>
 
                             </select>
-                            <input type="image" value="Visible to Excel"  src="/contributionspaid/images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visiblet table as Excel file" />
-                            <a href="https://flowerbot.github.io/contributionspaid/recoupments.html" target="_blank" title="escape SP">Source</a>
+                            <input type="image" style="display: none" value="Visible to Excel"  src="/contributionspaid/images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visiblet table as Excel file" />
                         </div>
         <div id="output"></div>
 
