@@ -460,6 +460,7 @@ function getFileDate(path) {
         // for subototals
         var dataClass = $.pivotUtilities.SubtotalPivotData;
         var renderers = $.extend($.pivotUtilities.renderers, 
+       // $.pivotUtilities.d3_renderers,
         $.pivotUtilities.plotly_renderers, 
         $.pivotUtilities.subtotal_renderers, 
         $.pivotUtilities.export_renderers);
@@ -467,7 +468,7 @@ function getFileDate(path) {
 
         var sum = $.pivotUtilities.aggregatorTemplates.sum;
         var numberFormat = $.pivotUtilities.numberFormat;
-        var intFormat = numberFormat({digitsAfterDecimal: 0});
+        var intFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
         var SubtotalDisableFrom = document.getElementById("subtotalto").value;
         var rendererOptions = {
         //rendererOptions: {
