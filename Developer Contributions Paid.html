@@ -589,7 +589,7 @@ function getFileDate(path) {
                 $("#output").pivotUI(dataObj, {  
                     hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO", "RAM_PROCESS_CTR"],
                     dataClass: dataClass,
-                   rows: (savedConfig) ? savedConfig.rows : ["Transaction Year", "ApprovalYear", "Application ID", "Short Description", "locality"], 
+                   rows: (savedConfig) ? savedConfig.rows : ["Transaction Year", "Approval Year", "Application ID", "Short Description", "Locality"], 
                    cols: (savedConfig) ? savedConfig.cols : ["Purpose"],
                     vals: ["PAID"],
                     renderers: renderers,
@@ -607,7 +607,7 @@ function getFileDate(path) {
                             return sum(intFormat)(["PAID"]);
                         },
                         "BALANCE": function() {return sum(intFormat)(["BALANCE"])},
-                        "LEVIED": function() { return sum(intFormat)(["LEVIED"])},
+                        //"LEVIED": function() { return sum(intFormat)(["LEVIED"])},
                     }, 
                     onRefresh: function (config) {
 
@@ -755,7 +755,7 @@ function selectChange(el) {
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
 
-                tConfig["rows"] = ["Transaction Year", "ApprovalYear", "Application ID", "Short Description", "locality"];
+                tConfig["rows"] = ["Transaction Year", "Approval Year", "Application ID", "Short Description", "Locality"];
                 tConfig["cols"] = ["Purpose"];
                 tConfig["rendererName"] = "Table";
                 tConfig["inclusions"] = { "Transaction Year": yearArray };
@@ -774,7 +774,7 @@ function selectChange(el) {
                 delete tConfig["inclusions"];
 
                 tConfig["rows"] = ["Purpose"];
-                tConfig["cols"] = ["locality"];
+                tConfig["cols"] = ["Locality"];
                 tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
                 tConfig["inclusions"] = {};
 
