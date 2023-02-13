@@ -588,7 +588,7 @@ function getFileDate(path) {
                 $("#output").pivotUI(dataObj, {  
                     hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO", "RAM_PROCESS_CTR"],
                     dataClass: dataClass,
-                   rows: (savedConfig) ? savedConfig.rows : ["ApprovalYear", "Application ID", "Short Description", "locality"], 
+                   rows: (savedConfig) ? savedConfig.rows : ["Transaction Year","ApprovalYear", "Application ID", "Short Description", "locality"], 
                    cols: (savedConfig) ? savedConfig.cols : ["Purpose"],
                     vals: ["PAID"],
                     renderers: renderers,
@@ -754,7 +754,7 @@ function selectChange(el) {
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
 
-                tConfig["rows"] = ["Transaction Year", "ApprovalYear", "Application ID", "Short Description", "locality"];
+                tConfig["rows"] = ["ApprovalYear", "Application ID", "Short Description", "locality"];
                 tConfig["cols"] = ["Purpose"];
                 tConfig["rendererName"] = "Table";
                 tConfig["inclusions"] = { "Transaction Year": yearArray };

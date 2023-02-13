@@ -177,12 +177,10 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     //var yearArray = [String(new Date().getFullYear()-1), String(new Date().getFullYear())];
     var yearArray = [String(new Date().getFullYear())];
 
-    console.log(yearArray);
-
-    //var configobject;
+    var configobject;
     var configRenderer;
 
-    var storageTag = "-dcpaid2";  // make these unique to each chart
+    var storageTag = "-dcpaid";  // make these unique to each chart
 
     let configShowUI = localStorage.getItem('showUi'+storageTag) === null ? false : JSON.parse(localStorage.getItem('showUi'+storageTag));
 
@@ -401,7 +399,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
 
 
 
-var fileNameAndPath = "/contributionspaid/data/CurrentS94Transactions.csv";
+var fileNameAndPath = "/contributionspaid/data/Summarised Charges Query Improved.csv";
 
 var fromXlOne = false;
 
@@ -561,9 +559,7 @@ function getFileDate(path) {
                     return i[15] != "0.00"&& i[14] != "0.00";;
                 });
 
-                //console.log("DATAoBJ:");
-               // console.log(dataObj);
-
+            
                 console.log("records filtered to:", dataObj.length);
                 //console.log(dataObj);
 
@@ -578,15 +574,10 @@ function getFileDate(path) {
 
                     toggleButtonText(savedConfig.showUI);
 
-
-                        } else {
-                            $("#subTotalRowLimitDiv").hide();
-
                         }
 
 
                 $("#output").pivotUI(dataObj, {  
-                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO", "RAM_PROCESS_CTR"],
                     dataClass: dataClass,
                    rows: (savedConfig) ? savedConfig.rows : ["ApprovalYear", "Application ID", "Short Description", "locality"], 
                    cols: (savedConfig) ? savedConfig.cols : ["Purpose"],
@@ -594,9 +585,9 @@ function getFileDate(path) {
                     renderers: renderers,
                     rendererOptions: rendererOptions,
                     sorters: sorters,
-                    exclusions: {},
+                    exclusions: { Plan:["91","92","95",""]},
                     showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
-                    inclusions: (savedConfig) ? savedConfig.inclusions : { "Transaction Year": yearArray },
+                    inclusions: (savedConfig) ? savedConfig.inclusions : {LatestTransactionYear: yearArray },
                     rendererName: (savedConfig) ? savedConfig.rendererName : "Table",
                    aggregators:{
       
@@ -728,8 +719,6 @@ function selectChange(el) {
 
     var tConfig = $("#output").data("pivotUIOptions");
 
-   // console.log($("#output").data());
-
     console.log("tconfig:");
     console.log(tConfig);
 
@@ -754,10 +743,10 @@ function selectChange(el) {
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
 
-                tConfig["rows"] = ["Transaction Year", "ApprovalYear", "Application ID", "Short Description", "locality"];
+                tConfig["rows"] = ["ApprovalYear", "Application ID", "Short Description", "locality"];
                 tConfig["cols"] = ["Purpose"];
                 tConfig["rendererName"] = "Table";
-                tConfig["inclusions"] = { "Transaction Year": yearArray };
+                tConfig["inclusions"] = {LatestTransactionYear: yearArray };
             
                 
             }
@@ -789,29 +778,12 @@ function selectChange(el) {
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
 
-                tConfig["rows"] = ["Transaction Year", "Purpose","Levy"];
+                tConfig["rows"] = ["Purpose","Levy"];
                 tConfig["cols"] = [];
                 tConfig["rendererName"] = "Table With Subtotal";
-                tConfig["inclusions"] = { "Transaction Year": yearArray};
+                tConfig["inclusions"] = {LatestTransactionYear: yearArray};
 
 
-            } 
-
-            else 
-        if(el.value == "chartYear") {
-            console.log("year chart triggered");
-
-                delete tConfig["rows"];
-                delete tConfig["cols"];
-                delete tConfig["rendererName"];
-                delete tConfig["inclusions"];
-                delete tConfig["exclusions"];
-
-                tConfig["rows"] = ["Purpose"];
-                tConfig["cols"] = ["Transaction Year"];
-                tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
-                tConfig["inclusions"] = {};
-                tConfig["exclusions"] = {};
 
             } 
 
@@ -828,10 +800,8 @@ function selectChange(el) {
 
         if(val) {
         document.getElementById('toggleHideUIButton').value= "Hide Chart Settings";
-        $('#subTotalRowLimitDiv').show();
         } else {
             document.getElementById('toggleHideUIButton').value= "Show Chart Settings";
-            $('#subTotalRowLimitDiv').hide();
         }
 
 
@@ -955,7 +925,7 @@ function rowLimitChange(el)  {
 
         </script>
         <div id="header" class="hidden">Header/branding goes here</div>
-            <h3>Developer Contributions Paid</h3>
+            <h3 class="hidden">Developer Contributions Paid</h3>
 
                     <div>
                             <p>How to use: Select a preset from the menu, or click 'Show Chart Settings' and drag data elements to the required axis/use the drop down arrow beside each data element to filter the chart results.  </p>
@@ -970,8 +940,7 @@ function rowLimitChange(el)  {
                                 <option value=""></option>
                                 <option value="all">Summary View</option>
                                 <option value="focusOnApps">Focus on Applications</option>
-                                <option value="Pies">Bar Chart by Locality</option>
-                                <option value="chartYear">Bar Chart by Transaction Year</option>
+                                <option value="Pies">Bar Chart</option>
                                 <option value="TSV">Export Selected Data</option>
 
                             </select>
@@ -987,6 +956,7 @@ function rowLimitChange(el)  {
             <ul>
                 <li>Data provided in accordance with Cl 34 of the EP&A Regulation</li>
                 <li>Included are developer contributions levied on approved applications recorded in Council's Property and Rating system, introduced in 2002. </li>
+                <li>Some charges may have been paid in stages over multiple years - 'LatestTransactionYear' is the year of the most recent transaction recorded for the charge</li>
                 <li>Some levies and/or sectors have since been discontinued/consolidated - <span class="discontinued">these are shown highlighted</span>.</li>
                 </ul>
                 <div>Powered by <a target='_blank' href='https://pivottable.js.org/examples/'>Pivot.js</a> and <a href='https://nagarajanchinnasamy.github.io/subtotal/examples/' target='_blank'>Subtotal.js</a> </div>
