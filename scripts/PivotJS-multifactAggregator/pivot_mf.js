@@ -305,7 +305,6 @@
                     return function (data, rowKey, colKey) {
                         return {
                             selector: {
-                                grandtotal: [[],[]],
                                 total: [[], []],
                                 row: [rowKey, []],
                                 col: [[], colKey]
@@ -363,7 +362,12 @@
             "Col Heatmap": function (pvtData, opts) {
                 return $(pivotTableRenderer(pvtData, opts)).heatmap("colheatmap");
             }
+
+            
+
         };
+
+        
         locales = {
             en: {
                 aggregators: aggregators,
@@ -895,11 +899,13 @@
             }
 
             totalAggregator = pivotData.getAggregator([], []);
+
             if (totalAggregator.multivalue) {
                 val = totalAggregator.multivalue();
+                console.log(totalAggregator.format);
                 for (v in val) {
                     _d = val[v];
-                    html = "<td class='pvtGrandTotal'>" + _d + "</td>";
+                    html = "<td class='pvtGrandTotal'>" + totalAggregator.format(_d) + "</td>";
                     tr.append(html);
                 }
             } else {
