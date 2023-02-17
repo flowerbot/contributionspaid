@@ -744,8 +744,10 @@
                 return len;
             };
             result = $("<table class='table table-bordered pvtTable'>");
+
             for (j in colAttrs) {
                 c = colAttrs[j];
+               
                 tr = $("<tr>");
                 if (parseInt(j) === 0 && rowAttrs.length !== 0) {
                     tr.append($("<th>").attr("colspan", rowAttrs.length).attr("rowspan", colAttrs.length));
@@ -770,13 +772,18 @@
                 if (parseInt(j) === 0) {
                     tr.append($("<th class='pvtTotalLabel'>").text("Total").attr("colspan", col_colspan).attr("rowspan", colAttrs.length).css('vertical-align', 'middle'));
                 }
+ 
                 result.append(tr);
             }
+
+            //result.append("</thead>");
+            
             if (rowAttrs.length !== 0) {
                 tr = $("<tr>");
                 
                 let ctr = 0;
                 for (i in rowAttrs) {
+                  
                     r = rowAttrs[i];
                     ctr++;
                     var colNum = ctr;
@@ -810,114 +817,84 @@
                 }
                 result.append(tr);
             }
+            result.append("</thead>");
 
             for (i in rowKeys) {
                 rowKey = rowKeys[i];
                 tr = $("<tr>");
                 for (j in rowKey) {
-                    txt = rowKey[j];
-                   // console.log("rowKey 0:", rowAttrs[0]);
-
-                  //  console.log("colSpanArray:", colSpanArray[j]);
-
-                    var colspan = colSpanArray[j];
-
-                    /*
-                    var colspan = 1;
-                    if (j == 1) {
-                        colspan = rowAttrs.length;
-                    } else {
-                        if (colAttrs.length > 0) {
-                            colspan = colAttrs.length + 1;
-                        }
-                    } */
-                    var rowspan = spanSize(rowKeys, parseInt(i), parseInt(j));
-                    
-                    if (rowspan !== -1) {
-                        th = $("<th class='pvtRowLabel'>").text(txt).attr("rowspan", rowspan).attr("colspan", colspan).css("vertical-align", "middle");
-                        tr.append(th);
-                    }
+                  txt = rowKey[j];
+                  th = $("<th class='pvtRowLabel'>").text(txt).attr("rowspan", x);
+                  if (parseInt(j) === rowAttrs.length - 1 && colAttrs.length !== 0) {
+                    th.attr("colspan", 2);
+                  }
+                  tr.append(th);
                 }
-
                 for (j in colKeys) {
-                    colKey = colKeys[j];
-                    aggregator = pivotData.getAggregator(rowKey, colKey);
-                    if (aggregator.multivalue) {
-                        val = aggregator.multivalue();
-                        for (v in val) {
-                            tr.append($("<td class='pvtVal row" + i + " col" + j + "-" + v + "'>").text(aggregator.format(val[v])).data("value", val[v]));
-                        }
-                    } else {
-                        val = aggregator.value();
-                        if (val) {
-                            tr.append($("<td class='pvtVal row" + i + " col" + j + "'>").text(aggregator.format(val)).data("value", val));
-                        }
-                        else {
-                            tmpAggregator = pivotData.getAggregator([], []);
-                            var cols_length = 1;
-                            if (tmpAggregator.multivalue) {
-                                cols_length = Object.keys(tmpAggregator.multivalue()).length;
-                            }
-                            for (var cl = 0; cl < cols_length; cl++) {
-                                tr.append($("<td class='pvtVal row" + i + " col" + j + "-" + cl + "'>").text("").data("value", null));
-                            }
-                        }
-                    }
-                }
-
-                totalAggregator = pivotData.getAggregator(rowKey, []);
-                if (totalAggregator.multivalue) {
-                    val = totalAggregator.multivalue();
+                  colKey = colKeys[j];
+                  aggregator = pivotData.getAggregator(rowKey, colKey);
+          
+                  if (aggregator.multivalue) {
+                    val = aggregator.multivalue();
                     for (v in val) {
-                        //tr.append($("<td class='pvtTotal rowTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]).data("for", "row" + i));
-                        tr.append("<td class='pvtTotal rowTotal'>" + totalAggregator.format(val[v]) + "</td>");
+                      tr.append($("<td class='pvtVal row" + i + " col" + j + "'>").text(aggregator.format(val[v])).data("value", val[v]));
                     }
-                } else {
-                    val = totalAggregator.value();
-                    tr.append($("<td class='pvtTotal rowTotal'>").text(totalAggregator.format(val)).data("value", val).data("for", "row" + i));
+                  } else {
+                    val = aggregator.value();
+                    tr.append($("<td class='pvtVal row" + i + " col" + j + "'>").text(aggregator.format(val)).data("value", val));
+                  }
+          
                 }
+                totalAggregator = pivotData.getAggregator(rowKey, []);
+          
+          
+                if (totalAggregator.multivalue) {
+                  val = totalAggregator.multivalue();
+                  for (v in val) {
+                    tr.append($("<td class='pvtTotal rowTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]).data("for", "row" + i));
+                  }
+                } else {
+                  val = totalAggregator.value();
+                  tr.append($("<td class='pvtTotal rowTotal'>").text(totalAggregator.format(val)).data("value", val).data("for", "row" + i));
+                }
+          
                 result.append(tr);
-            }
+              }
 
-            tr = $("<tr>");
-            th = $("<th class='pvtTotalLabel'>").text("Total");
-            th.attr("colspan", rowAttrs.length + (colAttrs.length === 0 ? 0 : 1));
-           // th.attr("colspan", rowAttrs.length + (colAttrs.length === 0 ? 0 : 1));
-            tr.append(th);
-            for (j in colKeys) {
+              tr = $("<tr>");
+              th = $("<th class='pvtTotalLabel'>").text("Totals");
+              th.attr("colspan", rowAttrs.length + (colAttrs.length === 0 ? 0 : 1));
+              tr.append(th);
+              for (j in colKeys) {
                 colKey = colKeys[j];
                 totalAggregator = pivotData.getAggregator([], colKey);
+          
                 if (totalAggregator.multivalue) {
-                    val = totalAggregator.multivalue();
-                    for (v in val) {
-                        tr.append($("<td class='pvtTotal colTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]).data("for", "col" + j));
-                    }
+                  val = totalAggregator.multivalue();
+                  for (v in val) {
+                    tr.append($("<td class='pvtTotal colTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]).data("for", "col" + j));
+                  }
                 } else {
-                    val = totalAggregator.value();
-                    tr.append($("<td class='pvtTotal colTotal'>").text(totalAggregator.format(val)).data("value", val).data("for", "col" + j));
+                  val = totalAggregator.value();
+                  tr.append($("<td class='pvtTotal colTotal'>").text(totalAggregator.format(val)).data("value", val).data("for", "col" + j));
                 }
-            }
-
-            totalAggregator = pivotData.getAggregator([], []);
-
-            if (totalAggregator.multivalue) {
+              }
+          
+              totalAggregator = pivotData.getAggregator([], []);
+          
+              if (totalAggregator.multivalue) {
                 val = totalAggregator.multivalue();
-                console.log(totalAggregator.format);
                 for (v in val) {
-                    _d = val[v];
-                    html = "<td class='pvtGrandTotal'>" + totalAggregator.format(_d) + "</td>";
-                    tr.append(html);
+                  tr.append($("<td class='pvtGrandTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]));
                 }
-            } else {
+              } else {
                 val = totalAggregator.value();
-                html = $("<td class='pvtGrandTotal'>").text(totalAggregator.format(val)).data("value", val);
-                tr.append(html);
-            }
-
-            result.append(tr);
-            result.data("dimensions", [rowKeys.length, colKeys.length]);
-            // console.log("mfTableRenderer::execTime=" + ((new Date().getTime()) - startTime));
-            return result;
+                tr.append($("<td class='pvtGrandTotal'>").text(totalAggregator.format(val)).data("value", val));
+              }
+          
+              result.append(tr);
+              result.data("dimensions", [rowKeys.length, colKeys.length]);
+              return result;
         };
         pivotTableRenderer = function (pivotData, opts) {
             var aggregator, c, colAttrs, colKey, colKeys, defaults, i, j, r, result, rowAttrs, rowKey, rowKeys, spanSize, td, th, totalAggregator, tr, txt, val, x;
@@ -1161,6 +1138,7 @@
                 cols: [],
                 rows: [],
                 vals: [],
+               // inclusions: {},
                 exclusions: {},
                 unusedAttrsVertical: "auto",
                 autoSortUnusedAttrs: false,
@@ -1512,6 +1490,7 @@
                             cols: subopts.cols,
                             rows: subopts.rows,
                             vals: vals,
+                            //inclusions: inclusions,
                             exclusions: exclusions,
                             aggregatorName: aggregator.val(),
                             rendererName: renderer.val()

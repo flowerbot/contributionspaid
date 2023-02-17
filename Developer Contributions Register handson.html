@@ -1,0 +1,101 @@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+
+<script>
+
+var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMFCut.csv";
+
+var fromXlOne = false;
+
+
+function getFileDate(path) {
+
+$.ajaxSetup({cache: false});
+$.ajax({
+    type: "GET",
+    async: true,
+    timeout: 5000,
+    url : path,
+    dataType : "text",
+    success: function(data, textStatus, request){
+var lastModified = new Date(request.getResponseHeader("Last-Modified"));
+document.getElementById("fileDate").innerHTML = lastModified.toString();
+
+},
+    error: function(ex) {
+        console.log(ex);
+    }
+});
+}
+
+        Papa.parse(fileNameAndPath, {
+            download: true,
+            skipEmptyLines: true,
+            complete: function(parsed){
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+             // console.log("Parsed:");
+              console.log("records parsed: ", parsed.data.length);
+
+     
+              const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
+
+
+                var curPath = window.location.href;
+                //var fileDate = "";
+                var localDate = "";
+
+                getFileDate(fileNameAndPath);
+
+
+               // console.log("First Balance:" + parsed.data[1][1]);
+                 fixedData = [];
+
+               // console.log(parsed);
+
+                if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
+
+               // dataObj = parsed.data;
+                    var emptyCols = [];
+         
+                //i[14] is the 'LEVIED' column
+                // i[15] is the 'PAID' column
+                 dataObj = parsed.data.filter(function(i) {
+                    return i[15] != "0.00"&& i[14] != "0.00";;
+                });
+
+                var container = document.querySelector("#output");
+
+                const hot = new Handsontable(container, {
+                    data: dataObj,
+                    licenseKey: "non-commercial-and-evaluation",
+                   /* width: 400,
+                    height: 300, */
+                    colHeaders: true,
+                    rowHeaders: true,
+                    customBorders: true,
+                    dropdownMenu: true,
+                    multiColumnSorting: true,
+                    filters: true,
+                    manualRowMove: true,
+                    readOnly: true,
+                })
+
+
+
+            }
+        });
+</script>
+
+<div><span id="fileDate"></span></div>
+<div id="output"></div>

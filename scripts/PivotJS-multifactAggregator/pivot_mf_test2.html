@@ -1,0 +1,130 @@
+
+<html>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+    
+<!-- PivotTable.js libs from ../dist -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
+<!-- script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
+<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script -->
+
+
+
+<script type="text/javascript" src="multifact_sum_aggregator.js"></script>
+<script type="text/javascript" src="multifact_table_renderer.js"></script>
+
+<!-- link rel="stylesheet" type="text/css" href="pivot_mf.css" -->
+
+<style>
+    body {font-family: Verdana;}
+</style>
+
+
+
+
+    <body>
+
+
+<div id="pivotUI"></div>
+<script>
+    var dataObj;
+    var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMF.csv";
+
+
+    var custom_renderers = {
+	"Multifact Table": multifactTableRenderer()
+};
+
+var custom_aggregators = {
+	"Multifact aggregator": multifactSumAggregator()
+};
+
+
+
+
+    //var data = [ { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{03BCAAE8-F798-4B1F-8637-B88D662F8425}", "DetalOpis": "Kosz cukierniczy pomarańczowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 11 szt. ", "MO_Oper_Sum": "-11 +0", "MO_Saldo": "-11", "MS_Oper_Sum": "+11 -0 -0 +0", "MS_Saldo": "11", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{1255C28B-3B75-4748-BE25-CDAC820B2681}", "DetalOpis": "Kosz piekarniczy brązowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 13 szt. ", "MO_Oper_Sum": "-13 +0", "MO_Saldo": "-13", "MS_Oper_Sum": "+13 -0 -0 +0", "MS_Saldo": "13", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{C83A5CE5-388B-4031-BEAE-DC6B57D14F36}", "DetalOpis": "Kosz piekarniczy szary", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 12 szt. ", "MO_Oper_Sum": "-12 +0", "MO_Saldo": "-12", "MS_Oper_Sum": "+12 -0 -0 +0", "MS_Saldo": "12", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{693500D8-566F-4149-A980-C3E23F925D19}", "DetalOpis": "Kosz piekarniczy żółty/brązowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 10 szt. ", "MO_Oper_Sum": "-10 +0", "MO_Saldo": "-10", "MS_Oper_Sum": "+10 -0 -0 +0", "MS_Saldo": "10", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "37", "ParentOpis": "37) DĘBKI TRASA- MARCIN TKACZYK", "DetalID": "{C83A5CE5-388B-4031-BEAE-DC6B57D14F36}", "DetalOpis": "Kosz piekarniczy szary", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO <- MS (1) 4 szt. ", "MO_Oper_Sum": "-0 +4", "MO_Saldo": "4", "MS_Oper_Sum": "+0 -4 -0 +0", "MS_Saldo": "-4", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "37", "ParentOpis": "37) DĘBKI TRASA- MARCIN TKACZYK", "DetalID": "{693500D8-566F-4149-A980-C3E23F925D19}", "DetalOpis": "Kosz piekarniczy żółty/brązowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 21 szt. ", "MO_Oper_Sum": "-21 +0", "MO_Saldo": "-21", "MS_Oper_Sum": "+21 -0 -0 +0", "MS_Saldo": "21", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{601FDF09-9C79-458B-9897-6906FE32B9D1}", "DetalOpis": "Podkład czarny pod kosz", "IleOper": 2, "Operacje": "Razem: 2 w tym: MO -> MS (1) 4 szt. MO <- MS (1) 4 szt. ", "MO_Oper_Sum": "-4 +4", "MO_Saldo": "0", "MS_Oper_Sum": "+4 -4 -0 +0", "MS_Saldo": "0", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{0C86EF1D-54C7-4ED4-9F27-BEA2CAF3C822}", "DetalOpis": "Podkład czerwony pod kosze cukiernicze", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 6 szt. ", "MO_Oper_Sum": "-6 +0", "MO_Saldo": "-6", "MS_Oper_Sum": "+6 -0 -0 +0", "MS_Saldo": "6", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{5A5BF24A-44DC-46A1-98AA-CF48310B3939}", "DetalOpis": "Taca alum. duża 40x60x1", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 5 szt. ", "MO_Oper_Sum": "-5 +0", "MO_Saldo": "-5", "MS_Oper_Sum": "+5 -0 -0 +0", "MS_Saldo": "5", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{19944B9D-64E5-4C3E-8629-E2B60017CE8C}", "DetalOpis": "Taca złota duża 40x60x1", "IleOper": 2, "Operacje": "Razem: 2 w tym: MO -> MS (1) 5 szt. MO <- MS (1) 5 szt. ", "MO_Oper_Sum": "-5 +5", "MO_Saldo": "0", "MS_Oper_Sum": "+5 -5 -0 +0", "MS_Saldo": "0", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{112FB40F-6722-44A9-9A10-DA94C35DD31A}", "DetalOpis": "Taca złota mała 40x30x1", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 4 szt. ", "MO_Oper_Sum": "-4 +0", "MO_Saldo": "-4", "MS_Oper_Sum": "+4 -0 -0 +0", "MS_Saldo": "4", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-14 - 2015-05-14" } ] 
+
+    Papa.parse(fileNameAndPath, {
+            download: true,
+            skipEmptyLines: true,
+            complete: function(parsed){
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+             // console.log("Parsed:");
+              console.log("records parsed: ", parsed.data.length);
+
+     
+              const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
+
+
+                var curPath = window.location.href;
+
+
+              //  getFileDate(fileNameAndPath);
+
+
+               // console.log("First Balance:" + parsed.data[1][1]);
+                 fixedData = [];
+
+               // console.log(parsed);
+
+                if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
+
+               // dataObj = parsed.data;
+                    var emptyCols = [];
+         
+                //i[14] is the 'LEVIED' column
+                // i[15] is the 'PAID' column
+                 dataObj = parsed.data.filter(function(i) {
+                    return i[15] != "0.00"&& i[14] != "0.00";;
+                });
+
+
+                var pui = $("#pivotUI").pivotUI( dataObj, {
+                    aggregators: $.extend(custom_aggregators, $.pivotUtilities.aggregators),
+	renderers: $.extend(custom_renderers, $.pivotUtilities.renderers, $.pivotUtilities.gchart_renderers),
+            rows: ["Approval Year","Application ID"],
+            cols: ['Purpose'],
+            /*vals: ["LEVIED", "PAID", "BALANCE"], */
+            inclusions: { "Approval Year": ["2021", "2022", "2023"]},
+           /* aggregatorName: "MFSum",
+            rendererName: "MFTable", */
+            rendererOptions: { Table: { rowTotals: false } }
+        });
+            }
+        });
+
+/*
+        var pui = $("#pivotUI").pivotUI( data, {
+            rows: ["ParentOpis", "DetalOpis"],
+            cols: ['Okres'],
+            vals: ["IleOper", "MK_Saldo", "MO_Saldo", "MS_Saldo"],
+            aggregatorName: "MFSum",
+            rendererName: "MFTable",
+            hiddenAttributes: ["ParentID", "Operacje", "MK_Saldo", "MO_Saldo", "MS_Saldo", "IleOper", "DetalID", "MO_Oper_Sum", "MS_Oper_Sum", "MK_Oper_Sum"]
+        });
+        */
+/*var pui = $("#pivotUI").pivotUI( dataObj, {
+            rows: ["Plan"],
+            cols: ['Transaction Year'],
+            vals: ["LEVIED", "PAID", "Balance"],
+            aggregatorName: "MFSum",
+            rendererName: "MFTable"
+        });
+        */
+</script>
+
+</body>
+</html>

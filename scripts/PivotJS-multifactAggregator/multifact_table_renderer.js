@@ -1,12 +1,15 @@
-multifactTableRenderer = function(){
+
+multifactTableRenderer = function(fmt){
     return function(pivotData) {
+      console.log("format:", fmt);
       var aggregator, c, colAttrs, colKey, colKeys, i, j, r, result, rowAttrs, rowKey, rowKeys, th, totalAggregator, tr, txt, val, x;
       colAttrs = pivotData.colAttrs;
       rowAttrs = pivotData.rowAttrs;
       rowKeys = pivotData.getRowKeys();
       colKeys = pivotData.getColKeys();
+      colSpanArray=[];
   
-      result = $("<table class='table table-bordered pvtTable'>");
+      result = $("<table class='table table-bordered pvtTable mfTable'>");
   
       for (j in colAttrs) {
         c = colAttrs[j];
@@ -41,11 +44,26 @@ multifactTableRenderer = function(){
         }
         result.append(tr);
       }
+      
+      //header=result;
+     // console.log($('table.pvtTable tr:first'));
+
+
+      
+
       if (rowAttrs.length !== 0) {
         tr = $("<tr>");
+
+        let ctr = 0;
         for (i in rowAttrs) {
           r = rowAttrs[i];
-          tr.append($("<th class='pvtAxisLabel'>").text(r));
+          ctr++;
+          var colNum = ctr;
+          (colAttrs.length > 0 && colNum == rowAttrs.length) ? colSpanArray.push(2) : colSpanArray.push(1);
+
+          //tr.append($("<th class='pvtAxisLabel'>").text(r));
+          tr.append($("<th class='pvtAxisLabel' data-span='"+colSpanArray[i]+"'>").text(r));
+
         }
   
         tmpAggregator = pivotData.getAggregator([], []);
@@ -58,12 +76,12 @@ multifactTableRenderer = function(){
           val = tmpAggregator.multivalue();
           for (i in colKeys) {
             for (v in val) {
-              tr.append($("<th class='pvtColLabel'>").text(v).data("value", v));
+             (v != "") ? tr.append($("<th class='pvtColLabel'>").text(v).data("value", v)) : tr.append($("<th class='pvtColLabel'>").text("0").data("value", "0")) ;
             }
           }
   
           for (v in val) {
-            tr.append($("<th class='pvtColLabel'>").text(v).data("value", v));
+            (v!= "") ? tr.append($("<th class='pvtColLabel'>").text(v).data("value", v)) : tr.append($("<th class='pvtColLabel'>").text("0").data("value", "0"));
           }
         } else {
           th = $("<th>");
@@ -93,11 +111,16 @@ multifactTableRenderer = function(){
           if (aggregator.multivalue) {
             val = aggregator.multivalue();
             for (v in val) {
-              tr.append($("<td class='pvtVal row" + i + " col" + j + "'>").text(aggregator.format(val[v])).data("value", val[v]));
+             // console.log("V:",typeof v,":");
+              (v != "")
+              ? tr.append($("<td class='pvtVal row" + i + " col" + j + v + "'>").text(aggregator.format(val[v])).data("value", val[v]))
+              : tr.append($("<td class='pvtVal row" + i + " col" + j + v + "'>").text(aggregator.format(0)).data("value", 0));
             }
           } else {
             val = aggregator.value();
-            tr.append($("<td class='pvtVal row" + i + " col" + j + "'>").text(aggregator.format(val)).data("value", val));
+            (val != "") 
+            ? tr.append($("<td class='pvtVal row" + i + " col" + j + v + "'>").text(aggregator.format(val)).data("value", val))
+            : tr.append($("<td class='pvtVal row" + i + " col" + j + v + "'>").text(aggregator.format(0)).data("value", 0));
           }
   
         }
@@ -107,11 +130,11 @@ multifactTableRenderer = function(){
         if (totalAggregator.multivalue) {
           val = totalAggregator.multivalue();
           for (v in val) {
-            tr.append($("<td class='pvtTotal rowTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]).data("for", "row" + i));
+            tr.append($("<td class='pvtTotal rowTotal'>").text(val[v]).data("value", val[v]).data("for", "row" + i));
           }
         } else {
           val = totalAggregator.value();
-          tr.append($("<td class='pvtTotal rowTotal'>").text(totalAggregator.format(val)).data("value", val).data("for", "row" + i));
+          tr.append($("<td class='pvtTotal rowTotal'>").text(val).data("value", val).data("for", "row" + i));
         }
   
         result.append(tr);
@@ -127,11 +150,11 @@ multifactTableRenderer = function(){
         if (totalAggregator.multivalue) {
           val = totalAggregator.multivalue();
           for (v in val) {
-            tr.append($("<td class='pvtTotal colTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]).data("for", "col" + j));
+            tr.append($("<td class='pvtTotal colTotal'>").text(val[v]).data("value", val[v]).data("for", "col" + j));
           }
         } else {
           val = totalAggregator.value();
-          tr.append($("<td class='pvtTotal colTotal'>").text(totalAggregator.format(val)).data("value", val).data("for", "col" + j));
+          tr.append($("<td class='pvtTotal colTotal'>").text(val).data("value", val).data("for", "col" + j));
         }
       }
   
@@ -140,11 +163,11 @@ multifactTableRenderer = function(){
       if (totalAggregator.multivalue) {
         val = totalAggregator.multivalue();
         for (v in val) {
-          tr.append($("<td class='pvtGrandTotal'>").text(totalAggregator.format(val[v])).data("value", val[v]));
+          tr.append($("<td class='pvtGrandTotal'>").text(val[v]).data("value", val[v]));
         }
       } else {
         val = totalAggregator.value();
-        tr.append($("<td class='pvtGrandTotal'>").text(totalAggregator.format(val)).data("value", val));
+        tr.append($("<td class='pvtGrandTotal'>").text(val).data("value", val));
       }
   
       result.append(tr);

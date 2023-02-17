@@ -29,6 +29,9 @@
         <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
 
 
+        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_sum_aggregator.js"></script>
+<script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_table_renderer.js"></script>
+
 <!-- needed to dl as Excel -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
@@ -174,13 +177,14 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     var config = {};
 
     //var yearArray = [String(new Date().getFullYear()-2), String(new Date().getFullYear()-1), String(new Date().getFullYear())];
-    //var yearArray = [String(new Date().getFullYear()-1), String(new Date().getFullYear())];
+    var twoYearArray = [String(new Date().getFullYear()-1), String(new Date().getFullYear())];
     var yearArray = [String(new Date().getFullYear())];
 
-    console.log(yearArray);
+    //console.log(yearArray);
 
     //var configobject;
     var configRenderer;
+
 
     var storageTag = "-dcpaid2";  // make these unique to each chart
 
@@ -192,6 +196,41 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
         )
 
     }
+
+    var pdObject = {};
+
+    var vals = ['LEVIED', 'PAID']; //default
+
+    var sum = $.pivotUtilities.aggregatorTemplates.sum;
+    var numberFormat = $.pivotUtilities.numberFormat;
+    var intFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
+    var curFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
+
+    var custom_renderers = {
+        "Multifact Table": multifactTableRenderer()
+    };
+
+    var custom_aggregators = {
+        "Multifact aggregator": multifactSumAggregator(curFormat),
+        
+        "PAID": function() {
+                            //consol
+                         //   var balNum = parseFloat(["Balance"]);
+                            return sum(curFormat)(["PAID"]);
+                        }, 
+
+                     /*   "PAID": function() {
+                            //consol
+                         //   var balNum = parseFloat(["Balance"]);
+                            return {
+                                value: function(){ 
+                                    return sum(intFormat)(["PAID"]); },
+                                numInputs: 0 
+                        }},*/
+        "BALANCE": function() {return sum(curFormat)(["BALANCE"])},
+        "LEVIED": function() { return sum(curFormat)(["LEVIED"])} 
+    };
+
 
 
 
@@ -401,7 +440,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
 
 
 
-var fileNameAndPath = "/contributionspaid/data/CurrentS94Transactions.csv";
+var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMFCut.csv";
 
 var fromXlOne = false;
 
@@ -426,6 +465,49 @@ function getFileDate(path) {
             }
         });
 }
+
+
+
+document.addEventListener('click', function (e) {
+                //console.log(dataObj);
+                const cell = e.target.closest('th');
+                if (!cell) {return;} // Quit, not clicked on a cell
+                const row = cell.parentElement;
+                //console.log(dataObj);
+                tmpData = dataObj[0];
+                //console.log("tmpData:", tmpData);
+                rowIndex = tmpData.findIndex((el) => el == "Application ID");
+                tableRowIndex = savedConfig.rows.findIndex((el) => el == "Application ID");
+                pcIndex = tmpData.findIndex((el)=> el == "RAM_PROCESS_CTR");
+                if(rowIndex >= 0) {
+                           // console.log("row index:", row.cells[tableRowIndex].innerHTML);
+                            DAText = row.cells[tableRowIndex].innerHTML;
+
+                           // console.log("table row cell", row.cell[tableRowIndex].innerHTML);
+
+                            appCtr = dataObj.filter(function(i) {
+                                return (i[rowIndex]==DAText);
+                            })[0][pcIndex];
+
+                            
+
+                           // console.log("appCtr:", appCtr);
+                            
+                            if(appCtr > 0) {
+                            if (window.confirm("View DA Tracker details for "+ DAText + " ?"))
+                            {
+                                var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
+                                win.focus();
+                            }
+                        }
+            }
+
+                
+              //  console.log(cell.innerHTML, row.rowIndex, cell.cellIndex);
+            });
+
+
+
 
     $(function(){
 
@@ -465,12 +547,18 @@ function getFileDate(path) {
        // $.pivotUtilities.d3_renderers,
         $.pivotUtilities.plotly_renderers, 
         $.pivotUtilities.subtotal_renderers, 
+        custom_renderers,
         $.pivotUtilities.export_renderers);
+
+        /*var aggregators = $.extend($.pivotUtilities.aggregators,
+        custom_aggregators); */
+
         var tpl = $.pivotUtilities.aggregatorTemplates;
 
-        var sum = $.pivotUtilities.aggregatorTemplates.sum;
-        var numberFormat = $.pivotUtilities.numberFormat;
-        var intFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
+   
+
+
+
         var SubtotalDisableFrom = document.getElementById("subtotalto").value;
         var rendererOptions = {
         //rendererOptions: {
@@ -481,20 +569,21 @@ function getFileDate(path) {
                 colSubtotalDisplay: {
                     collapseAt: 1
                 },
-            table : {
-              /*  clickCallback: function(e, value, filters, pivotData) {
+          /*  table: {
+                clickCallback: function(e, value, filters, pivotData) {
+                    console.log("clicked");
                 var links = [];
                 pivotData.forEachMatchingRecord(filters,
-                function(record) { links.push(record.ProjectLink); });
+                function(record) { links.push(record["Application ID"]); });
 
                 if (window.confirm("Visit the project site at: "+ links[0] + " ?"))
                 {
                     var win = window.open(links[0], '_blank');
                     win.focus();
                 }
-                } */
+                } 
 
-            },
+            }, */
             //config["heatmap"] = {
 
 
@@ -560,9 +649,12 @@ function getFileDate(path) {
          
                 //i[14] is the 'LEVIED' column
                 // i[15] is the 'PAID' column
-                 dataObj = parsed.data.filter(function(i) {
+
+              /*   dataObj = parsed.data.filter(function(i) {
                     return i[15] != "0.00"&& i[14] != "0.00";;
-                });
+                }); */
+
+                dataObj = parsed.data;
 
                 //console.log("DATAoBJ:");
                // console.log(dataObj);
@@ -588,30 +680,83 @@ function getFileDate(path) {
                         }
 
 
+
+
                 $("#output").pivotUI(dataObj, {  
-                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO", "RAM_PROCESS_CTR"],
+                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO","RAM_PROCESS_CTR"],
                     dataClass: dataClass,
-                   rows: (savedConfig) ? savedConfig.rows : ["ApprovalYear", "Application ID", "Short Description", "Locality"], 
-                   cols: (savedConfig) ? savedConfig.cols : ["Purpose"],
-                    vals: ["PAID"],
-                    renderers: renderers,
-                    rendererOptions: rendererOptions,
-                    sorters: sorters,
-                    exclusions: {},
-                    showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
-                    inclusions: (savedConfig) ? savedConfig.inclusions : { "ApprovalYear": yearArray },
-                    rendererName: (savedConfig) ? savedConfig.rendererName : "Table",
-                   aggregators:{
-      
-                        "PAID": function() {
-                            //consol
-                         //   var balNum = parseFloat(["Balance"]);
-                            return sum(intFormat)(["PAID"]);
+                   rows: (savedConfig) ? savedConfig.rows : ["Application ID", "locality", "Short Description", "Locality", "Determined By", "Determined", "Purpose", "Levy", "Charge Amount", "LEVIED", "Works In Kind Description", "WIK $"], 
+                   cols: (savedConfig) ? savedConfig.cols : [],
+                    vals: (savedConfig) ? savedConfig.vals : ["PAID"],
+                    derivedAttributes: {
+                        "WIK $": function(d) {
+                            return d["Works In Kind Description"] != ""  ? d["LEVIED"] : 0;
                         },
-                        "BALANCE": function() {return sum(intFormat)(["BALANCE"])},
-                        "LEVIED": function() { return sum(intFormat)(["LEVIED"])},
-                    }, 
+                        "Determined": function(d) {
+                            return (d["Approval Date"]).substring(0,10);
+                        }
+                    },
+                    renderers: renderers,
+                    //aggregators: aggregators,
+                    rendererOptions: rendererOptions,
+                    menuLimit: 3000,
+                    sorters: sorters,
+                    exclusions: {"Determined By": [""]},
+                    aggregatorName: (savedConfig) ? savedConfig.aggregatorName : "PAID",
+                    //numberFormat: curFormat,
+                    showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
+                    inclusions: (savedConfig) ? savedConfig.inclusions : { "Approval Year": yearArray },
+                    rendererName: (savedConfig) ? savedConfig.rendererName : "Table",
+                   //aggregators: $.extend(custom_aggregators, $.pivotUtilities.aggregators),
+                   aggregators: custom_aggregators,
                     onRefresh: function (config) {
+
+
+/*
+                  //const tbody = document.querySelector('.pvtTable');
+                 document.addEventListener('click', function (e) {
+                //console.log(dataObj);
+                const cell = e.target.closest('th');
+                if (!cell) {return;} // Quit, not clicked on a cell
+                const row = cell.parentElement;
+                //console.log(dataObj);
+                tmpData = dataObj[0];
+                //console.log("tmpData:", tmpData);
+                rowIndex = tmpData.findIndex((el) => el == "Application ID");
+                tableRowIndex = config.rows.findIndex((el) => el == "Application ID");
+                pcIndex = tmpData.findIndex((el)=> el == "RAM_PROCESS_CTR");
+                if(rowIndex >= 0) {
+                           // console.log("row index:", row.cells[tableRowIndex].innerHTML);
+                            DAText = row.cells[tableRowIndex].innerHTML;
+
+                           // console.log("table row cell", row.cell[tableRowIndex].innerHTML);
+
+                            appCtr = dataObj.filter(function(i) {
+                                return (i[rowIndex]==DAText);
+                            })[0][pcIndex];
+
+                            
+
+                           // console.log("appCtr:", appCtr);
+                            
+                            if(appCtr > 0) {
+                            if (window.confirm("View DA Tracker details for "+ DAText + " ?"))
+                            {
+                                var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
+                                win.focus();
+                            }
+                        }
+            }
+
+                
+              //  console.log(cell.innerHTML, row.rowIndex, cell.cellIndex);
+            });
+*/
+
+                        console.log("refresh config");
+                        console.log(config.aggregatorName);
+
+                        vals = config.vals;
 
                 localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
 
@@ -622,7 +767,16 @@ function getFileDate(path) {
                 document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span class='blink_me'>" + JSON.stringify(config["inclusions"]) + "</span> ";
                 } catch (ex) {console.log("inclusions not found")};
 
+                if(config.aggregatorName != "Multifact aggregator") {
+
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                } else {
+                    //this worked for a one attribute column array but nothing else, and the aggregator doesn't behave unless every column is
+                    // represented so best not to use it
+                 /*   $newHead = $('<thead></thead>').prependTo('table.pvtTable').append($('table.pvtTable tr:first'));
+                $newHead.append($('table.pvtTable tr:nth-child(1)'));  */ 
+                         } 
 
                 var $table = $('table.pvtTable');
 
@@ -636,7 +790,7 @@ function getFileDate(path) {
                         floatTableClass: 'pivotBody',
                         autoReflow: true
                     });
-		  } catch(ex) {}
+		  } catch(ex) {} 
 
 
                     colorLevy();
@@ -647,7 +801,26 @@ function getFileDate(path) {
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             }
-        });
+
+
+
+            
+
+
+
+
+
+        }
+
+        
+        
+        
+        );
+
+
+
+
+
      });
 
 
@@ -756,11 +929,40 @@ function selectChange(el) {
                 delete tConfig["cols"];
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
+                delete tConfig["aggregatorName"];
+                delete tConfig["vals"];
 
-                tConfig["rows"] = ["ApprovalYear", "Application ID", "Short Description", "Locality"];
-                tConfig["cols"] = ["Purpose"];
+
+
+                tConfig["rows"] = ["Application ID", "locality", "Short Description", "Locality", "Determined By", "Determined", "Purpose", "Levy", "Charge Amount", "LEVIED", "Works In Kind Description", "WIK $"];
+                tConfig["cols"] = [];
                 tConfig["rendererName"] = "Table";
-                tConfig["inclusions"] = { "ApprovalYear": yearArray };
+                tConfig["aggregatorName"] = "PAID";
+                tConfig["inclusions"] = { "Approval Year": yearArray };
+                tConfig["vals"] = ["PAID"];
+                
+            
+                
+            }
+        else
+
+        if(el.value == "LeviedPaid") {
+                console.log("focus on apps triggered");
+
+                delete tConfig["rows"];
+                delete tConfig["cols"];
+                delete tConfig["rendererName"];
+                delete tConfig["inclusions"];
+                delete tConfig["aggregatorName"];
+                delete tConfig["vals"];
+                console.log("format:", tConfig.format);
+
+                tConfig["rows"] = ["Application ID", "locality", "Short Description", "Locality", "Determined By", "Determined", "Purpose", "Levy"];
+                tConfig["cols"] = [];
+                tConfig["rendererName"] = "Multifact Table";
+                tConfig["aggregatorName"] = "Multifact aggregator"
+                tConfig["inclusions"] = { "Approval Year": yearArray };
+                tConfig["vals"] = ["LEVIED","PAID"];
             
                 
             }
@@ -774,12 +976,15 @@ function selectChange(el) {
                 delete tConfig["cols"];
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
+                delete tConfig["vals"];
+                delete tConfig["aggregatorName"];
 
                 tConfig["rows"] = ["Purpose"];
-                tConfig["cols"] = ["Locality"];
+                tConfig["cols"] = ["locality"];
                 tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
                 tConfig["inclusions"] = {};
-
+                tConfig["aggregatorName"] = ["PAID"];
+                tConfig["vals"] = ["PAID"];
 
 
 
@@ -791,11 +996,15 @@ function selectChange(el) {
                 delete tConfig["cols"];
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
+                delete tConfig["vals"];
+                delete tConfig["aggregatorName"];
 
-                tConfig["rows"] = ["ApprovalYear", "Purpose","Levy"];
+                tConfig["rows"] = ["Approval Year", "Purpose","Levy"];
                 tConfig["cols"] = [];
                 tConfig["rendererName"] = "Table With Subtotal";
-                tConfig["inclusions"] = { "ApprovalYear": yearArray};
+                tConfig["inclusions"] = { "Approval Year": yearArray};
+                tConfig["aggregatorName"] = ["PAID"];
+                tConfig["vals"] = ["PAID"];
 
 
             } 
@@ -809,18 +1018,25 @@ function selectChange(el) {
                 delete tConfig["rendererName"];
                 delete tConfig["inclusions"];
                 delete tConfig["exclusions"];
+                delete tConfig["vals"];
+                delete tConfig["aggregatorName"];
 
                 tConfig["rows"] = ["Purpose"];
-                tConfig["cols"] = ["ApprovalYear"];
+                tConfig["cols"] = ["Approval Year"];
                 tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
                 tConfig["inclusions"] = {};
                 tConfig["exclusions"] = {};
+                tConfig["aggregatorName"] = ["PAID"];
+                tConfig["vals"] = ["PAID"];
 
             } 
 
                 localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
 
             $("#output").pivotUI(dataObj, tConfig, true);
+
+
+
 
 
 
@@ -922,7 +1138,7 @@ for(i=0; i<$colLabels.length; i++) {
 
    // if($levyLabels[k].innerHTML.match(/\p{U+25E2}\b Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
    
-   console.log($colLabels[i].textContent);
+  // console.log($colLabels[i].textContent);
    // first one is for the subtotal collapse arrow
 
    if($colLabels[i].textContent.match(/^ \u25E2 Community Facilities/)) $('.pvtColLabel').eq(i).addClass("comFacCell");
@@ -973,8 +1189,9 @@ function rowLimitChange(el)  {
                                 <option value=""></option>
                                 <option value="all">Summary View</option>
                                 <option value="focusOnApps">Focus on Applications</option>
+                                <option value="LeviedPaid">Applications - Levied and Paid</option>
                                 <option value="Pies">Bar Chart by Locality</option>
-                                <option value="chartYear">Bar Chart by ApprovalYear</option>
+                                <option value="chartYear">Bar Chart by Approval Year</option>
                                 <option value="TSV">Export Selected Data</option>
 
                             </select>

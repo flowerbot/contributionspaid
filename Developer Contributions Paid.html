@@ -604,8 +604,11 @@ function getFileDate(path) {
                         "PAID": function() {
                             //consol
                          //   var balNum = parseFloat(["Balance"]);
-                            return sum(intFormat)(["PAID"]);
-                        },
+                            return {
+                                value: function(record){ 
+                                    return sum(intFormat)(["PAID"]); },
+                                numInputs: 0 
+                        }},
                         "BALANCE": function() {return sum(intFormat)(["BALANCE"])},
                         "LEVIED": function() { return sum(intFormat)(["LEVIED"])},
                     }, 

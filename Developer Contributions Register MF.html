@@ -5,6 +5,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/2.2.1/jquery.floatThead.min.js"></script>
+
     
 <!-- PivotTable.js libs from ../dist -->
 <!-- link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
@@ -15,8 +17,15 @@
 
 
 
+
+    <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
+    <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
+
+
 <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/pivot_mf.js"></script>
 <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-multifactAggregator/pivot_mf.css">
+
+
 
 <style>
     body {font-family: Verdana;}
@@ -147,6 +156,211 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
 <script>
     var dataObj;
     var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMF.csv";
+    var storageTag = "dcRegisterMF";
+
+    var discontinued = [
+            {
+            "Charge_Type": "ComFacNth",
+            "Levy": "S95-15 - Community Facilities (Nth Coast)",
+            "DiscontinuedDate": "28/9/2010",
+            "Discontinued": "discontinued"
+            },
+            {
+            "Charge_Type": "ComFacSth",
+            "Levy": "S95-15  - Community Facilities (Sth Coast)",
+            "DiscontinuedDate": "28/9/2010",
+            "Discontinued": "discontinued"
+            },
+            {
+            "Charge_Type": "CommFac3",
+            "Levy": "S94-03 - Community Facilities",
+            "DiscontinuedDate": "30/6/2020",
+            "Discontinued": "discontinued"
+            },
+            {
+            "Charge_Type": "Cycleway19",
+            "Levy": "S94-19 - Kings Beach/Forest - Cycleways",
+            "DiscontinuedDate": "15/11/2005",
+            "Discontinued": "consolidated in "
+            },
+            {
+            "Charge_Type": "HeavyHaulD",
+            "Levy": "S94-04 - Heavy Haulage Contributions",
+            "DiscontinuedDate": "1/12/2016",
+            "Discontinued": "discontinued"
+            },
+            {
+            "Charge_Type": "LCA-1",
+            "Levy": "S94-04 - Road Contribution LCA1",
+            "DiscontinuedDate": "31/1/2012",
+            "Discontinued": "discontinued"
+            },
+            {
+            "Charge_Type": "LCA-2",
+            "Levy": "S94-04 - Road Contribution LCA2",
+            "DiscontinuedDate": "31/1/2012",
+            "Discontinued": "discontinued"
+            },
+            {
+            "Charge_Type": "Sector12_4",
+            "Levy": "S94-04 - Road Contribution Sector 12",
+            "DiscontinuedDate": "19/7/2007",
+            "Discontinued": "Split to 12a/12b"
+            },
+            {
+            "Charge_Type": "Sector7a_4",
+            "Levy": "S94-04 - Road Contribution Sector 07a Dbah/Cab",
+            "DiscontinuedDate": "19/7/2007",
+            "Discontinued": "consolidted in Sector 7"
+            },
+            {
+            "Charge_Type": "Sector7b_4",
+            "Levy": "S94-04 - Road Contribution Sector 07b Kings Forest",
+            "DiscontinuedDate": "19/7/2007",
+            "Discontinued": "consolidated in Sector 7"
+            },
+            {
+            "Charge_Type": "Sector7c_4",
+            "Levy": "S94-04 - Road Contribution Sector 07c Kings Beach",
+            "DiscontinuedDate": "19/7/2007",
+            "Discontinued": "consolidated in Sector 7"
+            },
+            {
+            "Charge_Type": "Sector8a_4",
+            "Levy": "S94-04 - Road Contribution Sector 08a",
+            "DiscontinuedDate": "19/7/2007",
+            "Discontinued": "consolidated in Sector 8"
+            },
+            {
+            "Charge_Type": "Sector8b_4",
+            "Levy": "S94-04 - Road Contribution Sector 08b",
+            "DiscontinuedDate": "19/7/2007",
+            "Discontinued": "consolidated in Sector 8"
+            },
+            {
+            "Charge_Type": "RemShire",
+            "Levy": "S94-16 - Emergency Facilities - Rest of Shire",
+            "DiscontinuedDate": "28/2/2006",
+            "Discontinued": "discontinued on Ministers Direction"
+            },
+            {
+            "Charge_Type": "Tou/KH/Sea",
+            "Levy": "S94-16 - Emergency Fac Tou/KH/Sea/KF/CasB",
+            "DiscontinuedDate": "28/2/2006",
+            "Discontinued": "discontinued on Ministers Direction"
+            },
+            {
+            "Charge_Type": "SubOnly6",
+            "Levy": "S94-06  - Street Trees",
+            "DiscontinuedDate": "12/7/2005",
+            "Discontinued": "discontinued on Ministers Direction"
+            },
+            {
+            "Charge_Type": "Struct5_2",
+            "Levy": "S94-05 - Structured Open Space Zone 2",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_3",
+            "Levy": "S94-05 - Structured Open Space Zone 3",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_1",
+            "Levy": "S94-05 - Structured Open Space Zone 1",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Casual5_1",
+            "Levy": "S94-05 - Casual Open Space Zone 1",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Casual5_2",
+            "Levy": "S94-05 - Casual Open Space Zone 2",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Casual5_3",
+            "Levy": "S94-05 - Casual Open Space Zone 3",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_4",
+            "Levy": "S94-05 - Structured Open Space Zone 4",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Casual5_4",
+            "Levy": "S94-05 - Casual Open Space Zone 4",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_5",
+            "Levy": "S94-05 - Structured Open Space Zone 5",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Casual5_5",
+            "Levy": "S94-05 - Casual Open Space Zone 5",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_6",
+            "Levy": "S94-05 - Structured Open Space Zone 6",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Casual5_6",
+            "Levy": "S94-05 - Casual Open Space Zone 6",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_7",
+            "Levy": "S94-05 - Structured Open Space Zone 7",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Casual5_7",
+            "Levy": "S94-05 - Casual Open Space Zone 7",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_8",
+            "Levy": "S94-05 - Structured Open Space Zone 8",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_9",
+            "Levy": "S94-05 - Structured Open Space Zone 9",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            },
+            {
+            "Charge_Type": "Struct5_10",
+            "Levy": "S94-05 - Structured Open Space Zone 10",
+            "DiscontinuedDate": "26/8/2002",
+            "Discontinued": "consolidated into Local Structure Open Space"
+            }
+
+      
+            ];
+
 
 console.log("renderers:");
 console.log($.pivotUtilities.renderers);
@@ -156,6 +370,14 @@ console.log($.pivotUtilities.renderers);
                     $.pivotUtilities.plotly_renderers, 
                     $.pivotUtilities.subtotal_renderers, 
                     $.pivotUtilities.export_renderers);
+
+  /*  var sorters = {
+        "Purpose": $.pivotUtilities.sortAs(
+            ["Community Facilities","Open Space", "Roads","Drainage"]
+        )
+
+    } */
+
 
    // var data = [ { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{03BCAAE8-F798-4B1F-8637-B88D662F8425}", "DetalOpis": "Kosz cukierniczy pomarańczowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 11 szt. ", "MO_Oper_Sum": "-11 +0", "MO_Saldo": "-11", "MS_Oper_Sum": "+11 -0 -0 +0", "MS_Saldo": "11", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{1255C28B-3B75-4748-BE25-CDAC820B2681}", "DetalOpis": "Kosz piekarniczy brązowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 13 szt. ", "MO_Oper_Sum": "-13 +0", "MO_Saldo": "-13", "MS_Oper_Sum": "+13 -0 -0 +0", "MS_Saldo": "13", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{C83A5CE5-388B-4031-BEAE-DC6B57D14F36}", "DetalOpis": "Kosz piekarniczy szary", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 12 szt. ", "MO_Oper_Sum": "-12 +0", "MO_Saldo": "-12", "MS_Oper_Sum": "+12 -0 -0 +0", "MS_Saldo": "12", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "58", "ParentOpis": "58) Tomasz Kuhr - Kosakowo", "DetalID": "{693500D8-566F-4149-A980-C3E23F925D19}", "DetalOpis": "Kosz piekarniczy żółty/brązowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 10 szt. ", "MO_Oper_Sum": "-10 +0", "MO_Saldo": "-10", "MS_Oper_Sum": "+10 -0 -0 +0", "MS_Saldo": "10", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "37", "ParentOpis": "37) DĘBKI TRASA- MARCIN TKACZYK", "DetalID": "{C83A5CE5-388B-4031-BEAE-DC6B57D14F36}", "DetalOpis": "Kosz piekarniczy szary", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO <- MS (1) 4 szt. ", "MO_Oper_Sum": "-0 +4", "MO_Saldo": "4", "MS_Oper_Sum": "+0 -4 -0 +0", "MS_Saldo": "-4", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "37", "ParentOpis": "37) DĘBKI TRASA- MARCIN TKACZYK", "DetalID": "{693500D8-566F-4149-A980-C3E23F925D19}", "DetalOpis": "Kosz piekarniczy żółty/brązowy", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 21 szt. ", "MO_Oper_Sum": "-21 +0", "MO_Saldo": "-21", "MS_Oper_Sum": "+21 -0 -0 +0", "MS_Saldo": "21", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-13 - 2015-05-13" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{601FDF09-9C79-458B-9897-6906FE32B9D1}", "DetalOpis": "Podkład czarny pod kosz", "IleOper": 2, "Operacje": "Razem: 2 w tym: MO -> MS (1) 4 szt. MO <- MS (1) 4 szt. ", "MO_Oper_Sum": "-4 +4", "MO_Saldo": "0", "MS_Oper_Sum": "+4 -4 -0 +0", "MS_Saldo": "0", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{0C86EF1D-54C7-4ED4-9F27-BEA2CAF3C822}", "DetalOpis": "Podkład czerwony pod kosze cukiernicze", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 6 szt. ", "MO_Oper_Sum": "-6 +0", "MO_Saldo": "-6", "MS_Oper_Sum": "+6 -0 -0 +0", "MS_Saldo": "6", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{5A5BF24A-44DC-46A1-98AA-CF48310B3939}", "DetalOpis": "Taca alum. duża 40x60x1", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 5 szt. ", "MO_Oper_Sum": "-5 +0", "MO_Saldo": "-5", "MS_Oper_Sum": "+5 -0 -0 +0", "MS_Saldo": "5", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{19944B9D-64E5-4C3E-8629-E2B60017CE8C}", "DetalOpis": "Taca złota duża 40x60x1", "IleOper": 2, "Operacje": "Razem: 2 w tym: MO -> MS (1) 5 szt. MO <- MS (1) 5 szt. ", "MO_Oper_Sum": "-5 +5", "MO_Saldo": "0", "MS_Oper_Sum": "+5 -5 -0 +0", "MS_Saldo": "0", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-15 - 2015-05-15" }, { "ParentID": "36", "ParentOpis": "36) Mariusz Orzeł", "DetalID": "{112FB40F-6722-44A9-9A10-DA94C35DD31A}", "DetalOpis": "Taca złota mała 40x30x1", "IleOper": 1, "Operacje": "Razem: 1 w tym: MO -> MS (1) 4 szt. ", "MO_Oper_Sum": "-4 +0", "MO_Saldo": "-4", "MS_Oper_Sum": "+4 -0 -0 +0", "MS_Saldo": "4", "MK_Oper_Sum": "", "MK_Saldo": "0", "Okres": "2015-05-14 - 2015-05-14" } ] 
 
@@ -203,14 +425,59 @@ console.log($.pivotUtilities.renderers);
 
 
                 var pui = $("#pivotUI").pivotUI( dataObj, {
-            rows: ["Approval Year", "Application ID", "Short Description", , "Works In Kind Description"],
-            cols: ['Purpose'],
-            vals: ["LEVIED", "PAID"],
-            inclusions: { "Approval Year": ["2023"]},
-            aggregatorName: "MFSum",
-            rendererName: "MFTable",
-            rendererOptions: { Table: { rowTotals: false } },
-            renderers: renderers
+                        rows: ["Approval Year", "Application ID", "Short Description", "Determined By", "Approval Date", "Levy", "Works In Kind Description"],
+                        cols: ['Purpose'],
+                        vals: ["Charge Amount", "PAID"],
+                        exclusions: { "Approval Year": ["1984","1987","1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016"],
+                                     "Determined By": [""]},
+                        aggregatorName: "MFSum",
+                        rendererName: "MFTable",
+                        rendererOptions: { Table: { rowTotals: false } },
+                        renderers: renderers,
+                        showUI: false,
+                       // sorters: sorters,
+                        derivedAttributes: {
+                            "WIK $": function(d) {
+                            //  console.log("d:", d);
+                                return d["Works In Kind Description"] != ""  ? d["Amount"] : 0;
+                            }
+                        },
+                        onRefresh: function (config) {
+
+                            localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
+
+
+
+
+                            try {
+                            document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span class='blink_me'>" + JSON.stringify(config["inclusions"]) + "</span> ";
+                            } catch (ex) {console.log("inclusions not found")};
+
+
+                            $newHead = $('<thead></thead>').prependTo('table.pvtTable').append($('table.pvtTable tr:first'));
+                            $newHead.append($('table.pvtTable tr:nth-child(1)'));
+
+                            //console.log(header1);
+                            
+                           // console.log($header1);
+                           var $table = $('table.pvtTable');
+
+                         try {
+                            //   console.log($table.closest('.wrapper'));
+                                //console.log($table);
+                                $table.floatThead({
+                                    scrollContainer: function($table){
+                                        return $table.closest('.wrapper');
+                                    },
+                                    position: 'auto',
+                                    floatTableClass: 'pivotBody',
+                                    autoReflow: true
+                                });
+                         } catch(ex) {}
+
+
+                                colorLevy();
+                            }
         });
             }
         });
@@ -233,6 +500,94 @@ console.log($.pivotUtilities.renderers);
             rendererName: "MFTable"
         });
         */
+
+        function colorLevy() {
+
+var $levyLabels = $(".pvtRowLabel");
+
+//const triangle =/\p{Black Lower Right Triangle}/gu;
+
+for(k=0; k<$levyLabels.length; k++) {
+    var labelLookup = discontinued.filter(obj => {
+    return obj["Levy"] === $levyLabels[k].innerHTML;
+    });
+
+  //  console.log($levyLabels[k].innerHTML);
+   
+    if (labelLookup.length > 0) {
+      //  console.log(labelLookup);
+        var dDate = labelLookup[0].DiscontinuedDate;
+        var dText = labelLookup[0].Discontinued;
+        $('.pvtRowLabel').eq(k).addClass("discontinued");
+        $('.pvtRowLabel').eq(k).attr("title",dText + " "+ dDate);
+    }
+
+   // if($levyLabels[k].innerHTML.match(/\p{U+25E2}\b Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+   // first one is for the subtotal collapse arrow
+    if($levyLabels[k].innerHTML.match(/^ \u25E2 Community Facilities/)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+    if($levyLabels[k].innerHTML.match(/^Community Facilities/)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+
+
+    if($levyLabels[k].innerHTML.match(/^ \u25E2 Open Space/)) $('.pvtRowLabel').eq(k).addClass("osCell");
+    if($levyLabels[k].innerHTML.match(/^Open Space/)) $('.pvtRowLabel').eq(k).addClass("osCell");
+
+    if($levyLabels[k].innerHTML.match(/^ \u25E2 Drainage/)) $('.pvtRowLabel').eq(k).addClass("drainageCell");
+    if($levyLabels[k].innerHTML.match(/^Drainage/)) $('.pvtRowLabel').eq(k).addClass("drainageCell");
+
+    if($levyLabels[k].innerHTML.match(/^ \u25E2 Roads/)) $('.pvtRowLabel').eq(k).addClass("roadCell");
+    if($levyLabels[k].innerHTML.match(/^Roads/)) $('.pvtRowLabel').eq(k).addClass("roadCell");
+
+
+    if($levyLabels[k].innerHTML.match(/^ \u25E2 Other/)) $('.pvtRowLabel').eq(k).addClass("otherCell");
+    if($levyLabels[k].innerHTML.match(/^Other/)) $('.pvtRowLabel').eq(k).addClass("otherCell");
+
+
+   // if($levyLabels[k].innerHTML.match(/^Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+
+}
+
+
+
+var $colLabels = $(".pvtColLabel");
+
+//const triangle =/\p{Black Lower Right Triangle}/gu;
+
+for(i=0; i<$colLabels.length; i++) {
+// var labelLookup = discontinued.filter(obj => {
+// return obj["Levy"] === $levyLabels[k].innerHTML;
+// });
+
+//  console.log($levyLabels[k].innerHTML);
+
+
+// if($levyLabels[k].innerHTML.match(/\p{U+25E2}\b Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+
+console.log($colLabels[i].textContent);
+// first one is for the subtotal collapse arrow
+
+if($colLabels[i].textContent.match(/^ \u25E2 Community Facilities/)) $('.pvtColLabel').eq(i).addClass("comFacCell");
+if($colLabels[i].textContent.match(/^Community Facilities/)) $('.pvtColLabel').eq(i).addClass("comFacCell");
+
+
+if($colLabels[i].textContent.match(/^ \u25E2 Open Space/)) $('.pvtColLabel').eq(i).addClass("osCell");
+if($colLabels[i].textContent.match(/^Open Space/)) $('.pvtColLabel').eq(i).addClass("osCell");
+
+if($colLabels[i].textContent.match(/^ \u25E2 Drainage/)) $('.pvtColLabel').eq(i).addClass("drainageCell");
+if($colLabels[i].textContent.match(/^Drainage/)) $('.pvtColLabel').eq(i).addClass("drainageCell");
+
+if($colLabels[i].textContent.match(/^ \u25E2 Roads/)) $('.pvtColLabel').eq(i).addClass("roadCell");
+if($colLabels[i].textContent.match(/^Roads/)) $('.pvtColLabel').eq(i).addClass("roadCell");
+
+
+if($colLabels[i].textContent.match(/^ \u25E2 Other/)) $('.pvtColLabel').eq(i).addClass("otherCell");
+if($colLabels[i].textContent.match(/^Other/)) $('.pvtColLabel').eq(i).addClass("otherCell");
+
+
+// if($levyLabels[k].innerHTML.match(/^Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+
+}
+
+}
 </script>
 
 </body>
