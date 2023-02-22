@@ -29,12 +29,14 @@
         <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
 
 
-        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_sum_aggregator.js"></script>
-<script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_table_renderer.js"></script>
+        <!-- script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_sum_aggregator.js"></script>
+<script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_table_renderer.js"></script -->
 
 <!-- needed to dl as Excel -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <style>
@@ -165,6 +167,50 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
   /*  display: none; */
 }
 
+.rowWrap {
+    height: auto;
+}
+
+.cellWrap {
+    white-space: normal !important;
+    word-wrap: break-word;
+    word-break: break-all;
+    max-width: 200px;
+   /* height: 100px; */
+   /* overflow: unset; */
+
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.intro {
+    font-size: smaller;
+    font-style:italic;
+    text-align:left;
+}
+table.dataTable {
+    border-collapse: collapse;
+}
+
+.dataTable tbody tr th {
+    text-align: left;
+}
+
+tr.dataDic td {
+    font-size: smaller;
+}
+.dicDivider {
+    background-color:rgb(49, 76, 78);
+    color: white;
+}
+
+tr.dataDic:nth-child(even) {
+
+    background-color: #e2f0ff;
+
+}
 
 
 </style>
@@ -199,7 +245,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
 
     var pdObject = {};
 
-    var vals = ['LEVIED', 'PAID']; //default
+    var vals = ['AMOUNT']; //default
 
     var sum = $.pivotUtilities.aggregatorTemplates.sum;
     var numberFormat = $.pivotUtilities.numberFormat;
@@ -207,12 +253,13 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     var curFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
 
     var custom_renderers = {
-        "Multifact Table": multifactTableRenderer()
+      //  "Multifact Table": multifactTableRenderer()
     };
 
     var custom_aggregators = {
-        "Multifact aggregator": multifactSumAggregator(curFormat),
-        
+       // "Multifact aggregator": multifactSumAggregator(curFormat),
+       "AMOUNT": function() { return sum(curFormat)(["Amount"])},
+       "LEVIED": function() { return sum(curFormat)(["LEVIED"])},
         "PAID": function() {
                             //consol
                          //   var balNum = parseFloat(["Balance"]);
@@ -227,8 +274,9 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
                                     return sum(intFormat)(["PAID"]); },
                                 numInputs: 0 
                         }},*/
-        "BALANCE": function() {return sum(curFormat)(["BALANCE"])},
-        "LEVIED": function() { return sum(curFormat)(["LEVIED"])} 
+        "BALANCE": function() {return sum(curFormat)(["BALANCE"])}
+
+        
     };
 
 
@@ -438,9 +486,101 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
             ];
 
 
+var dataDictionary = [ 
+    {
+        "Value":"Purpose",
+        "Description":"Represents one of the 5 categories of contribution required by the Department of Planning's reporting template, derived from the charge description."
+    },
+    {
+        "Value": "Amount",
+        "Description": "Sum of all transactions for each record, being of type 'TR TYPE' LEVIED, PAID or WIK CREDIT by Charge.  This value is always correct and should be used in preference to 'Charge Amount'"
+    },
+    {   "Value": "Charge Amount",
+        "Description": "Most often this is $ value recorded on the charge when first raised (see Initial Balance).  In most cases it will be equivalent to Amount for TR TYPE 'LEVIED', however adjustments to the charge may have been made at a later date by various 'adjustment' transactions where the Charge Amount was not updated."
+    },
+    {   "Value": "Initial Balance",
+        "Description": "$ value recorded on the charge when first raised.  While the Charge Amount may be altered after the charge is first raised to record the current amount to be charged, the Initial Balance will not.  In practice at TSC, this is usually the same as the Charge Amount, as it is not current practice to update the Charge Amount when adjustments are made."
+    },
+    {   "Value": "Balance",
+        "Description": "$ value remaining to be paid on the charge.  A Balance value of $0 means the charge is fully paid."
+    },
+    { "Value": "Levy",
+        "Description": "The full name of the charge applied to the application."
+    },
+    {
+        "Value": "LEVIED",
+        "Description": "Same $ value as 'Amount', but only applied to records where the 'TR TYPE' is 'LEVIED'"
+
+    },
+    {
+        "Value": "LEVIED Description",
+        "Description": "Transaction notes (REFERENCE) IF TR TYPE is 'LEVIED', empty on other records.  Note that by default each transaction will have a reference of the Application ID"
+
+    },
+    {
+        "Value": "PAID",
+        "Description": "Same $ value as 'Amount', but only applied to records where the 'TR TYPE' is 'PAID'"
+
+    },
+    {
+        "Value": "PAID Description",
+        "Description": "Transaction notes (REFERENCE) IF TR TYPE is 'PAID', empty on other records.  Note that by default each transaction will have a reference of the Application ID"
+
+    },
+    {
+        "Value": "WIK CREDIT",
+        "Description": "Same $ value as 'Amount', but only applied to records where the 'TR TYPE' is 'WIK CREDIT'"
+
+    },
+    {
+        "Value": "WIK Description",
+        "Description": "Transaction notes (REFERENCE) if TR TYPE is 'WIK CREDIT', empty on other records"
+
+    },
+    { 
+        "Value": "Application ID",
+        "Description": "Council's identifier for the application.  This ID can be searched in Council's DA Tracker.  Click a row which contains the Application ID to open the DA Tracker for that application."
+    },
+    { 
+        "Value": "Determined By",
+        "Description": "This dataset includes approved applications only (see also 'DECISION')"
+    },
+    { 
+        "Value": "DECISION",
+        "Description": "This dataset includes approved applications only (see also 'Determined By')"
+    },
+    {
+        "Value": "Application Description",
+        "Description": "Full description of the development application (see also 'Short Description')"
+    }, 
+    {
+        "Value": "Short Description",
+        "Description":  "Truncated version of 'Application Description' to fit the chart onscreen.  In Table views, hover your mouse over the Short Description to see the full description."
+    },
+    {
+        "Value": "Lots",
+        "Description": "The number of lots or units the application includes."
+    },
+    {
+        "Value": "locality",
+        "Description": "locality (suburb) where the development is located"
+
+    },
+    { 
+        "Value": "legal_description",
+        "Description": "Deposited plan legal description for the application"
+        
+    },
+    { 
+        "Value": "formatted_address",
+        "Description": "street address for the application"
+        
+    }
+    
+];
 
 
-var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMFCut.csv";
+var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMF.csv";
 
 var fromXlOne = false;
 
@@ -469,36 +609,83 @@ function getFileDate(path) {
 
 
 document.addEventListener('click', function (e) {
-                //console.log(dataObj);
+
                 const cell = e.target.closest('th');
+
                 if (!cell) {return;} // Quit, not clicked on a cell
                 const row = cell.parentElement;
-                //console.log(dataObj);
                 tmpData = dataObj[0];
-                //console.log("tmpData:", tmpData);
                 rowIndex = tmpData.findIndex((el) => el == "Application ID");
                 tableRowIndex = savedConfig.rows.findIndex((el) => el == "Application ID");
                 pcIndex = tmpData.findIndex((el)=> el == "RAM_PROCESS_CTR");
-                if(rowIndex >= 0) {
+                tmpRows = document.querySelectorAll("table.pvtTable >tbody tr");
+                maxCols = tmpRows[0].cells.length;
+                appCtr = 0;
+                subtract = 0;
+                //record = [];
+                if(maxCols-row.cells.length != 0) subtract = maxCols-row.cells.length;
+
+                if(tableRowIndex > -1) {
                            // console.log("row index:", row.cells[tableRowIndex].innerHTML);
-                            DAText = row.cells[tableRowIndex].innerHTML;
+                           if( ["Table", "Heatmap", "Row Heatmap", "Col Heatmap"].indexOf(savedConfig.rendererName) > -1 ) {
+                                DAText = row.cells[tableRowIndex-subtract].innerHTML;
 
-                           // console.log("table row cell", row.cell[tableRowIndex].innerHTML);
+                                console.log("DAText:", DAText);
 
-                            appCtr = dataObj.filter(function(i) {
-                                return (i[rowIndex]==DAText);
-                            })[0][pcIndex];
+                            // console.log("table row cell", row.cell[tableRowIndex].innerHTML);
 
-                            
+                            console.log("row index:", rowIndex);
 
-                           // console.log("appCtr:", appCtr);
+                                appCtr = dataObj.filter(function(i) {
+                                    return (i[rowIndex]==DAText);
+                                })[0][pcIndex];
+
+                              /*  record = dataObj.filter(function(i){
+                                    return (i[rowIndex]==DAText);
+                                })[0]; */
+
+                            } else {
+
+
+                                rName = savedConfig.rendererName;
+                                if(rName.indexOf("Table With Subtotal") > -1) {
+
+                             
+                                thisRow = e.target.closest('tr');
+                                sel = thisRow.getAttribute("class");
+
+                                
+
+                                try {
+
+                                    DAText = thisRow.querySelector('th.rowcol'+tableRowIndex).innerHTML.replace(/[^\w\/]+/g, "");
+
+                                        appCtr = dataObj.filter(function(i) {
+                                            return (i[rowIndex]==DAText);
+                                        })[0][pcIndex];
+
+                                      /*  record = dataObj.filter(function(i) {
+                                            return(i[rowIndex]==DAText);
+                                        } )[0]; */
+
+                                    } catch (ex) {
+                                        appCtr = 0;
+                                    }
+
+                                }
+
+                            }
+
                             
                             if(appCtr > 0) {
-                            if (window.confirm("View DA Tracker details for "+ DAText + " ?"))
-                            {
-                                var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
-                                win.focus();
-                            }
+
+                            popup(DAText,appCtr);
+                                
+                           // if (window.confirm("View DA Tracker details for "+ DAText + " ?"))
+                           // {
+                            //    var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
+                            //    win.focus();
+                           // }
                         }
             }
 
@@ -507,7 +694,58 @@ document.addEventListener('click', function (e) {
             });
 
 
+function popupFieldInfo() {
 
+    var html = "<div class='intro'>For each developer contribution charge on an application, there will be up to 3 data rows represented in this chart - 1 for each of LEVIED, PAID (only if paid) and WIK CREDIT (only if credit applied).</div>";
+     html += "<div style='overflow-y:scroll; height:80vh'><table class='dataTable'><tr><th>Attribute</th><th>Description</th></tr>";
+      html += "<tr><td colspan=2 class='dicDivider'>Charge-related:</td></tr>" ;
+        dataDictionary.forEach(i =>{
+
+            if(i["Value"] == "Application ID") html += "<tr><td colspan=2 class='dicDivider'>Application-related:</td></tr>" ;
+            html += "<tr class='dataDic'><td style='min-width: 110px; vertical-align: top;'>" + i["Value"] + "</td><td>" + i["Description"] + "</td></tr>";
+        })
+        html += "</table></div>"
+    Swal.fire({
+                                //title: 'Go to the DA tracker?',
+                               // text: "View DA Tracker details for "+ DAText + "?",
+                               /* icon: 'question',
+                                iconHTML: 'YY?', */
+                                html: html,
+                               // confirmButtonText: 'OK',
+                                width: 700,
+
+                                heightAuto: false,
+                                height: 100,
+                                showConfirmButton: false,
+                                showCloseButton: true,
+                                backdrop: true
+                                });
+
+}
+
+async function popup(DAText,appCtr) {
+
+  //  console.log(record);
+
+    const {value: accept }  =  await Swal.fire({
+                                //title: 'Go to the DA tracker?',
+                               // text: "View DA Tracker details for "+ DAText + "?",
+                               /* icon: 'question',
+                                iconHTML: 'YY?', */
+                                html: "View DA Tracker details for "+ DAText + "?",
+                                confirmButtonText: 'OK',
+                                showCancelButton: true,
+                                backdrop: false
+                                });
+
+                            if(accept) {
+
+                                var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
+                                win.focus();
+                            }
+
+}
+    
 
     $(function(){
 
@@ -539,15 +777,15 @@ document.addEventListener('click', function (e) {
 
     if(stRowLimit != null) document.getElementById("subtotalto").value = parseInt(stRowLimit);
 
-        console.log("pU Renderers");
-        console.log($.pivotUtilities)
+       // console.log("pU Renderers");
+       // console.log($.pivotUtilities)
         // for subototals
         var dataClass = $.pivotUtilities.SubtotalPivotData;
         var renderers = $.extend($.pivotUtilities.renderers, 
        // $.pivotUtilities.d3_renderers,
         $.pivotUtilities.plotly_renderers, 
         $.pivotUtilities.subtotal_renderers, 
-        custom_renderers,
+       // custom_renderers,
         $.pivotUtilities.export_renderers);
 
         /*var aggregators = $.extend($.pivotUtilities.aggregators,
@@ -656,11 +894,7 @@ document.addEventListener('click', function (e) {
 
                 dataObj = parsed.data;
 
-                //console.log("DATAoBJ:");
-               // console.log(dataObj);
-
                 console.log("records filtered to:", dataObj.length);
-                //console.log(dataObj);
 
                 document.getElementById("progressTotal").innerHTML = dataObj.length;
                     document.getElementById("progress").innerHTML = dataObj.length;
@@ -683,26 +917,25 @@ document.addEventListener('click', function (e) {
 
 
                 $("#output").pivotUI(dataObj, {  
-                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO","RAM_PROCESS_CTR"],
+                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO","RAM_PROCESS_CTR", "CHARGE_CTR"],
                     dataClass: dataClass,
-                   rows: (savedConfig) ? savedConfig.rows : ["Application ID", "locality", "Short Description", "Locality", "Determined By", "Determined", "Purpose", "Levy", "Charge Amount", "LEVIED", "Works In Kind Description", "WIK $"], 
-                   cols: (savedConfig) ? savedConfig.cols : [],
-                    vals: (savedConfig) ? savedConfig.vals : ["PAID"],
+                   rows: (savedConfig) ? savedConfig.rows : ["Application ID", "locality", "Short Description", "Determined By", "Determined", "Levy"], 
+                   cols: (savedConfig) ? savedConfig.cols : ["Purpose", "TR TYPE"],
+                    vals: (savedConfig) ? savedConfig.vals : ["AMOUNT"],
                     derivedAttributes: {
-                        "WIK $": function(d) {
+                      /*  "WIK $": function(d) {
                             return d["Works In Kind Description"] != ""  ? d["LEVIED"] : 0;
-                        },
+                        }, */
                         "Determined": function(d) {
                             return (d["Approval Date"]).substring(0,10);
                         }
                     },
                     renderers: renderers,
-                    //aggregators: aggregators,
                     rendererOptions: rendererOptions,
                     menuLimit: 3000,
                     sorters: sorters,
                     exclusions: {"Determined By": [""]},
-                    aggregatorName: (savedConfig) ? savedConfig.aggregatorName : "PAID",
+                    aggregatorName: (savedConfig) ? savedConfig.aggregatorName : "AMOUNT",
                     //numberFormat: curFormat,
                     showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
                     inclusions: (savedConfig) ? savedConfig.inclusions : { "Approval Year": yearArray },
@@ -712,49 +945,10 @@ document.addEventListener('click', function (e) {
                     onRefresh: function (config) {
 
 
-/*
-                  //const tbody = document.querySelector('.pvtTable');
-                 document.addEventListener('click', function (e) {
-                //console.log(dataObj);
-                const cell = e.target.closest('th');
-                if (!cell) {return;} // Quit, not clicked on a cell
-                const row = cell.parentElement;
-                //console.log(dataObj);
-                tmpData = dataObj[0];
-                //console.log("tmpData:", tmpData);
-                rowIndex = tmpData.findIndex((el) => el == "Application ID");
-                tableRowIndex = config.rows.findIndex((el) => el == "Application ID");
-                pcIndex = tmpData.findIndex((el)=> el == "RAM_PROCESS_CTR");
-                if(rowIndex >= 0) {
-                           // console.log("row index:", row.cells[tableRowIndex].innerHTML);
-                            DAText = row.cells[tableRowIndex].innerHTML;
+                        savedConfig = config;
 
-                           // console.log("table row cell", row.cell[tableRowIndex].innerHTML);
-
-                            appCtr = dataObj.filter(function(i) {
-                                return (i[rowIndex]==DAText);
-                            })[0][pcIndex];
-
-                            
-
-                           // console.log("appCtr:", appCtr);
-                            
-                            if(appCtr > 0) {
-                            if (window.confirm("View DA Tracker details for "+ DAText + " ?"))
-                            {
-                                var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
-                                win.focus();
-                            }
-                        }
-            }
-
-                
-              //  console.log(cell.innerHTML, row.rowIndex, cell.cellIndex);
-            });
-*/
-
-                        console.log("refresh config");
-                        console.log(config.aggregatorName);
+                       // console.log("refresh config");
+                       // console.log(config.aggregatorName);
 
                         vals = config.vals;
 
@@ -767,7 +961,12 @@ document.addEventListener('click', function (e) {
                 document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span class='blink_me'>" + JSON.stringify(config["inclusions"]) + "</span> ";
                 } catch (ex) {console.log("inclusions not found")};
 
-                if(config.aggregatorName != "Multifact aggregator") {
+                //try {
+                txt = document.getElementById("inclusions").innerHTML;
+                document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span class='blink_me'>" + JSON.stringify(config.aggregatorName) + "</span> ";
+               // } catch (ex) {console.log("vals not found")};
+
+                if(config.aggregatorName != "Multifact aggregator" && config.rendererName != "Table" ) {
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
 
@@ -794,6 +993,11 @@ document.addEventListener('click', function (e) {
 
 
                     colorLevy();
+
+                    if(config.rendererName.indexOf("Table") > -1 || config.rendererName.indexOf("Heatmap") > -1) {
+                    
+                    wrapDescription();
+                    }
          }
 
                 }); 
@@ -911,7 +1115,7 @@ function selectChange(el) {
 
 
     localStorage.setItem('selectedOption'+storageTag,el.value);
-
+"Table"
 
          
     if(el.value == "TSV") {
@@ -934,12 +1138,12 @@ function selectChange(el) {
 
 
 
-                tConfig["rows"] = ["Application ID", "locality", "Short Description", "Locality", "Determined By", "Determined", "Purpose", "Levy", "Charge Amount", "LEVIED", "Works In Kind Description", "WIK $"];
-                tConfig["cols"] = [];
+                tConfig["rows"] = ["Application ID", "locality", "Short Description", "Determined By", "Determined", "Levy"];
+                tConfig["cols"] = ["Purpose", "TR TYPE"];
                 tConfig["rendererName"] = "Table";
-                tConfig["aggregatorName"] = "PAID";
+                tConfig["aggregatorName"] = "AMOUNT";
                 tConfig["inclusions"] = { "Approval Year": yearArray };
-                tConfig["vals"] = ["PAID"];
+                tConfig["vals"] = ["AMOUNT"];
                 
             
                 
@@ -1000,11 +1204,11 @@ function selectChange(el) {
                 delete tConfig["aggregatorName"];
 
                 tConfig["rows"] = ["Approval Year", "Purpose","Levy"];
-                tConfig["cols"] = [];
+                tConfig["cols"] = ["TR TYPE"];
                 tConfig["rendererName"] = "Table With Subtotal";
                 tConfig["inclusions"] = { "Approval Year": yearArray};
-                tConfig["aggregatorName"] = ["PAID"];
-                tConfig["vals"] = ["PAID"];
+                tConfig["aggregatorName"] = ["AMOUNT"];
+                tConfig["vals"] = ["AMOUNT"];
 
 
             } 
@@ -1165,6 +1369,131 @@ for(i=0; i<$colLabels.length; i++) {
 
 }
 
+function wrapDescription() {
+
+    applicationColNum = savedConfig.rows.findIndex((el) => ["Application ID"].indexOf(el) > -1);
+    descriptionColNum = savedConfig.rows.findIndex((el) => ["Short Description"].indexOf(el) > -1);
+   // console.log("applnColNum", applicationColNum);
+   // console.log("descColNum", descriptionColNum);
+    tmpRows = document.querySelectorAll("table.pvtTable >tbody tr");
+    maxCols = tmpRows[0].cells.length;
+    headerLen = savedConfig.rows.length;
+    //console.log(tmpRows[0]);
+
+    if(descriptionColNum > -1) {
+
+        tmpData = dataObj[0];
+        //console.log(tmpData);
+
+            appRowIndex = tmpData.findIndex((e) =>  ["Application ID"].indexOf(e) > -1);
+
+           // console.log("appRowIndex:", appRowIndex);
+
+            descRowIndex = tmpData.findIndex((f) => ["Application Description"].indexOf(f) > -1);
+           // console.log("descRowIndex:", descRowIndex);
+
+
+       
+
+        
+        skipColNum = maxCols-headerLen;
+
+        //console.log("MAX COLS:", maxCols);
+    
+        tmpRows.forEach(r => {
+
+            var thisRowLen = r.cells.length;
+          //  console.log("test result:",(maxCols) - thisRowLen);
+
+           // console.log(r);
+
+           //if((r.cells.length-skipColNum) - (headerLen-applicationColNum) >= 0 )  {
+            if((maxCols - thisRowLen) == 0 )  {
+            //console.log("compare:",r.cells.length-skipColNum,"-v-",headerLen-applicationColNum);
+               // console.log('did one');
+               // console.log(r);
+              //  ctr = 0;
+             
+                index = applicationColNum;
+                descIndex = descriptionColNum;
+                
+                DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
+
+                // console.log("DATEXT:XX:",DAText2);
+
+                 
+
+              //   console.log(dataObj.filter(function(i) {
+               //                             return (i[appRowIndex] == DAText2);
+               //                         }));
+
+                try {
+                    appCtr = dataObj.filter(function(i) {
+                                            return (i[appRowIndex] == DAText2);
+                                        })[0][descRowIndex]; 
+
+               // console.log(appCtr);
+               // console.log('descIndex at end:', descIndex);
+                    r.cells[descIndex].setAttribute("title", appCtr);
+                    r.setAttribute("title","click to go to DA Tracker");
+
+                } catch(ex) {}
+                
+
+                        } else {
+
+
+                        
+                      //  try {
+                      //  console.log("thisRowLen:", thisRowLen, ":::", (maxCols));
+                        if((thisRowLen < (maxCols)) ) {
+
+
+                            var subtract = maxCols - thisRowLen;
+
+                          //  console.log("ZERO INVOKED");
+                            index = applicationColNum - subtract;
+                            descIndex = descriptionColNum - subtract;
+                           // console.log(r);
+
+                        try {
+                            DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
+
+                        // console.log("DATEXT:::",DAText2);
+                      /*   if (DAText2 == "") {
+                            index--;
+                            descIndex--;
+                            DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
+
+                         } */
+
+
+                           // console.log("DESCROWNUM:",descRowIndex);
+                            appCtr = dataObj.filter(function(i) {
+                                                    return (i[appRowIndex] == DAText2);
+                                                })[0][descRowIndex]; 
+
+                       // console.log(appCtr);
+                            r.cells[descIndex].setAttribute("title", appCtr);
+                                        } catch(ex) {}
+                                            }
+
+                     //   } catch(ex) {}
+
+
+                        }
+
+                       
+
+
+
+         
+        });
+
+    }
+
+}
+
 function rowLimitChange(el)  {
 
     localStorage.setItem("stRowLimit", el.value);
@@ -1182,6 +1511,8 @@ function rowLimitChange(el)  {
 
                             <p id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span><br />
                                 Data Date: <span id='fileDate'></span>.</p>  
+                            </div>
+                            <div>
                             <input type="button" class="hidden" value="Export JSON" onClick="dataExport()" /> 
                             <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
                             <input type="button" value="Show Chart Settings" uivisible=false id="toggleHideUIButton" onclick="toggleConfigHide(this, true)" title="Click to toggle hide/show chart settings" /> 
@@ -1189,15 +1520,18 @@ function rowLimitChange(el)  {
                                 <option value=""></option>
                                 <option value="all">Summary View</option>
                                 <option value="focusOnApps">Focus on Applications</option>
-                                <option value="LeviedPaid">Applications - Levied and Paid</option>
+                                <option value="LeviedPaid" class="hidden">Applications - Levied and Paid</option>
                                 <option value="Pies">Bar Chart by Locality</option>
                                 <option value="chartYear">Bar Chart by Approval Year</option>
                                 <option value="TSV">Export Selected Data</option>
 
                             </select>
+
                             <input type="image" class='excelImg' value="Visible to Excel"  src="/contributionspaid/images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visible table as Excel file" />
-			    
-                            <div id='subTotalRowLimitDiv'> Subtotal row limit <input id="subtotalto" onChange="javascript:rowLimitChange(this)" type="number" value= "1" title="change this to increase the depth when viewing subtotal views" /><em>Change this to increase the depth when viewing subtotal views.</em></div>
+
+                            <input type="button" value="Dictionary" style="float: right;" onClick="popupFieldInfo()" />
+                        </div>
+                            <div id='subTotalRowLimitDiv'> Subtotal row limit <input id="subtotalto" onChange="javascript:rowLimitChange(this)" type="number" value= "2" title="change this to increase the depth when viewing subtotal views" /><em>Change this to increase the depth when viewing subtotal views.</em></div>
 
                     </div>
         <div id="output"></div>

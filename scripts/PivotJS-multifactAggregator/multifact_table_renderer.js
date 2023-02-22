@@ -2,6 +2,7 @@
 multifactTableRenderer = function(fmt){
     return function(pivotData) {
       console.log("format:", fmt);
+      console.log("pd:", pivotData);
       var aggregator, c, colAttrs, colKey, colKeys, i, j, r, result, rowAttrs, rowKey, rowKeys, th, totalAggregator, tr, txt, val, x;
       colAttrs = pivotData.colAttrs;
       rowAttrs = pivotData.rowAttrs;
