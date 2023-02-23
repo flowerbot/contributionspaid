@@ -189,6 +189,7 @@ table.pvtTable thead tr th.pvtColLabel.otherCell {
     font-size: smaller;
     font-style:italic;
     text-align:left;
+    padding-bottom: 10px;
 }
 table.dataTable {
     border-collapse: collapse;
@@ -196,10 +197,13 @@ table.dataTable {
 
 .dataTable tbody tr th {
     text-align: left;
+    font-size:small;
 }
 
 tr.dataDic td {
     font-size: smaller;
+    font-family: 'Open Sans', 'Arial Narrow', Arial, Helvetica, sans-serif;
+    padding: 5px !important;
 }
 .dicDivider {
     background-color:rgb(49, 76, 78);
@@ -222,7 +226,7 @@ tr.dataDic:nth-child(even) {
     var dataObj;
     var config = {};
 
-    //var yearArray = [String(new Date().getFullYear()-2), String(new Date().getFullYear()-1), String(new Date().getFullYear())];
+    var threeYearArray = [String(new Date().getFullYear()-2), String(new Date().getFullYear()-1), String(new Date().getFullYear())];
     var twoYearArray = [String(new Date().getFullYear()-1), String(new Date().getFullYear())];
     var yearArray = [String(new Date().getFullYear())];
 
@@ -697,7 +701,7 @@ document.addEventListener('click', function (e) {
 function popupFieldInfo() {
 
     var html = "<div class='intro'>For each developer contribution charge on an application, there will be up to 3 data rows represented in this chart - 1 for each of LEVIED, PAID (only if paid) and WIK CREDIT (only if credit applied).</div>";
-     html += "<div style='overflow-y:scroll; height:80vh'><table class='dataTable'><tr><th>Attribute</th><th>Description</th></tr>";
+     html += "<div style='overflow-y:auto; max-height:80vh'><table class='dataTable'><tr><th>Attribute</th><th>Description</th></tr>";
       html += "<tr><td colspan=2 class='dicDivider'>Charge-related:</td></tr>" ;
         dataDictionary.forEach(i =>{
 
@@ -1186,7 +1190,7 @@ function selectChange(el) {
                 tConfig["rows"] = ["Purpose"];
                 tConfig["cols"] = ["locality"];
                 tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
-                tConfig["inclusions"] = {};
+                tConfig["inclusions"] = { "Approval Year": yearArray };
                 tConfig["aggregatorName"] = ["PAID"];
                 tConfig["vals"] = ["PAID"];
 
@@ -1228,7 +1232,7 @@ function selectChange(el) {
                 tConfig["rows"] = ["Purpose"];
                 tConfig["cols"] = ["Approval Year"];
                 tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
-                tConfig["inclusions"] = {};
+                tConfig["inclusions"] = { "Approval Year": threeYearArray };
                 tConfig["exclusions"] = {};
                 tConfig["aggregatorName"] = ["PAID"];
                 tConfig["vals"] = ["PAID"];
