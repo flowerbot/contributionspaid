@@ -1,0 +1,212 @@
+[
+    {
+       "Charge_Type":"ComFacNth",
+       "Levy":"S95-15 - Community Facilities (Nth Coast)",
+       "DiscontinuedDate":"28/9/2010",
+       "Discontinued":"discontinued"
+    },
+    {
+       "Charge_Type":"ComFacSth",
+       "Levy":"S95-15  - Community Facilities (Sth Coast)",
+       "DiscontinuedDate":"28/9/2010",
+       "Discontinued":"discontinued"
+    },
+    {
+       "Charge_Type":"CommFac3",
+       "Levy":"S94-03 - Community Facilities",
+       "DiscontinuedDate":"30/6/2020",
+       "Discontinued":"discontinued"
+    },
+    {
+       "Charge_Type":"Cycleway19",
+       "Levy":"S94-19 - Kings Beach/Forest - Cycleways",
+       "DiscontinuedDate":"15/11/2005",
+       "Discontinued":"consolidated in "
+    },
+    {
+       "Charge_Type":"HeavyHaulD",
+       "Levy":"S94-04 - Heavy Haulage Contributions",
+       "DiscontinuedDate":"1/12/2016",
+       "Discontinued":"discontinued"
+    },
+    {
+       "Charge_Type":"LCA-1",
+       "Levy":"S94-04 - Road Contribution LCA1",
+       "DiscontinuedDate":"31/1/2012",
+       "Discontinued":"discontinued"
+    },
+    {
+       "Charge_Type":"LCA-2",
+       "Levy":"S94-04 - Road Contribution LCA2",
+       "DiscontinuedDate":"31/1/2012",
+       "Discontinued":"discontinued"
+    },
+    {
+       "Charge_Type":"Sector12_4",
+       "Levy":"S94-04 - Road Contribution Sector 12",
+       "DiscontinuedDate":"19/7/2007",
+       "Discontinued":"Split to 12a/12b"
+    },
+    {
+       "Charge_Type":"Sector7a_4",
+       "Levy":"S94-04 - Road Contribution Sector 07a Dbah/Cab",
+       "DiscontinuedDate":"19/7/2007",
+       "Discontinued":"consolidted in Sector 7"
+    },
+    {
+       "Charge_Type":"Sector7b_4",
+       "Levy":"S94-04 - Road Contribution Sector 07b Kings Forest",
+       "DiscontinuedDate":"19/7/2007",
+       "Discontinued":"consolidated in Sector 7"
+    },
+    {
+       "Charge_Type":"Sector7c_4",
+       "Levy":"S94-04 - Road Contribution Sector 07c Kings Beach",
+       "DiscontinuedDate":"19/7/2007",
+       "Discontinued":"consolidated in Sector 7"
+    },
+    {
+       "Charge_Type":"Sector8a_4",
+       "Levy":"S94-04 - Road Contribution Sector 08a",
+       "DiscontinuedDate":"19/7/2007",
+       "Discontinued":"consolidated in Sector 8"
+    },
+    {
+       "Charge_Type":"Sector8b_4",
+       "Levy":"S94-04 - Road Contribution Sector 08b",
+       "DiscontinuedDate":"19/7/2007",
+       "Discontinued":"consolidated in Sector 8"
+    },
+    {
+       "Charge_Type":"RemShire",
+       "Levy":"S94-16 - Emergency Facilities - Rest of Shire",
+       "DiscontinuedDate":"28/2/2006",
+       "Discontinued":"discontinued on Ministers Direction"
+    },
+    {
+       "Charge_Type":"Tou/KH/Sea",
+       "Levy":"S94-16 - Emergency Fac Tou/KH/Sea/KF/CasB",
+       "DiscontinuedDate":"28/2/2006",
+       "Discontinued":"discontinued on Ministers Direction"
+    },
+    {
+       "Charge_Type":"SubOnly6",
+       "Levy":"S94-06  - Street Trees",
+       "DiscontinuedDate":"12/7/2005",
+       "Discontinued":"discontinued on Ministers Direction"
+    },
+    {
+       "Charge_Type":"Struct5_2",
+       "Levy":"S94-05 - Structured Open Space Zone 2",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_3",
+       "Levy":"S94-05 - Structured Open Space Zone 3",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_1",
+       "Levy":"S94-05 - Structured Open Space Zone 1",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Casual5_1",
+       "Levy":"S94-05 - Casual Open Space Zone 1",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Casual5_2",
+       "Levy":"S94-05 - Casual Open Space Zone 2",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Casual5_3",
+       "Levy":"S94-05 - Casual Open Space Zone 3",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_4",
+       "Levy":"S94-05 - Structured Open Space Zone 4",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Casual5_4",
+       "Levy":"S94-05 - Casual Open Space Zone 4",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_5",
+       "Levy":"S94-05 - Structured Open Space Zone 5",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Casual5_5",
+       "Levy":"S94-05 - Casual Open Space Zone 5",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_6",
+       "Levy":"S94-05 - Structured Open Space Zone 6",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Casual5_6",
+       "Levy":"S94-05 - Casual Open Space Zone 6",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_7",
+       "Levy":"S94-05 - Structured Open Space Zone 7",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Casual5_7",
+       "Levy":"S94-05 - Casual Open Space Zone 7",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_8",
+       "Levy":"S94-05 - Structured Open Space Zone 8",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_9",
+       "Levy":"S94-05 - Structured Open Space Zone 9",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"Struct5_10",
+       "Levy":"S94-05 - Structured Open Space Zone 10",
+       "DiscontinuedDate":"26/8/2002",
+       "Discontinued":"consolidated into Local Structured Open Space"
+    },
+    {
+       "Charge_Type":"StructOS21",
+       "Levy":"S94-21 - Structured OS Tnora Village",
+       "DiscontinuedDate":"16/3/2023",
+       "Discontinued":"majority projects complete, remainder consolidated into Local Structured Open space"
+    },
+    {
+       "Charge_Type":"CommFac21",
+       "Levy":"S94-21 - Community Facilities Tnora Village",
+       "DiscontinuedDate":"16/3/2023",
+       "Discontinued":"consolidated into Shirewide Community Facilities"
+    }
+ ]

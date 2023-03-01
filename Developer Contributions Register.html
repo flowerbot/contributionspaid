@@ -1,6 +1,9 @@
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <html>
-	<head><title>Developer Contributions Paid</title></head>
+	<head>
+        <!-- AUTHOR: L KRAUSZ 
+             DATE:   1/3/2023  -->
+        <title>Developer Contributions Paid</title>
+    </head>
     <body>
         <!-- external libs from cdnjs -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
@@ -201,10 +204,23 @@ table.dataTable {
 }
 
 tr.dataDic td {
+        font-size: 12px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        padding: 8px;
+
+    }
+
+    tr.dataDic td cs {
+        font-weight:  600; 
+        color: #66b2b2;
+        text-shadow: 0 0 0 #66b2b2;
+    }
+
+/*tr.dataDic td {
     font-size: smaller;
     font-family: 'Open Sans', 'Arial Narrow', Arial, Helvetica, sans-serif;
     padding: 5px !important;
-}
+} */
 .dicDivider {
     background-color:rgb(49, 76, 78);
     color: white;
@@ -212,7 +228,7 @@ tr.dataDic td {
 
 tr.dataDic:nth-child(even) {
 
-    background-color: #e2f0ff;
+    background-color: #E6E6E3;
 
 }
 
@@ -285,304 +301,34 @@ tr.dataDic:nth-child(even) {
 
 
 
+    var discontinued = [];
+    
+    async function getDiscontinued() {
+     await fetch('data/discontinued.json')
+     .then((response) => response.json())
+     .then((json) => discontinued = json);
+ 
+     console.log("DISCONTINUED");
+     console.log(discontinued);
+ 
+ 
+    }
+ 
+    getDiscontinued();
+ 
+   
 
-    var discontinued = [
-            {
-            "Charge_Type": "ComFacNth",
-            "Levy": "S95-15 - Community Facilities (Nth Coast)",
-            "DiscontinuedDate": "28/9/2010",
-            "Discontinued": "discontinued"
-            },
-            {
-            "Charge_Type": "ComFacSth",
-            "Levy": "S95-15  - Community Facilities (Sth Coast)",
-            "DiscontinuedDate": "28/9/2010",
-            "Discontinued": "discontinued"
-            },
-            {
-            "Charge_Type": "CommFac3",
-            "Levy": "S94-03 - Community Facilities",
-            "DiscontinuedDate": "30/6/2020",
-            "Discontinued": "discontinued"
-            },
-            {
-            "Charge_Type": "Cycleway19",
-            "Levy": "S94-19 - Kings Beach/Forest - Cycleways",
-            "DiscontinuedDate": "15/11/2005",
-            "Discontinued": "consolidated in "
-            },
-            {
-            "Charge_Type": "HeavyHaulD",
-            "Levy": "S94-04 - Heavy Haulage Contributions",
-            "DiscontinuedDate": "1/12/2016",
-            "Discontinued": "discontinued"
-            },
-            {
-            "Charge_Type": "LCA-1",
-            "Levy": "S94-04 - Road Contribution LCA1",
-            "DiscontinuedDate": "31/1/2012",
-            "Discontinued": "discontinued"
-            },
-            {
-            "Charge_Type": "LCA-2",
-            "Levy": "S94-04 - Road Contribution LCA2",
-            "DiscontinuedDate": "31/1/2012",
-            "Discontinued": "discontinued"
-            },
-            {
-            "Charge_Type": "Sector12_4",
-            "Levy": "S94-04 - Road Contribution Sector 12",
-            "DiscontinuedDate": "19/7/2007",
-            "Discontinued": "Split to 12a/12b"
-            },
-            {
-            "Charge_Type": "Sector7a_4",
-            "Levy": "S94-04 - Road Contribution Sector 07a Dbah/Cab",
-            "DiscontinuedDate": "19/7/2007",
-            "Discontinued": "consolidted in Sector 7"
-            },
-            {
-            "Charge_Type": "Sector7b_4",
-            "Levy": "S94-04 - Road Contribution Sector 07b Kings Forest",
-            "DiscontinuedDate": "19/7/2007",
-            "Discontinued": "consolidated in Sector 7"
-            },
-            {
-            "Charge_Type": "Sector7c_4",
-            "Levy": "S94-04 - Road Contribution Sector 07c Kings Beach",
-            "DiscontinuedDate": "19/7/2007",
-            "Discontinued": "consolidated in Sector 7"
-            },
-            {
-            "Charge_Type": "Sector8a_4",
-            "Levy": "S94-04 - Road Contribution Sector 08a",
-            "DiscontinuedDate": "19/7/2007",
-            "Discontinued": "consolidated in Sector 8"
-            },
-            {
-            "Charge_Type": "Sector8b_4",
-            "Levy": "S94-04 - Road Contribution Sector 08b",
-            "DiscontinuedDate": "19/7/2007",
-            "Discontinued": "consolidated in Sector 8"
-            },
-            {
-            "Charge_Type": "RemShire",
-            "Levy": "S94-16 - Emergency Facilities - Rest of Shire",
-            "DiscontinuedDate": "28/2/2006",
-            "Discontinued": "discontinued on Ministers Direction"
-            },
-            {
-            "Charge_Type": "Tou/KH/Sea",
-            "Levy": "S94-16 - Emergency Fac Tou/KH/Sea/KF/CasB",
-            "DiscontinuedDate": "28/2/2006",
-            "Discontinued": "discontinued on Ministers Direction"
-            },
-            {
-            "Charge_Type": "SubOnly6",
-            "Levy": "S94-06  - Street Trees",
-            "DiscontinuedDate": "12/7/2005",
-            "Discontinued": "discontinued on Ministers Direction"
-            },
-            {
-            "Charge_Type": "Struct5_2",
-            "Levy": "S94-05 - Structured Open Space Zone 2",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_3",
-            "Levy": "S94-05 - Structured Open Space Zone 3",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_1",
-            "Levy": "S94-05 - Structured Open Space Zone 1",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Casual5_1",
-            "Levy": "S94-05 - Casual Open Space Zone 1",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Casual5_2",
-            "Levy": "S94-05 - Casual Open Space Zone 2",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Casual5_3",
-            "Levy": "S94-05 - Casual Open Space Zone 3",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_4",
-            "Levy": "S94-05 - Structured Open Space Zone 4",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Casual5_4",
-            "Levy": "S94-05 - Casual Open Space Zone 4",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_5",
-            "Levy": "S94-05 - Structured Open Space Zone 5",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Casual5_5",
-            "Levy": "S94-05 - Casual Open Space Zone 5",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_6",
-            "Levy": "S94-05 - Structured Open Space Zone 6",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Casual5_6",
-            "Levy": "S94-05 - Casual Open Space Zone 6",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_7",
-            "Levy": "S94-05 - Structured Open Space Zone 7",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Casual5_7",
-            "Levy": "S94-05 - Casual Open Space Zone 7",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_8",
-            "Levy": "S94-05 - Structured Open Space Zone 8",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_9",
-            "Levy": "S94-05 - Structured Open Space Zone 9",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            },
-            {
-            "Charge_Type": "Struct5_10",
-            "Levy": "S94-05 - Structured Open Space Zone 10",
-            "DiscontinuedDate": "26/8/2002",
-            "Discontinued": "consolidated into Local Structure Open Space"
-            }
+ var dataDictionary = [];
 
-      
-            ];
-
-
-var dataDictionary = [ 
-    {
-        "Value":"Purpose",
-        "Description":"Represents one of the 5 categories of contribution required by the Department of Planning's reporting template, derived from the charge description."
-    },
-    {
-        "Value": "Amount",
-        "Description": "Sum of all transactions for each record, being of type 'TR TYPE' LEVIED, PAID or WIK CREDIT by Charge.  This value is always correct and should be used in preference to 'Charge Amount'"
-    },
-    {   "Value": "Charge Amount",
-        "Description": "Most often this is $ value recorded on the charge when first raised (see Initial Balance).  In most cases it will be equivalent to Amount for TR TYPE 'LEVIED', however adjustments to the charge may have been made at a later date by various 'adjustment' transactions where the Charge Amount was not updated."
-    },
-    {   "Value": "Initial Balance",
-        "Description": "$ value recorded on the charge when first raised.  While the Charge Amount may be altered after the charge is first raised to record the current amount to be charged, the Initial Balance will not.  In practice at TSC, this is usually the same as the Charge Amount, as it is not current practice to update the Charge Amount when adjustments are made."
-    },
-    {   "Value": "Balance",
-        "Description": "$ value remaining to be paid on the charge.  A Balance value of $0 means the charge is fully paid."
-    },
-    { "Value": "Levy",
-        "Description": "The full name of the charge applied to the application."
-    },
-    {
-        "Value": "LEVIED",
-        "Description": "Same $ value as 'Amount', but only applied to records where the 'TR TYPE' is 'LEVIED'"
-
-    },
-    {
-        "Value": "LEVIED Description",
-        "Description": "Transaction notes (REFERENCE) IF TR TYPE is 'LEVIED', empty on other records.  Note that by default each transaction will have a reference of the Application ID"
-
-    },
-    {
-        "Value": "PAID",
-        "Description": "Same $ value as 'Amount', but only applied to records where the 'TR TYPE' is 'PAID'"
-
-    },
-    {
-        "Value": "PAID Description",
-        "Description": "Transaction notes (REFERENCE) IF TR TYPE is 'PAID', empty on other records.  Note that by default each transaction will have a reference of the Application ID"
-
-    },
-    {
-        "Value": "WIK CREDIT",
-        "Description": "Same $ value as 'Amount', but only applied to records where the 'TR TYPE' is 'WIK CREDIT'"
-
-    },
-    {
-        "Value": "WIK Description",
-        "Description": "Transaction notes (REFERENCE) if TR TYPE is 'WIK CREDIT', empty on other records"
-
-    },
-    { 
-        "Value": "Application ID",
-        "Description": "Council's identifier for the application.  This ID can be searched in Council's DA Tracker.  Click a row which contains the Application ID to open the DA Tracker for that application."
-    },
-    { 
-        "Value": "Determined By",
-        "Description": "This dataset includes approved applications only (see also 'DECISION')"
-    },
-    { 
-        "Value": "DECISION",
-        "Description": "This dataset includes approved applications only (see also 'Determined By')"
-    },
-    {
-        "Value": "Application Description",
-        "Description": "Full description of the development application (see also 'Short Description')"
-    }, 
-    {
-        "Value": "Short Description",
-        "Description":  "Truncated version of 'Application Description' to fit the chart onscreen.  In Table views, hover your mouse over the Short Description to see the full description."
-    },
-    {
-        "Value": "Lots",
-        "Description": "The number of lots or units the application includes."
-    },
-    {
-        "Value": "locality",
-        "Description": "locality (suburb) where the development is located"
-
-    },
-    { 
-        "Value": "legal_description",
-        "Description": "Deposited plan legal description for the application"
-        
-    },
-    { 
-        "Value": "formatted_address",
-        "Description": "street address for the application"
-        
+    async function getDataDictionary() {
+    await fetch('data/datadictionary.json')
+    .then((response) =>  response.json())
+    .then((json) =>  dataDictionary = json);
     }
     
-];
+    getDataDictionary();
 
+  
 
 var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMF.csv";
 
@@ -901,7 +647,18 @@ async function popup(DAText,appCtr) {
                 console.log("records filtered to:", dataObj.length);
 
                 document.getElementById("progressTotal").innerHTML = dataObj.length;
-                    document.getElementById("progress").innerHTML = dataObj.length;
+                document.getElementById("progress").innerHTML = dataObj.length;
+
+
+                let headerRow = dataObj[0];
+                let yearIndex = headerRow.indexOf("Approval Year");
+
+                let yearValues = dataObj.map(v => Number(v[yearIndex]));
+                let v2 = yearValues.splice(0,1);
+                var minYear = Math.min(...yearValues);
+
+                document.getElementById("earliestDate").innerHTML = minYear.toString();
+
 
  
                 savedConfig = JSON.parse(localStorage.getItem('pivotdatakey'+storageTag));
@@ -1543,9 +1300,8 @@ function rowLimitChange(el)  {
 
         <div class="note">Note: 
             <ul>
-                <li>Data provided in accordance with Cl 34 of the EP&A Regulation</li>
-                <li>Included are developer contributions levied on approved applications recorded in Council's Property and Rating system, introduced in 2002. </li>
-                <li>Remaining 'BALANCE' is per <u>application</u>:  when greater than 0, may include outstanding charges other than developer contribution levies. </li>
+                <li>Data provided in accordance with Cl 217 of the EP&A Regulation 2021.</li>
+                <li>Dataset contains developer contributions levied on approved applications recorded in Council's Property and Rating system, introduced in 2002. The earliest 'Approval Year' included in this dataset is <span id='earliestDate'></span>.</li>
                 <li>Some levies and/or sectors have since been discontinued/consolidated - <span class="discontinued">these are shown highlighted</span>.</li>
                 </ul>
                 <div>Powered by <a target='_blank' href='https://pivottable.js.org/examples/'>Pivot.js</a> and <a href='https://nagarajanchinnasamy.github.io/subtotal/examples/' target='_blank'>Subtotal.js</a> </div>

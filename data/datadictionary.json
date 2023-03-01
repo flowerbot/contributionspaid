@@ -1,0 +1,96 @@
+[ 
+    {
+        "Value":"Purpose",
+        "Description":"Represents one of the 5 categories of contribution required by the Department of Planning's reporting template, derived from the charge description."
+    },
+    {
+        "Value": "TR TYPE",
+        "Description": "Transaction Type, enables filtering or grouping by <cs>Amount</cs> using possible values: LEVIED, PAID or WIK CREDIT."
+    },
+    {
+        "Value": "Amount",
+        "Description": "Sum of all transactions for each record by <cs>Charge</cs> and <cs>TR TYPE</cs>.  This value is always correct and should be used in preference to <cs>Charge Amount</cs>"
+    },
+    {   "Value": "Charge Amount",
+        "Description": "Most often this is $ value recorded on the charge when first raised (see <cs>Initial Balance</cs>).  In most cases it will be equivalent to <cs>Amount</cs> for <cs>TR TYPE</cs> 'LEVIED', however adjustments to the charge may have been made at a later date by various 'adjustment' transactions where the <cs>Charge Amount</cs> was not updated."
+    },
+    {   "Value": "Initial Balance",
+        "Description": "$ value recorded on the charge when first raised.  While the <cs>Charge Amount</cs> may be altered after the charge is first raised to record the current amount to be charged, the <cs>Initial Balance</cs> will not.  In practice at TSC, this is usually the same as the <cs>Charge Amount</cs>, as it is not current practice to update the <cs>Charge Amount</cs> when adjustments are made."
+    },
+    {   "Value": "Balance",
+        "Description": "$ value remaining to be paid on the charge.  A <cs>Balance</cs> value of $0 means the charge is fully paid."
+    },
+    { "Value": "Levy",
+        "Description": "The full name of the charge applied to the application."
+    },
+    {
+        "Value": "LEVIED",
+        "Description": "Same $ value as <cs>Amount</cs>, but only applied to records where the <cs>TR TYPE</cs> is 'LEVIED'"
+
+    },
+    {
+        "Value": "LEVIED Description",
+        "Description": "Transaction notes (REFERENCE) IF <cs>TR TYPE</cs> is 'LEVIED', empty on other records.  Note that by default each transaction will have a reference of the Application ID"
+
+    },
+    {
+        "Value": "PAID",
+        "Description": "Same $ value as <cs>Amount</cs>, but only applied to records where the <cs>TR TYPE</cs> is 'PAID'"
+
+    },
+    {
+        "Value": "PAID Description",
+        "Description": "Transaction notes (REFERENCE) IF <cs>TR TYPE</cs> is 'PAID', empty on other records.  Note that by default each transaction will have a reference of the Application ID"
+
+    },
+    {
+        "Value": "WIK CREDIT",
+        "Description": "Same $ value as <cs>Amount</cs>, but only applied to records where the <cs>TR TYPE</cs> is 'WIK CREDIT'"
+
+    },
+    {
+        "Value": "WIK Description",
+        "Description": "Transaction notes (REFERENCE) if <cs>TR TYPE</cs> is 'WIK CREDIT', empty on other records"
+
+    },
+    { 
+        "Value": "Application ID",
+        "Description": "Council's identifier for the application.  This ID can be searched in Council's DA Tracker.  Click a row which contains the Application ID to open the DA Tracker for that application."
+    },
+    { 
+        "Value": "Determined By",
+        "Description": "This dataset includes approved applications only (see also <cs>DECISION</cs>)"
+    },
+    { 
+        "Value": "DECISION",
+        "Description": "This dataset includes approved applications only (see also <cs>Determined By</cs>)"
+    },
+    {
+        "Value": "Application Description",
+        "Description": "Full description of the development application (see also <cs>Short Description</cs>)"
+    }, 
+    {
+        "Value": "Short Description",
+        "Description":  "Truncated version of <cs>Application Description</cs> to fit the chart onscreen.  In Table views, hover your mouse over the <cs>Short Description</cs> to see the full description."
+    },
+    {
+        "Value": "Lots",
+        "Description": "The number of lots or units the application includes."
+    },
+    {
+        "Value": "locality",
+        "Description": "locality (suburb) where the development is located"
+
+    },
+    { 
+        "Value": "legal_description",
+        "Description": "Deposited plan legal description for the application"
+        
+    },
+    { 
+        "Value": "formatted_address",
+        "Description": "street address for the application"
+        
+    }
+    
+]

@@ -571,6 +571,17 @@ function getFileDate(path) {
                 document.getElementById("progressTotal").innerHTML = dataObj.length;
                     document.getElementById("progress").innerHTML = dataObj.length;
 
+                let headerRow = dataObj[0];
+                let yearIndex = headerRow.indexOf("Approval Year");
+
+                let yearValues = dataObj.map(v => Number(v[yearIndex]));
+                let v2 = yearValues.splice(0,1);
+                var minYear = Math.min(...yearValues);
+
+                document.getElementById("earliestDate").innerHTML = minYear.toString();
+
+
+
  
                 savedConfig = JSON.parse(localStorage.getItem('pivotdatakey'+storageTag));
 
@@ -989,9 +1000,8 @@ function rowLimitChange(el)  {
 
         <div class="note">Note: 
             <ul>
-                <li>Data provided in accordance with Cl 34 of the EP&A Regulation</li>
-                <li>Included are developer contributions levied on approved applications recorded in Council's Property and Rating system, introduced in 2002. </li>
-                <li>Remaining 'BALANCE' is per <u>application</u>:  when greater than 0, may include outstanding charges other than developer contribution levies. </li>
+                <li>Data provided in accordance with Cl 217 of the EP&A Regulation 2021.</li>
+                <li>Dataset contains developer contributions levied on approved applications recorded in Council's Property and Rating system, introduced in 2002. The earliest 'Approval Year' included in this dataset is <span id='earliestDate'></span>.</li>
                 <li>Some levies and/or sectors have since been discontinued/consolidated - <span class="discontinued">these are shown highlighted</span>.</li>
                 </ul>
                 <div>Powered by <a target='_blank' href='https://pivottable.js.org/examples/'>Pivot.js</a> and <a href='https://nagarajanchinnasamy.github.io/subtotal/examples/' target='_blank'>Subtotal.js</a> </div>
