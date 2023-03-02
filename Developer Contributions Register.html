@@ -6,40 +6,36 @@
     </head>
     <body>
         <!-- external libs from cdnjs -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 
-<script type="text/javascript" src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 
-<!-- script type="text/javascript" src="/contributionspaid/scripts/jquery.floatTHead.min.js"></script -->
-	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/2.2.1/jquery.floatThead.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/2.2.1/jquery.floatThead.min.js"></script>
 
-<!-- PivotTable.js libs from ../dist -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
-<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script>
+    <!-- PivotTable.js libs from ../dist -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
 
-
-        <!-- subtotal.js libs from ../dist -->
-        <!-- base href= "/flowerbot/contributionspaid/blob/main/" -->
-	    <!-- base href= "/" -->
-        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
-        <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script>
 
 
-        <!-- script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_sum_aggregator.js"></script>
-<script type="text/javascript" src="/contributionspaid/scripts/PivotJS-multifactAggregator/multifact_table_renderer.js"></script -->
+    <!-- subtotal.js libs from ../dist, not available from a CDN -->
+    <!-- base href= "/" -->
+    <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
+    <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
 
-<!-- needed to dl as Excel -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- needed to dl as Excel -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <style>
@@ -82,128 +78,126 @@
        margin-right: -73px;
      }
 
-#inclusions strong {
-    font-weight: 500;
-    color:lightseagreen;
-}
+    #inclusions strong {
+        font-weight: 500;
+        color:lightseagreen;
+    }
 
-/* extras for floating headers */
-.floatThead-container {
-    overflow: hidden;
-}
+    /* extras for floating headers */
+    .floatThead-container {
+        overflow: hidden;
+    }
 
-.pvtFilterBox {
-    z-index: 2001;
-}
-/* ************************* */
+    .pvtFilterBox {
+        z-index: 2001;
+    }
+    /* ************************* */
 
-.pvtRowLabel {
-    font-weight: normal;
-}
+    .pvtRowLabel {
+        font-weight: normal;
+    }
 
 
-.hidden {
-    display: none;
-}
+    .hidden {
+        display: none;
+    }
 
-.note {
+    .note {
+        font-size: smaller;
+        font-style: italic;
+        color: silver;
+    }
+
+    #progressHeading {
+    color: grey;
     font-size: smaller;
-    font-style: italic;
-    color: silver;
-}
+    }
 
-#progressHeading {
- color: grey;
- font-size: smaller;
-}
+    table.pvtTable tbody tr th.pvtRowLabel.discontinued, .discontinued {
+        color:grey !important;
+        background-color: beige !important;
+    }
 
-table.pvtTable tbody tr th.pvtRowLabel.discontinued, .discontinued {
-    color:grey !important;
-    background-color: beige !important;
-}
+    #header {
+        width: 100%;
+        background-color: lightblue;
+        height: 100px;
+    }
 
-#header {
-    width: 100%;
-    background-color: lightblue;
-    height: 100px;
-}
+    .excelImg {
+        width: 30px;
+        height: 30px;
+    }
 
-.excelImg {
-    width: 30px;
-    height: 30px;
-}
+   /* table.pvtTable tbody tr th.pvtRowLabel {
+        min-width: 150px;
+    } */
 
-table.pvtTable tbody tr th.pvtRowLabel.comFacCell, 
-table.pvtTable thead tr th.pvtColLabel.comFacCell {
-    background-color: #F9DFE1 !important;
-}
+    table.pvtTable tbody tr th.pvtRowLabel.comFacCell, 
+    table.pvtTable thead tr th.pvtColLabel.comFacCell {
+        background-color: #F9DFE1 !important;
+    }
 
-table.pvtTable tbody tr th.pvtRowLabel.osCell,
-table.pvtTable thead tr th.pvtColLabel.osCell {
-    background-color:  #D4EBD4 !important;
-}
+    table.pvtTable tbody tr th.pvtRowLabel.osCell,
+    table.pvtTable thead tr th.pvtColLabel.osCell {
+        background-color:  #D4EBD4 !important;
+    }
 
-table.pvtTable tbody tr th.pvtRowLabel.roadCell,
-table.pvtTable thead tr th.pvtColLabel.roadCell {
-    background-color: #f1e8df !important;
-}
+    table.pvtTable tbody tr th.pvtRowLabel.roadCell,
+    table.pvtTable thead tr th.pvtColLabel.roadCell {
+        background-color: #f1e8df !important;
+    }
 
-table.pvtTable tbody tr th.pvtRowLabel.drainageCell,
-table.pvtTable thead tr th.pvtColLabel.drainageCell {
-    background-color: #e4eef8 !important;
-}
+    table.pvtTable tbody tr th.pvtRowLabel.drainageCell,
+    table.pvtTable thead tr th.pvtColLabel.drainageCell {
+        background-color: #e4eef8 !important;
+    }
 
-table.pvtTable tbody tr th.pvtRowLabel.otherCell,
-table.pvtTable thead tr th.pvtColLabel.otherCell {
-    background-color: #EFEED8 !important;
-}
+    table.pvtTable tbody tr th.pvtRowLabel.otherCell,
+    table.pvtTable thead tr th.pvtColLabel.otherCell {
+        background-color: #EFEED8 !important;
+    }
 
-#subTotalRowLimitDiv input{
-    width: 60px;
-} 
+    #subTotalRowLimitDiv input{
+        width: 60px;
+    } 
 
-#subTotalRowLimitDiv{
-    padding: 2px;
-    /* display: inline-block; */
-    background-color: lightgrey;
-    font-size: smaller;
-  /*  display: none; */
-}
+    #subTotalRowLimitDiv{
+        padding: 2px;
+        background-color: lightgrey;
+        font-size: smaller;
+    }
 
-.rowWrap {
-    height: auto;
-}
+    .rowWrap {
+        height: auto;
+    }
 
-.cellWrap {
-    white-space: normal !important;
-    word-wrap: break-word;
-    word-break: break-all;
-    max-width: 200px;
-   /* height: 100px; */
-   /* overflow: unset; */
+    .cellWrap {
+        white-space: normal !important;
+        word-wrap: break-word;
+        word-break: break-all;
+        max-width: 200px;
 
-}
+    }
 
-.pointer {
-    cursor: pointer;
-}
+    .pointer {
+        cursor: pointer;
+    }
 
-.intro {
-    font-size: smaller;
-    font-style:italic;
-    text-align:left;
-    padding-bottom: 10px;
-}
-table.dataTable {
-    border-collapse: collapse;
-}
+    .intro {
+        font-size: smaller;
+        font-style:italic;
+        text-align:left;
+    }
+    table.dataTable {
+        border-collapse: collapse;
+    }
 
-.dataTable tbody tr th {
-    text-align: left;
-    font-size:small;
-}
+    .dataTable tbody tr th {
+        text-align: left;
+    }
 
-tr.dataDic td {
+    tr.dataDic td {
         font-size: 12px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         padding: 8px;
@@ -215,22 +209,22 @@ tr.dataDic td {
         color: #66b2b2;
         text-shadow: 0 0 0 #66b2b2;
     }
+    .dicDivider {
+        background-color:rgb(49, 76, 78);
+        color: white;
+    }
 
-/*tr.dataDic td {
-    font-size: smaller;
-    font-family: 'Open Sans', 'Arial Narrow', Arial, Helvetica, sans-serif;
-    padding: 5px !important;
-} */
-.dicDivider {
-    background-color:rgb(49, 76, 78);
-    color: white;
-}
+    tr.dataDic:nth-child(even) {
 
-tr.dataDic:nth-child(even) {
+        background-color: #E6E6E3;
 
-    background-color: #E6E6E3;
+    }
 
-}
+    .thickLine {
+
+        border-top: 2pt solid black !important;
+
+        }
 
 
 </style>
@@ -242,15 +236,13 @@ tr.dataDic:nth-child(even) {
     var dataObj;
     var config = {};
 
-    var threeYearArray = [String(new Date().getFullYear()-2), String(new Date().getFullYear()-1), String(new Date().getFullYear())];
+    //var threeYearArray = [String(new Date().getFullYear()-2), String(new Date().getFullYear()-1), String(new Date().getFullYear())];
     var twoYearArray = [String(new Date().getFullYear()-1), String(new Date().getFullYear())];
     var yearArray = [String(new Date().getFullYear())];
 
-    //console.log(yearArray);
+  
 
-    //var configobject;
     var configRenderer;
-
 
     var storageTag = "-dcpaid2";  // make these unique to each chart
 
@@ -272,68 +264,40 @@ tr.dataDic:nth-child(even) {
     var intFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
     var curFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
 
-    var custom_renderers = {
-      //  "Multifact Table": multifactTableRenderer()
-    };
-
     var custom_aggregators = {
-       // "Multifact aggregator": multifactSumAggregator(curFormat),
+
        "AMOUNT": function() { return sum(curFormat)(["Amount"])},
        "LEVIED": function() { return sum(curFormat)(["LEVIED"])},
-        "PAID": function() {
-                            //consol
-                         //   var balNum = parseFloat(["Balance"]);
-                            return sum(curFormat)(["PAID"]);
-                        }, 
-
-                     /*   "PAID": function() {
-                            //consol
-                         //   var balNum = parseFloat(["Balance"]);
-                            return {
-                                value: function(){ 
-                                    return sum(intFormat)(["PAID"]); },
-                                numInputs: 0 
-                        }},*/
-        "BALANCE": function() {return sum(curFormat)(["BALANCE"])}
-
-        
+       "PAID": function() {  return sum(curFormat)(["PAID"])}, 
+       "BALANCE": function() {return sum(curFormat)(["BALANCE"])}
+       
     };
 
-
-
     var discontinued = [];
-    
-    async function getDiscontinued() {
-     await fetch('data/discontinued.json')
-     .then((response) => response.json())
-     .then((json) => discontinued = json);
- 
-     console.log("DISCONTINUED");
-     console.log(discontinued);
- 
- 
-    }
- 
-    getDiscontinued();
- 
-   
 
- var dataDictionary = [];
+   async function getDiscontinued() {
+    await fetch('/contributionspaid/data/discontinued.json')
+    .then((response) => response.json())
+    .then((json) => discontinued = json);
+
+   }
+
+   getDiscontinued();
+
+   var dataDictionary = [];
 
     async function getDataDictionary() {
-    await fetch('data/datadictionary.json')
+    await fetch('/contributionspaid/data/datadictionary.json')
     .then((response) =>  response.json())
     .then((json) =>  dataDictionary = json);
     }
     
     getDataDictionary();
 
-  
 
 var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMF.csv";
 
 var fromXlOne = false;
-
 
 
 function getFileDate(path) {
@@ -348,6 +312,7 @@ function getFileDate(path) {
             success: function(data, textStatus, request){
         var lastModified = new Date(request.getResponseHeader("Last-Modified"));
         document.getElementById("fileDate").innerHTML = lastModified.toString();
+
 
  },
             error: function(ex) {
@@ -372,17 +337,14 @@ document.addEventListener('click', function (e) {
                 maxCols = tmpRows[0].cells.length;
                 appCtr = 0;
                 subtract = 0;
+                //totals = "Balance"
                 //record = [];
                 if(maxCols-row.cells.length != 0) subtract = maxCols-row.cells.length;
 
                 if(tableRowIndex > -1) {
-                           // console.log("row index:", row.cells[tableRowIndex].innerHTML);
                            if( ["Table", "Heatmap", "Row Heatmap", "Col Heatmap"].indexOf(savedConfig.rendererName) > -1 ) {
                                 DAText = row.cells[tableRowIndex-subtract].innerHTML;
 
-                                console.log("DAText:", DAText);
-
-                            // console.log("table row cell", row.cell[tableRowIndex].innerHTML);
 
                             console.log("row index:", rowIndex);
 
@@ -390,9 +352,6 @@ document.addEventListener('click', function (e) {
                                     return (i[rowIndex]==DAText);
                                 })[0][pcIndex];
 
-                              /*  record = dataObj.filter(function(i){
-                                    return (i[rowIndex]==DAText);
-                                })[0]; */
 
                             } else {
 
@@ -414,9 +373,6 @@ document.addEventListener('click', function (e) {
                                             return (i[rowIndex]==DAText);
                                         })[0][pcIndex];
 
-                                      /*  record = dataObj.filter(function(i) {
-                                            return(i[rowIndex]==DAText);
-                                        } )[0]; */
 
                                     } catch (ex) {
                                         appCtr = 0;
@@ -439,17 +395,18 @@ document.addEventListener('click', function (e) {
                         }
             }
 
-                
-              //  console.log(cell.innerHTML, row.rowIndex, cell.cellIndex);
+               
+
             });
 
 
 function popupFieldInfo() {
 
     var html = "<div class='intro'>For each developer contribution charge on an application, there will be up to 3 data rows represented in this chart - 1 for each of LEVIED, PAID (only if paid) and WIK CREDIT (only if credit applied).</div>";
-     html += "<div style='overflow-y:auto; max-height:80vh'><table class='dataTable'><tr><th>Attribute</th><th>Description</th></tr>";
+     html += "<div style='overflow-y:scroll; height:80vh'><table class='dataTable'><tr><th>Attribute</th><th>Description</th></tr>";
       html += "<tr><td colspan=2 class='dicDivider'>Charge-related:</td></tr>" ;
-        dataDictionary.forEach(i =>{
+
+      dataDictionary.forEach(i =>{
 
             if(i["Value"] == "Application ID") html += "<tr><td colspan=2 class='dicDivider'>Application-related:</td></tr>" ;
             html += "<tr class='dataDic'><td style='min-width: 110px; vertical-align: top;'>" + i["Value"] + "</td><td>" + i["Description"] + "</td></tr>";
@@ -463,9 +420,7 @@ function popupFieldInfo() {
                                 html: html,
                                // confirmButtonText: 'OK',
                                 width: 700,
-
                                 heightAuto: false,
-                                height: 100,
                                 showConfirmButton: false,
                                 showCloseButton: true,
                                 backdrop: true
@@ -504,52 +459,23 @@ async function popup(DAText,appCtr) {
 
         let selectedOption = localStorage.getItem('selectedOption'+storageTag) === null ? "focusOnApps" : localStorage.getItem('selectedOption'+storageTag);
 
-       // alert(selectedOption);
         $("#chartType").val(selectedOption);
-
-
-
-
-        
-        // CATCH THE SCROLL EVENT
-
-        // would normally be 'document' but this is especially for SharePoint:
-       // var docBody = document.getElementById('s4-workspace');
-
-   /*     docBody.addEventListener('scroll', function(e) {
-      //  document.getElementById('showScroll').innerHTML = window.pageYOffset + 'px';
-                var $table = $('table.pvtTable');
-                $table.trigger('reflow');
-        
-    }); */
 
     var stRowLimit = localStorage.getItem("stRowLimit");
 
     if(stRowLimit != null) document.getElementById("subtotalto").value = parseInt(stRowLimit);
 
-       // console.log("pU Renderers");
-       // console.log($.pivotUtilities)
-        // for subototals
         var dataClass = $.pivotUtilities.SubtotalPivotData;
         var renderers = $.extend($.pivotUtilities.renderers, 
-       // $.pivotUtilities.d3_renderers,
         $.pivotUtilities.plotly_renderers, 
         $.pivotUtilities.subtotal_renderers, 
-       // custom_renderers,
         $.pivotUtilities.export_renderers);
 
-        /*var aggregators = $.extend($.pivotUtilities.aggregators,
-        custom_aggregators); */
-
         var tpl = $.pivotUtilities.aggregatorTemplates;
-
-   
-
 
 
         var SubtotalDisableFrom = document.getElementById("subtotalto").value;
         var rendererOptions = {
-        //rendererOptions: {
             rowSubtotalDisplay: {
                     collapseAt: 1,
                     disableFrom: SubtotalDisableFrom
@@ -557,36 +483,18 @@ async function popup(DAText,appCtr) {
                 colSubtotalDisplay: {
                     collapseAt: 1
                 },
-          /*  table: {
-                clickCallback: function(e, value, filters, pivotData) {
-                    console.log("clicked");
-                var links = [];
-                pivotData.forEachMatchingRecord(filters,
-                function(record) { links.push(record["Application ID"]); });
-
-                if (window.confirm("Visit the project site at: "+ links[0] + " ?"))
-                {
-                    var win = window.open(links[0], '_blank');
-                    win.focus();
-                }
-                } 
-
-            }, */
-            //config["heatmap"] = {
-
 
             heatmap: {
                 colorScaleGenerator: function(values) {
                     return d3.scale.linear()
-                     //   .domain(["1", "100000", "4000000", "9000000"])
-                      //  .domain([600000, 6000000])
                       .domain([-6000000, 0, 600000])
-                      //  .range(["#FFF", "#FF3D5A"])
-                     //  .range(["#FFF", "#9AFF3D", "#F7FF3D", "#FF3D5A"])
                         .range(["#9AFF3D", "#FFFFFF", "#FF0000"])
-                //}
+
                 }
-                },//;//, 
+                },
+                localeStrings: {
+                        totals: "Balance"
+                    },
  
         };
 
@@ -602,8 +510,6 @@ async function popup(DAText,appCtr) {
             download: true,
             skipEmptyLines: true,
             complete: function(parsed){
-              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
-             // console.log("Parsed:");
               console.log("records parsed: ", parsed.data.length);
 
      
@@ -619,36 +525,22 @@ async function popup(DAText,appCtr) {
 
 
                 var curPath = window.location.href;
-                //var fileDate = "";
                 var localDate = "";
 
                 getFileDate(fileNameAndPath);
 
-
-               // console.log("First Balance:" + parsed.data[1][1]);
                  fixedData = [];
-
-               // console.log(parsed);
 
                 if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
 
-               // dataObj = parsed.data;
                     var emptyCols = [];
          
-                //i[14] is the 'LEVIED' column
-                // i[15] is the 'PAID' column
-
-              /*   dataObj = parsed.data.filter(function(i) {
-                    return i[15] != "0.00"&& i[14] != "0.00";;
-                }); */
-
                 dataObj = parsed.data;
 
                 console.log("records filtered to:", dataObj.length);
 
                 document.getElementById("progressTotal").innerHTML = dataObj.length;
                 document.getElementById("progress").innerHTML = dataObj.length;
-
 
                 let headerRow = dataObj[0];
                 let yearIndex = headerRow.indexOf("Approval Year");
@@ -684,9 +576,6 @@ async function popup(DAText,appCtr) {
                    cols: (savedConfig) ? savedConfig.cols : ["Purpose", "TR TYPE"],
                     vals: (savedConfig) ? savedConfig.vals : ["AMOUNT"],
                     derivedAttributes: {
-                      /*  "WIK $": function(d) {
-                            return d["Works In Kind Description"] != ""  ? d["LEVIED"] : 0;
-                        }, */
                         "Determined": function(d) {
                             return (d["Approval Date"]).substring(0,10);
                         }
@@ -697,60 +586,52 @@ async function popup(DAText,appCtr) {
                     sorters: sorters,
                     exclusions: {"Determined By": [""]},
                     aggregatorName: (savedConfig) ? savedConfig.aggregatorName : "AMOUNT",
-                    //numberFormat: curFormat,
                     showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
                     inclusions: (savedConfig) ? savedConfig.inclusions : { "Approval Year": yearArray },
                     rendererName: (savedConfig) ? savedConfig.rendererName : "Table",
-                   //aggregators: $.extend(custom_aggregators, $.pivotUtilities.aggregators),
                    aggregators: custom_aggregators,
                     onRefresh: function (config) {
 
-
                         savedConfig = config;
-
-                       // console.log("refresh config");
-                       // console.log(config.aggregatorName);
-
                         vals = config.vals;
 
-                localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
+                        localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
 
 
 
 
-              try {
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span class='blink_me'>" + JSON.stringify(config["inclusions"]) + "</span> ";
-                } catch (ex) {console.log("inclusions not found")};
+                    try {
+                        document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span class='blink_me'>" + JSON.stringify(config["inclusions"]) + "</span> ";
+                        } catch (ex) {console.log("inclusions not found")};
 
-                //try {
-                txt = document.getElementById("inclusions").innerHTML;
-                document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span class='blink_me'>" + JSON.stringify(config.aggregatorName) + "</span> ";
-               // } catch (ex) {console.log("vals not found")};
+                        //try {
+                        txt = document.getElementById("inclusions").innerHTML;
+                        document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span class='blink_me'>" + JSON.stringify(config.aggregatorName) + "</span> ";
+                    // } catch (ex) {console.log("vals not found")};
 
-                if(config.aggregatorName != "Multifact aggregator" && config.rendererName != "Table" ) {
+                        if(config.aggregatorName != "Multifact aggregator" && config.rendererName != "Table" ) {
 
-                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+                        $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
 
-                } else {
-                    //this worked for a one attribute column array but nothing else, and the aggregator doesn't behave unless every column is
-                    // represented so best not to use it
-                 /*   $newHead = $('<thead></thead>').prependTo('table.pvtTable').append($('table.pvtTable tr:first'));
-                $newHead.append($('table.pvtTable tr:nth-child(1)'));  */ 
-                         } 
+                        } else {
+                            //this worked for a one attribute column array but nothing else, and the aggregator doesn't behave unless every column is
+                            // represented so best not to use it
+                        /*   $newHead = $('<thead></thead>').prependTo('table.pvtTable').append($('table.pvtTable tr:first'));
+                        $newHead.append($('table.pvtTable tr:nth-child(1)'));  */ 
+                                } 
 
-                var $table = $('table.pvtTable');
+                        var $table = $('table.pvtTable');
 
-		  try {
-             //   console.log($table.closest('.wrapper'));
-                    $table.floatThead({
-                        scrollContainer: function($table){
-                            return $table.closest('.wrapper');
-                        },
-                         position: 'auto',
-                        floatTableClass: 'pivotBody',
-                        autoReflow: true
-                    });
-		  } catch(ex) {} 
+                try {
+                            $table.floatThead({
+                                scrollContainer: function($table){
+                                    return $table.closest('.wrapper');
+                                },
+                                position: 'auto',
+                                floatTableClass: 'pivotBody',
+                                autoReflow: true
+                            });
+                } catch(ex) {} 
 
 
                     colorLevy();
@@ -761,24 +642,15 @@ async function popup(DAText,appCtr) {
                     }
          }
 
-                }); 
+                }, false, "en"); 
 
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             }
 
 
-
-            
-
-
-
-
-
         }
 
-        
-        
         
         );
 
@@ -865,18 +737,13 @@ function fixHeader() {
 
 
 function selectChange(el) {
-    console.log(el);
+
 
     var tConfig = $("#output").data("pivotUIOptions");
 
-   // console.log($("#output").data());
-
-    console.log("tconfig:");
-    console.log(tConfig);
-
 
     localStorage.setItem('selectedOption'+storageTag,el.value);
-"Table"
+//"Table"
 
          
     if(el.value == "TSV") {
@@ -947,7 +814,7 @@ function selectChange(el) {
                 tConfig["rows"] = ["Purpose"];
                 tConfig["cols"] = ["locality"];
                 tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
-                tConfig["inclusions"] = { "Approval Year": yearArray };
+                tConfig["inclusions"] = {};
                 tConfig["aggregatorName"] = ["PAID"];
                 tConfig["vals"] = ["PAID"];
 
@@ -989,7 +856,7 @@ function selectChange(el) {
                 tConfig["rows"] = ["Purpose"];
                 tConfig["cols"] = ["Approval Year"];
                 tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
-                tConfig["inclusions"] = { "Approval Year": threeYearArray };
+                tConfig["inclusions"] = {};
                 tConfig["exclusions"] = {};
                 tConfig["aggregatorName"] = ["PAID"];
                 tConfig["vals"] = ["PAID"];
@@ -999,11 +866,6 @@ function selectChange(el) {
                 localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
 
             $("#output").pivotUI(dataObj, tConfig, true);
-
-
-
-
-
 
     }
 
@@ -1053,7 +915,6 @@ function colorLevy() {
         return obj["Levy"] === $levyLabels[k].innerHTML;
         });
 
-      //  console.log($levyLabels[k].innerHTML);
        
         if (labelLookup.length > 0) {
           //  console.log(labelLookup);
@@ -1082,29 +943,14 @@ function colorLevy() {
         if($levyLabels[k].innerHTML.match(/^ \u25E2 Other/)) $('.pvtRowLabel').eq(k).addClass("otherCell");
         if($levyLabels[k].innerHTML.match(/^Other/)) $('.pvtRowLabel').eq(k).addClass("otherCell");
 
-
-       // if($levyLabels[k].innerHTML.match(/^Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
-
     }
 
 
 
     var $colLabels = $(".pvtColLabel");
 
-//const triangle =/\p{Black Lower Right Triangle}/gu;
 
 for(i=0; i<$colLabels.length; i++) {
-   // var labelLookup = discontinued.filter(obj => {
-   // return obj["Levy"] === $levyLabels[k].innerHTML;
-   // });
-
-  //  console.log($levyLabels[k].innerHTML);
-   
-
-   // if($levyLabels[k].innerHTML.match(/\p{U+25E2}\b Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
-   
-  // console.log($colLabels[i].textContent);
-   // first one is for the subtotal collapse arrow
 
    if($colLabels[i].textContent.match(/^ \u25E2 Community Facilities/)) $('.pvtColLabel').eq(i).addClass("comFacCell");
     if($colLabels[i].textContent.match(/^Community Facilities/)) $('.pvtColLabel').eq(i).addClass("comFacCell");
@@ -1124,8 +970,6 @@ for(i=0; i<$colLabels.length; i++) {
     if($colLabels[i].textContent.match(/^Other/)) $('.pvtColLabel').eq(i).addClass("otherCell");
 
 
-   // if($levyLabels[k].innerHTML.match(/^Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
-
 }
 
 }
@@ -1134,67 +978,41 @@ function wrapDescription() {
 
     applicationColNum = savedConfig.rows.findIndex((el) => ["Application ID"].indexOf(el) > -1);
     descriptionColNum = savedConfig.rows.findIndex((el) => ["Short Description"].indexOf(el) > -1);
-   // console.log("applnColNum", applicationColNum);
-   // console.log("descColNum", descriptionColNum);
     tmpRows = document.querySelectorAll("table.pvtTable >tbody tr");
     maxCols = tmpRows[0].cells.length;
     headerLen = savedConfig.rows.length;
-    //console.log(tmpRows[0]);
 
     if(descriptionColNum > -1) {
 
         tmpData = dataObj[0];
-        //console.log(tmpData);
 
             appRowIndex = tmpData.findIndex((e) =>  ["Application ID"].indexOf(e) > -1);
 
-           // console.log("appRowIndex:", appRowIndex);
 
             descRowIndex = tmpData.findIndex((f) => ["Application Description"].indexOf(f) > -1);
-           // console.log("descRowIndex:", descRowIndex);
-
-
-       
+      
 
         
         skipColNum = maxCols-headerLen;
 
-        //console.log("MAX COLS:", maxCols);
     
         tmpRows.forEach(r => {
 
             var thisRowLen = r.cells.length;
-          //  console.log("test result:",(maxCols) - thisRowLen);
-
-           // console.log(r);
-
-           //if((r.cells.length-skipColNum) - (headerLen-applicationColNum) >= 0 )  {
             if((maxCols - thisRowLen) == 0 )  {
-            //console.log("compare:",r.cells.length-skipColNum,"-v-",headerLen-applicationColNum);
-               // console.log('did one');
-               // console.log(r);
-              //  ctr = 0;
+
+                $(r).addClass("thickLine");
              
                 index = applicationColNum;
                 descIndex = descriptionColNum;
                 
                 DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
 
-                // console.log("DATEXT:XX:",DAText2);
-
-                 
-
-              //   console.log(dataObj.filter(function(i) {
-               //                             return (i[appRowIndex] == DAText2);
-               //                         }));
-
                 try {
                     appCtr = dataObj.filter(function(i) {
                                             return (i[appRowIndex] == DAText2);
                                         })[0][descRowIndex]; 
 
-               // console.log(appCtr);
-               // console.log('descIndex at end:', descIndex);
                     r.cells[descIndex].setAttribute("title", appCtr);
                     r.setAttribute("title","click to go to DA Tracker");
 
@@ -1203,43 +1021,26 @@ function wrapDescription() {
 
                         } else {
 
-
-                        
-                      //  try {
-                      //  console.log("thisRowLen:", thisRowLen, ":::", (maxCols));
                         if((thisRowLen < (maxCols)) ) {
 
 
                             var subtract = maxCols - thisRowLen;
 
-                          //  console.log("ZERO INVOKED");
                             index = applicationColNum - subtract;
                             descIndex = descriptionColNum - subtract;
-                           // console.log(r);
 
                         try {
                             DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
 
-                        // console.log("DATEXT:::",DAText2);
-                      /*   if (DAText2 == "") {
-                            index--;
-                            descIndex--;
-                            DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
 
-                         } */
-
-
-                           // console.log("DESCROWNUM:",descRowIndex);
                             appCtr = dataObj.filter(function(i) {
                                                     return (i[appRowIndex] == DAText2);
                                                 })[0][descRowIndex]; 
 
-                       // console.log(appCtr);
                             r.cells[descIndex].setAttribute("title", appCtr);
                                         } catch(ex) {}
                                             }
 
-                     //   } catch(ex) {}
 
 
                         }
@@ -1288,7 +1089,7 @@ function rowLimitChange(el)  {
 
                             </select>
 
-                            <input type="image" class='excelImg' value="Visible to Excel"  src="/contributionspaid/images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visible table as Excel file" />
+                            <input type="image" class='excelImg' value="Visible to Excel"  src="images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visible table as Excel file" />
 
                             <input type="button" value="Dictionary" style="float: right;" onClick="popupFieldInfo()" />
                         </div>
@@ -1304,7 +1105,7 @@ function rowLimitChange(el)  {
                 <li>Dataset contains developer contributions levied on approved applications recorded in Council's Property and Rating system, introduced in 2002. The earliest 'Approval Year' included in this dataset is <span id='earliestDate'></span>.</li>
                 <li>Some levies and/or sectors have since been discontinued/consolidated - <span class="discontinued">these are shown highlighted</span>.</li>
                 </ul>
-                <div>Powered by <a target='_blank' href='https://pivottable.js.org/examples/'>Pivot.js</a> and <a href='https://nagarajanchinnasamy.github.io/subtotal/examples/' target='_blank'>Subtotal.js</a> </div>
+                <div>Powered by <a target='_blank' href='https://pivottable.js.org/examples/'>Pivot.js</a> and <a href='https://nagarajanchinnasamy.github.io/subtotal/examples/' target='_blank'>Subtotal.js</a>. </div>
                 </div>
 
 
