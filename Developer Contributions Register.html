@@ -226,11 +226,32 @@
 
         }
 
+        pre {
+            background-color: ghostwhite;
+            border: 1px solid silver;
+            padding: 10px 20px;
+            margin: 20px;
+            border-radius: 4px;
+            width: 25%;
+            margin-left: auto;
+            margin-right: auto;
+   }
+
+   table.dataTable > td {
+    font-size: smaller;
+
+   }
+
+   .swal-text {
+    width: 100%;
+    overflow-y: scroll;
+   }
 
 </style>
 
 
 <script type="text/javascript">
+
 
     debug = false;
     var dataObj;
@@ -398,6 +419,75 @@ document.addEventListener('click', function (e) {
                
 
             });
+
+
+function makeTableHTML(myArray) {
+        var result = "<html>"
+            result += "<style> table thead { position: sticky; inset-block-start: 0; background-color: silver;  } th, td { font-size: smaller; font-family: Arial; }"
+            result += "th { border-bottom: 2px solid blue; }"
+            result += "</style>"
+         result += "<body><table border=1 style='border-collapse: collapse;' class='dataTable'>";
+        
+            for(var i=0; i<1; i++) {
+            result += "<thead><tr>";
+            for(var j=0; j<myArray[i].length; j++){
+                result += "<th>"+myArray[i][j]+"</th>";
+            }
+            result += "</tr></thead>";
+        }
+        
+        for(var i=1; i<myArray.length; i++) {
+            result += "<tr>";
+            for(var j=0; j<myArray[i].length; j++){
+                result += "<td >"+myArray[i][j]+"</td>";
+            }
+            result += "</tr>";
+        }
+        result += "</table></body></html>";
+
+        return result;
+}
+
+function popupJSON(obj) {
+
+    var win = window.open("", "Data Table", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+(screen.width-30)+",height="+(screen.height-30)+",top=15,left=15");
+//win.document.body.innerHTML = "<p>*** PLEASE WAIT, GETTING DATA ***</p>";
+
+    html = makeTableHTML(obj);
+
+   /* console.log(obj);
+
+    var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+    var replacer = function(match, pIndent, pKey, pVal, pEnd) {
+        var key = '<span class="json-key" style="color: brown">',
+            val = '<span class="json-value" style="color: navy">',
+            str = '<span class="json-string" style="color: olive">',
+            r = pIndent || '';
+        if (pKey)
+            r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+        if (pVal)
+            r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+        return r + (pEnd || '');
+    };
+
+    var html = JSON.stringify(obj, null, 3)
+               .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+               .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+               .replace(jsonLine, replacer);
+
+*/
+     /* Swal.fire({
+        html: html,
+        width: 1200,
+        heightAuto: false,
+        showConfirmButton: false,
+        showCloseButton: true,
+        backdrop:true,
+
+      })         */
+  
+win.document.body.innerHTML = html;
+}
 
 
 function popupFieldInfo() {
@@ -601,12 +691,12 @@ async function popup(DAText,appCtr) {
 
 
                     try {
-                        document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span class='blink_me'>" + JSON.stringify(config["inclusions"]) + "</span> ";
+                        document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span >" + JSON.stringify(config["inclusions"]) + "</span> ";
                         } catch (ex) {console.log("inclusions not found")};
 
                         //try {
                         txt = document.getElementById("inclusions").innerHTML;
-                        document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span class='blink_me'>" + JSON.stringify(config.aggregatorName) + "</span> ";
+                        document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span >" + JSON.stringify(config.aggregatorName) + "</span> ";
                     // } catch (ex) {console.log("vals not found")};
 
                         if(config.aggregatorName != "Multifact aggregator" && config.rendererName != "Table" ) {
@@ -1090,6 +1180,8 @@ function rowLimitChange(el)  {
                             </select>
 
                             <input type="image" class='excelImg' value="Visible to Excel"  src="images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visible table as Excel file" />
+                            <input type="button" value="Data Table" onclick="popupJSON(dataObj)"  title="Click to view Data Table" />
+
 
                             <input type="button" value="Dictionary" style="float: right;" onClick="popupFieldInfo()" />
                         </div>
