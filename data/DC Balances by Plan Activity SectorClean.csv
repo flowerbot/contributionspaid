@@ -1,290 +1,288 @@
-FORMAT XLONE REPORT,DefnSheetName=Report Set Up,,,,,,,,,
-h.SET,,,,,,,,,,
-*,Account Number,Plan Description,Balance,Plan Description,Sector Description ,DataDate,Activity Description,Plan,Activity,Sector
-LIST,01.05.00,DCP3 Open Space,0.00,01-DCP3 Open Space,No Sector,45030.00,Open Space,01,05,00
-LIST,01.05.00,DCP3 Open Space,39112.74,01-DCP3 Open Space,No Sector,45030.00,Open Space,01,05,00
-LIST,01.15.00,DCP3 Open Space,-924489.62,01-DCP3 Open Space,No Sector,45030.00,Casual Open Space,01,15,00
-LIST,01.16.00,DCP3 Open Space,0.00,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
-LIST,01.16.00,DCP3 Open Space,-49140.00,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
-LIST,01.16.00,DCP3 Open Space,2457.00,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
-LIST,01.16.00,DCP3 Open Space,-4969286.34,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
-LIST,02.01.00,Western Drainage,0.00,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
-LIST,02.01.00,Western Drainage,-16645.01,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
-LIST,02.01.00,Western Drainage,0.00,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
-LIST,02.01.00,Western Drainage,829.30,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
-LIST,02.01.00,Western Drainage,-68742.74,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
-LIST,03.06.00,DCP3 Community Facilities,0.00,03-DCP3 Community Facilities,No Sector,45030.00,Community Facilities,03,06,00
-LIST,03.06.00,DCP3 Community Facilities,-1979.40,03-DCP3 Community Facilities,No Sector,45030.00,Community Facilities,03,06,00
-LIST,04.02.00,TRCP,0.00,04-TRCP,No Sector,45030.00,Roads,04,02,00
-LIST,04.02.00,TRCP,35601133.25,04-TRCP,No Sector,45030.00,Roads,04,02,00
-LIST,04.02.01,TRCP,0.00,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
-LIST,04.02.01,TRCP,-261626.45,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
-LIST,04.02.01,TRCP,4027.65,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
-LIST,04.02.01,TRCP,-4635625.17,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
-LIST,04.02.02,TRCP,0.00,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
-LIST,04.02.02,TRCP,-673735.27,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
-LIST,04.02.02,TRCP,11251.71,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
-LIST,04.02.02,TRCP,-10257821.23,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
-LIST,04.02.03,TRCP,0.00,04-TRCP,Sector 3 - Kingscliff,45030.00,Roads,04,02,03
-LIST,04.02.03,TRCP,-3438944.98,04-TRCP,Sector 3 - Kingscliff,45030.00,Roads,04,02,03
-LIST,04.02.04,TRCP,0.00,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
-LIST,04.02.04,TRCP,-29839.46,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
-LIST,04.02.04,TRCP,1491.97,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
-LIST,04.02.04,TRCP,-2244473.46,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
-LIST,04.02.05,TRCP,0.00,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
-LIST,04.02.05,TRCP,-845591.00,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
-LIST,04.02.05,TRCP,2118.33,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
-LIST,04.02.05,TRCP,-3801378.46,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
-LIST,04.02.06,TRCP,0.00,04-TRCP,Sector 6,45030.00,Roads,04,02,06
-LIST,04.02.06,TRCP,-33231.10,04-TRCP,Sector 6,45030.00,Roads,04,02,06
-LIST,04.02.06,TRCP,0.00,04-TRCP,Sector 6,45030.00,Roads,04,02,06
-LIST,04.02.06,TRCP,269.85,04-TRCP,Sector 6,45030.00,Roads,04,02,06
-LIST,04.02.06,TRCP,-4807842.57,04-TRCP,Sector 6,45030.00,Roads,04,02,06
-LIST,04.02.07,TRCP,0.00,04-TRCP,Sector 7,45030.00,Roads,04,02,07
-LIST,04.02.07,TRCP,-457003.00,04-TRCP,Sector 7,45030.00,Roads,04,02,07
-LIST,04.02.07,TRCP,10518.35,04-TRCP,Sector 7,45030.00,Roads,04,02,07
-LIST,04.02.07,TRCP,-12918452.31,04-TRCP,Sector 7,45030.00,Roads,04,02,07
-LIST,04.02.08,TRCP,0.00,04-TRCP,Sector 8,45030.00,Roads,04,02,08
-LIST,04.02.08,TRCP,-43945.20,04-TRCP,Sector 8,45030.00,Roads,04,02,08
-LIST,04.02.08,TRCP,2197.26,04-TRCP,Sector 8,45030.00,Roads,04,02,08
-LIST,04.02.08,TRCP,-6581725.86,04-TRCP,Sector 8,45030.00,Roads,04,02,08
-LIST,04.02.09,TRCP,0.00,04-TRCP,Sector 9,45030.00,Roads,04,02,09
-LIST,04.02.09,TRCP,-240076.38,04-TRCP,Sector 9,45030.00,Roads,04,02,09
-LIST,04.02.09,TRCP,11559.81,04-TRCP,Sector 9,45030.00,Roads,04,02,09
-LIST,04.02.09,TRCP,-6631982.98,04-TRCP,Sector 9,45030.00,Roads,04,02,09
-LIST,04.02.10,TRCP,0.00,04-TRCP,Sector 10,45030.00,Roads,04,02,10
-LIST,04.02.10,TRCP,-10685.67,04-TRCP,Sector 10,45030.00,Roads,04,02,10
-LIST,04.02.10,TRCP,534.28,04-TRCP,Sector 10,45030.00,Roads,04,02,10
-LIST,04.02.10,TRCP,-3168237.17,04-TRCP,Sector 10,45030.00,Roads,04,02,10
-LIST,04.02.11,TRCP,0.00,04-TRCP,Sector 11,45030.00,Roads,04,02,11
-LIST,04.02.11,TRCP,-213720.05,04-TRCP,Sector 11,45030.00,Roads,04,02,11
-LIST,04.02.12,TRCP,0.00,04-TRCP,Sector 12,45030.00,Roads,04,02,12
-LIST,04.02.12,TRCP,-437648.89,04-TRCP,Sector 12,45030.00,Roads,04,02,12
-LIST,04.02.13,TRCP,0.00,04-TRCP,Sector 13,45030.00,Roads,04,02,13
-LIST,04.02.13,TRCP,-19123.38,04-TRCP,Sector 13,45030.00,Roads,04,02,13
-LIST,04.02.13,TRCP,956.17,04-TRCP,Sector 13,45030.00,Roads,04,02,13
-LIST,04.02.13,TRCP,-1090423.37,04-TRCP,Sector 13,45030.00,Roads,04,02,13
-LIST,04.02.15,TRCP,0.00,04-TRCP,Sector 15,45030.00,Roads,04,02,15
-LIST,04.02.15,TRCP,-8157.18,04-TRCP,Sector 15,45030.00,Roads,04,02,15
-LIST,04.02.15,TRCP,-16507.77,04-TRCP,Sector 15,45030.00,Roads,04,02,15
-LIST,04.02.26,TRCP,0.00,04-TRCP,Sector 26,45030.00,Roads,04,02,26
-LIST,04.02.26,TRCP,-1681953.74,04-TRCP,Sector 26,45030.00,Roads,04,02,26
-LIST,04.02.27,TRCP,0.00,04-TRCP,Sector 27,45030.00,Roads,04,02,27
-LIST,04.02.27,TRCP,-500615.66,04-TRCP,Sector 27,45030.00,Roads,04,02,27
-LIST,04.02.29,TRCP,0.00,04-TRCP,Sector 29,45030.00,Roads,04,02,29
-LIST,04.02.29,TRCP,-619.90,04-TRCP,Sector 29,45030.00,Roads,04,02,29
-LIST,04.02.29,TRCP,-743545.53,04-TRCP,Sector 29,45030.00,Roads,04,02,29
-LIST,04.02.30,TRCP,0.00,04-TRCP,Sector 30,45030.00,Roads,04,02,30
-LIST,04.02.30,TRCP,-36511.00,04-TRCP,Sector 30,45030.00,Roads,04,02,30
-LIST,04.02.30,TRCP,13.35,04-TRCP,Sector 30,45030.00,Roads,04,02,30
-LIST,04.02.30,TRCP,-779571.25,04-TRCP,Sector 30,45030.00,Roads,04,02,30
-LIST,04.02.31,TRCP,0.00,04-TRCP,Sector 31,45030.00,Roads,04,02,31
-LIST,04.02.31,TRCP,-369.30,04-TRCP,Sector 31,45030.00,Roads,04,02,31
-LIST,04.02.32,TRCP,0.00,04-TRCP,TRCP Sector 12a,45030.00,Roads,04,02,32
-LIST,04.02.32,TRCP,-257092.83,04-TRCP,TRCP Sector 12a,45030.00,Roads,04,02,32
-LIST,04.02.33,TRCP,0.00,04-TRCP,TRCP Sector 12b,45030.00,Roads,04,02,33
-LIST,04.02.33,TRCP,-381737.83,04-TRCP,TRCP Sector 12b,45030.00,Roads,04,02,33
-LIST,04.18.00,TRCP,0.00,04-TRCP,No Sector,45030.00,Extractive Industries,04,18,00
-LIST,04.18.00,TRCP,-2845.94,04-TRCP,No Sector,45030.00,Extractive Industries,04,18,00
-LIST,05.15.00,O/Space,-31038.55,05-O/Space,No Sector,45030.00,Casual Open Space,05,15,00
-LIST,05.15.00,O/Space,1173.39,05-O/Space,No Sector,45030.00,Casual Open Space,05,15,00
-LIST,05.15.00,O/Space,-711727.19,05-O/Space,No Sector,45030.00,Casual Open Space,05,15,00
-LIST,05.15.01,O/Space,-2.56,05-O/Space,Sector 1 - Tweed Heads,45030.00,Casual Open Space,05,15,01
-LIST,05.15.02,O/Space,-6.39,05-O/Space,Sector 2 - Murwillumbah,45030.00,Casual Open Space,05,15,02
-LIST,05.15.03,O/Space,-2.73,05-O/Space,Sector 3 - Kingscliff,45030.00,Casual Open Space,05,15,03
-LIST,05.15.04,O/Space,-1.00,05-O/Space,Sector 4 - Cabarita,45030.00,Casual Open Space,05,15,04
-LIST,05.15.05,O/Space,-5.92,05-O/Space,Sector 5 - Pottsville,45030.00,Casual Open Space,05,15,05
-LIST,05.15.07,O/Space,-14.91,05-O/Space,Sector 7,45030.00,Casual Open Space,05,15,07
-LIST,05.16.00,O/Space,0.00,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
-LIST,05.16.00,O/Space,-29486.67,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
-LIST,05.16.00,O/Space,1040.74,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
-LIST,05.16.00,O/Space,-830570.69,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
-LIST,05.16.01,O/Space,0.00,05-O/Space,Sector 1 - Tweed Heads,45030.00,Structured Open Space,05,16,01
-LIST,05.16.01,O/Space,10094.33,05-O/Space,Sector 1 - Tweed Heads,45030.00,Structured Open Space,05,16,01
-LIST,05.16.02,O/Space,0.00,05-O/Space,Sector 2 - Murwillumbah,45030.00,Structured Open Space,05,16,02
-LIST,05.16.02,O/Space,232358.30,05-O/Space,Sector 2 - Murwillumbah,45030.00,Structured Open Space,05,16,02
-LIST,05.16.03,O/Space,0.00,05-O/Space,Sector 3 - Kingscliff,45030.00,Structured Open Space,05,16,03
-LIST,05.16.03,O/Space,319385.72,05-O/Space,Sector 3 - Kingscliff,45030.00,Structured Open Space,05,16,03
-LIST,05.16.04,O/Space,0.00,05-O/Space,Sector 4 - Cabarita,45030.00,Structured Open Space,05,16,04
-LIST,05.16.04,O/Space,11175.40,05-O/Space,Sector 4 - Cabarita,45030.00,Structured Open Space,05,16,04
-LIST,05.16.05,O/Space,0.00,05-O/Space,Sector 5 - Pottsville,45030.00,Structured Open Space,05,16,05
-LIST,05.16.05,O/Space,-3.43,05-O/Space,Sector 5 - Pottsville,45030.00,Structured Open Space,05,16,05
-LIST,05.16.06,O/Space,0.00,05-O/Space,Sector 6,45030.00,Structured Open Space,05,16,06
-LIST,05.16.06,O/Space,2132.38,05-O/Space,Sector 6,45030.00,Structured Open Space,05,16,06
-LIST,05.16.07,O/Space,0.00,05-O/Space,Sector 7,45030.00,Structured Open Space,05,16,07
-LIST,05.16.07,O/Space,-0.49,05-O/Space,Sector 7,45030.00,Structured Open Space,05,16,07
-LIST,05.16.08,O/Space,0.00,05-O/Space,Sector 8,45030.00,Structured Open Space,05,16,08
-LIST,05.16.08,O/Space,-0.74,05-O/Space,Sector 8,45030.00,Structured Open Space,05,16,08
-LIST,05.16.09,O/Space,0.00,05-O/Space,Sector 9,45030.00,Structured Open Space,05,16,09
-LIST,05.16.09,O/Space,-4913.31,05-O/Space,Sector 9,45030.00,Structured Open Space,05,16,09
-LIST,05.16.10,O/Space,0.00,05-O/Space,Sector 10,45030.00,Structured Open Space,05,16,10
-LIST,05.16.10,O/Space,-0.22,05-O/Space,Sector 10,45030.00,Structured Open Space,05,16,10
-LIST,06.08.00,Contribution Street Trees,0.00,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
-LIST,06.08.00,Contribution Street Trees,-6831.00,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
-LIST,06.08.00,Contribution Street Trees,683.10,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
-LIST,06.08.00,Contribution Street Trees,-303293.51,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
-LIST,07.01.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
-LIST,07.01.00,West K'Cliff,-7787.19,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
-LIST,07.01.00,West K'Cliff,389.36,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
-LIST,07.01.00,West K'Cliff,-254985.99,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
-LIST,07.05.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
-LIST,07.05.00,West K'Cliff,-4393.00,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
-LIST,07.05.00,West K'Cliff,219.65,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
-LIST,07.05.00,West K'Cliff,-966180.74,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
-LIST,07.06.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Community Facilities,07,06,00
-LIST,07.06.00,West K'Cliff,-4.57,07-West K'Cliff,No Sector,45030.00,Community Facilities,07,06,00
-LIST,07.07.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Footpath/Cycleway,07,07,00
-LIST,07.07.00,West K'Cliff,3.10,07-West K'Cliff,No Sector,45030.00,Footpath/Cycleway,07,07,00
-LIST,09.14.00,Cobaki Lakes,0.00,09-Cobaki Lakes,No Sector,45030.00,Other,09,14,00
-LIST,09.14.00,Cobaki Lakes,0.62,09-Cobaki Lakes,No Sector,45030.00,Other,09,14,00
-LIST,10.14.00,Cobaki Lakes,0.00,10-Cobaki Lakes,No Sector,45030.00,Other,10,14,00
-LIST,10.14.00,Cobaki Lakes,1636.65,10-Cobaki Lakes,No Sector,45030.00,Other,10,14,00
-LIST,11.06.00,Libraries,0.00,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
-LIST,11.06.00,Libraries,-198735.77,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
-LIST,11.06.00,Libraries,3270.57,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
-LIST,11.06.00,Libraries,-1507900.72,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
-LIST,12.10.00,Bus Shelters,0.00,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
-LIST,12.10.00,Bus Shelters,-14687.08,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
-LIST,12.10.00,Bus Shelters,231.22,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
-LIST,12.10.00,Bus Shelters,-224518.38,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
-LIST,13.11.00,Cemeteries,0.00,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
-LIST,13.11.00,Cemeteries,-28046.38,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
-LIST,13.11.00,Cemeteries,455.71,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
-LIST,13.11.00,Cemeteries,-145501.72,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
-LIST,14.14.00,Mebbin Springs,0.00,14-Mebbin Springs,No Sector,45030.00,Other,14,14,00
-LIST,14.14.00,Mebbin Springs,-109447.67,14-Mebbin Springs,No Sector,45030.00,Other,14,14,00
-LIST,15.06.00,Community Facilities,0.00,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
-LIST,15.06.00,Community Facilities,-225149.31,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
-LIST,15.06.00,Community Facilities,2249.76,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
-LIST,15.06.00,Community Facilities,-2361518.52,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
-LIST,15.06.01,Community Facilities,0.00,15-Community Facilities,Sector 1 - Tweed Heads,45030.00,Community Facilities,15,06,01
-LIST,15.06.01,Community Facilities,-1196317.20,15-Community Facilities,Sector 1 - Tweed Heads,45030.00,Community Facilities,15,06,01
-LIST,15.06.02,Community Facilities,0.00,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
-LIST,15.06.02,Community Facilities,-23666.00,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
-LIST,15.06.02,Community Facilities,1183.30,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
-LIST,15.06.02,Community Facilities,416718.55,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
-LIST,16.12.00,Surf Lifesaving,0.00,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
-LIST,16.12.00,Surf Lifesaving,-4209.00,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
-LIST,16.12.00,Surf Lifesaving,210.45,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
-LIST,16.12.00,Surf Lifesaving,-607146.32,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
-LIST,16.12.02,Surf Lifesaving,0.00,16-Surf Lifesaving,Sector 2 - Murwillumbah,45030.00,Surf Lifesaving,16,12,02
-LIST,16.12.02,Surf Lifesaving,491521.46,16-Surf Lifesaving,Sector 2 - Murwillumbah,45030.00,Surf Lifesaving,16,12,02
-LIST,18.13.00,Council Admin - Tech Support,0.00,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
-LIST,18.13.00,Council Admin - Tech Support,-448087.18,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
-LIST,18.13.00,Council Admin - Tech Support,7388.14,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
-LIST,18.13.00,Council Admin - Tech Support,-1667995.85,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
-LIST,19.05.00,Kings Beach,0.00,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
-LIST,19.05.00,Kings Beach,-69310.66,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
-LIST,19.05.00,Kings Beach,80.15,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
-LIST,19.05.00,Kings Beach,-88612.50,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
-LIST,19.06.00,Kings Beach,0.00,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
-LIST,19.06.00,Kings Beach,-101582.12,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
-LIST,19.06.00,Kings Beach,117.45,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
-LIST,19.06.00,Kings Beach,-1624602.79,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
-LIST,19.07.00,Kings Beach,0.00,19-Kings Beach,No Sector,45030.00,Footpath/Cycleway,19,07,00
-LIST,19.07.00,Kings Beach,-124493.46,19-Kings Beach,No Sector,45030.00,Footpath/Cycleway,19,07,00
-LIST,20.15.00,Seabreeze Estate,-839.45,20-Seabreeze Estate,No Sector,45030.00,Casual Open Space,20,15,00
-LIST,21.05.00,Terranora Village,0.00,21-Terranora Village,No Sector,45030.00,Open Space,21,05,00
-LIST,21.05.00,Terranora Village,-6962.59,21-Terranora Village,No Sector,45030.00,Open Space,21,05,00
-LIST,21.06.00,Terranora Village,0.00,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
-LIST,21.06.00,Terranora Village,-4815.00,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
-LIST,21.06.00,Terranora Village,240.75,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
-LIST,21.06.00,Terranora Village,-45543.61,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
-LIST,22.07.00,Shirewide Cycleways,0.00,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
-LIST,22.07.00,Shirewide Cycleways,-106469.65,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
-LIST,22.07.00,Shirewide Cycleways,1563.36,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
-LIST,22.07.00,Shirewide Cycleways,-723705.75,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
-LIST,23.04.00,Shirewide Carparking,0.00,23-Shirewide Carparking,No Sector,45030.00,Parking,23,04,00
-LIST,23.04.00,Shirewide Carparking,-179053.74,23-Shirewide Carparking,No Sector,45030.00,Parking,23,04,00
-LIST,23.04.01,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 1 - Tweed Heads,45030.00,Parking,23,04,01
-LIST,23.04.01,Shirewide Carparking,-192563.28,23-Shirewide Carparking,Sector 1 - Tweed Heads,45030.00,Parking,23,04,01
-LIST,23.04.01,Shirewide Carparking,-385708.28,23-Shirewide Carparking,Sector 1 - Tweed Heads,45030.00,Parking,23,04,01
-LIST,23.04.02,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 2 - Murwillumbah,45030.00,Parking,23,04,02
-LIST,23.04.02,Shirewide Carparking,386771.01,23-Shirewide Carparking,Sector 2 - Murwillumbah,45030.00,Parking,23,04,02
-LIST,23.04.03,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 3 - Kingscliff,45030.00,Parking,23,04,03
-LIST,23.04.03,Shirewide Carparking,-83974.89,23-Shirewide Carparking,Sector 3 - Kingscliff,45030.00,Parking,23,04,03
-LIST,23.04.04,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 4 - Cabarita,45030.00,Parking,23,04,04
-LIST,23.04.04,Shirewide Carparking,-672829.56,23-Shirewide Carparking,Sector 4 - Cabarita,45030.00,Parking,23,04,04
-LIST,23.04.05,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 5 - Pottsville,45030.00,Parking,23,04,05
-LIST,23.04.05,Shirewide Carparking,-230300.70,23-Shirewide Carparking,Sector 5 - Pottsville,45030.00,Parking,23,04,05
-LIST,23.04.06,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 6,45030.00,Parking,23,04,06
-LIST,23.04.06,Shirewide Carparking,-10882.41,23-Shirewide Carparking,Sector 6,45030.00,Parking,23,04,06
-LIST,25.05.00,Salt Development,0.00,25-Salt Development,No Sector,45030.00,Open Space,25,05,00
-LIST,25.05.00,Salt Development,106000.90,25-Salt Development,No Sector,45030.00,Open Space,25,05,00
-LIST,25.16.00,Salt Development,0.00,25-Salt Development,No Sector,45030.00,Structured Open Space,25,16,00
-LIST,25.16.00,Salt Development,-1160091.72,25-Salt Development,No Sector,45030.00,Structured Open Space,25,16,00
-LIST,26.15.00,Plan 26 Shirewide Open Space,-249197.91,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Casual Open Space,26,15,00
-LIST,26.15.00,Plan 26 Shirewide Open Space,4170.59,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Casual Open Space,26,15,00
-LIST,26.15.00,Plan 26 Shirewide Open Space,-5281664.03,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Casual Open Space,26,15,00
-LIST,26.16.00,Plan 26 Shirewide Open Space,0.00,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
-LIST,26.16.00,Plan 26 Shirewide Open Space,-838367.73,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
-LIST,26.16.00,Plan 26 Shirewide Open Space,12826.55,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
-LIST,26.16.00,Plan 26 Shirewide Open Space,-1187954.53,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
-LIST,27.16.00,Tweed Hds Masterplan & Streetscaping,0.00,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
-LIST,27.16.00,Tweed Hds Masterplan & Streetscaping,-58632.00,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
-LIST,27.16.00,Tweed Hds Masterplan & Streetscaping,1570.50,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
-LIST,27.16.00,Tweed Hds Masterplan & Streetscaping,-646224.71,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
-LIST,28.15.00,Seaside City,-56859.50,28-Seaside City,No Sector,45030.00,Casual Open Space,28,15,00
-LIST,28.16.00,Seaside City,-778156.73,28-Seaside City,No Sector,45030.00,Structured Open Space,28,16,00
-LIST,91.03.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Traffic Facilities,91,03,00
-LIST,91.03.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Traffic Facilities,91,03,00
-LIST,91.07.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Footpath/Cycleway,91,07,00
-LIST,91.07.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Footpath/Cycleway,91,07,00
-LIST,91.15.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Casual Open Space,91,15,00
-LIST,92.05.00,Public Reserve Contributions,0.00,92-Public Reserve Contributions,No Sector,45030.00,Open Space,92,05,00
-LIST,92.05.00,Public Reserve Contributions,0.00,92-Public Reserve Contributions,No Sector,45030.00,Open Space,92,05,00
-LIST,92.15.00,Public Reserve Contributions,0.00,92-Public Reserve Contributions,No Sector,45030.00,Casual Open Space,92,15,00
-LIST,95.01.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Drainage,95,01,00
-LIST,95.01.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Drainage,95,01,00
-LIST,95.05.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Open Space,95,05,00
-LIST,95.05.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Open Space,95,05,00
-LIST,95.06.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Community Facilities,95,06,00
-LIST,95.06.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Community Facilities,95,06,00
-h.*,,,,,,,,,,
-SUMMARY,,,,,,,,,,
-*,,,,,,,,,,
-*,,,,,,,,,,
-*,,,,,,,,,,
-SUMMARY END,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
+Account Number,Plan Description,Balance,Plan Description,Sector Description ,DataDate,Activity Description,Plan,Activity,Sector
+01.05.00,DCP3 Open Space,0.00,01-DCP3 Open Space,No Sector,45030.00,Open Space,01,05,00
+01.05.00,DCP3 Open Space,39112.74,01-DCP3 Open Space,No Sector,45030.00,Open Space,01,05,00
+01.15.00,DCP3 Open Space,-924489.62,01-DCP3 Open Space,No Sector,45030.00,Casual Open Space,01,15,00
+01.16.00,DCP3 Open Space,0.00,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
+01.16.00,DCP3 Open Space,-49140.00,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
+01.16.00,DCP3 Open Space,2457.00,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
+01.16.00,DCP3 Open Space,-4969286.34,01-DCP3 Open Space,No Sector,45030.00,Structured Open Space,01,16,00
+02.01.00,Western Drainage,0.00,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
+02.01.00,Western Drainage,-16645.01,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
+02.01.00,Western Drainage,0.00,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
+02.01.00,Western Drainage,829.30,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
+02.01.00,Western Drainage,-68742.74,02-Western Drainage,No Sector,45030.00,Drainage,02,01,00
+03.06.00,DCP3 Community Facilities,0.00,03-DCP3 Community Facilities,No Sector,45030.00,Community Facilities,03,06,00
+03.06.00,DCP3 Community Facilities,-1979.40,03-DCP3 Community Facilities,No Sector,45030.00,Community Facilities,03,06,00
+04.02.00,TRCP,0.00,04-TRCP,No Sector,45030.00,Roads,04,02,00
+04.02.00,TRCP,35601133.25,04-TRCP,No Sector,45030.00,Roads,04,02,00
+04.02.01,TRCP,0.00,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
+04.02.01,TRCP,-261626.45,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
+04.02.01,TRCP,4027.65,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
+04.02.01,TRCP,-4635625.17,04-TRCP,Sector 1 - Tweed Heads,45030.00,Roads,04,02,01
+04.02.02,TRCP,0.00,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
+04.02.02,TRCP,-673735.27,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
+04.02.02,TRCP,11251.71,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
+04.02.02,TRCP,-10257821.23,04-TRCP,Sector 2 - Murwillumbah,45030.00,Roads,04,02,02
+04.02.03,TRCP,0.00,04-TRCP,Sector 3 - Kingscliff,45030.00,Roads,04,02,03
+04.02.03,TRCP,-3438944.98,04-TRCP,Sector 3 - Kingscliff,45030.00,Roads,04,02,03
+04.02.04,TRCP,0.00,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
+04.02.04,TRCP,-29839.46,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
+04.02.04,TRCP,1491.97,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
+04.02.04,TRCP,-2244473.46,04-TRCP,Sector 4 - Cabarita,45030.00,Roads,04,02,04
+04.02.05,TRCP,0.00,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
+04.02.05,TRCP,-845591.00,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
+04.02.05,TRCP,2118.33,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
+04.02.05,TRCP,-3801378.46,04-TRCP,Sector 5 - Pottsville,45030.00,Roads,04,02,05
+04.02.06,TRCP,0.00,04-TRCP,Sector 6,45030.00,Roads,04,02,06
+04.02.06,TRCP,-33231.10,04-TRCP,Sector 6,45030.00,Roads,04,02,06
+04.02.06,TRCP,0.00,04-TRCP,Sector 6,45030.00,Roads,04,02,06
+04.02.06,TRCP,269.85,04-TRCP,Sector 6,45030.00,Roads,04,02,06
+04.02.06,TRCP,-4807842.57,04-TRCP,Sector 6,45030.00,Roads,04,02,06
+04.02.07,TRCP,0.00,04-TRCP,Sector 7,45030.00,Roads,04,02,07
+04.02.07,TRCP,-457003.00,04-TRCP,Sector 7,45030.00,Roads,04,02,07
+04.02.07,TRCP,10518.35,04-TRCP,Sector 7,45030.00,Roads,04,02,07
+04.02.07,TRCP,-12918452.31,04-TRCP,Sector 7,45030.00,Roads,04,02,07
+04.02.08,TRCP,0.00,04-TRCP,Sector 8,45030.00,Roads,04,02,08
+04.02.08,TRCP,-43945.20,04-TRCP,Sector 8,45030.00,Roads,04,02,08
+04.02.08,TRCP,2197.26,04-TRCP,Sector 8,45030.00,Roads,04,02,08
+04.02.08,TRCP,-6581725.86,04-TRCP,Sector 8,45030.00,Roads,04,02,08
+04.02.09,TRCP,0.00,04-TRCP,Sector 9,45030.00,Roads,04,02,09
+04.02.09,TRCP,-240076.38,04-TRCP,Sector 9,45030.00,Roads,04,02,09
+04.02.09,TRCP,11559.81,04-TRCP,Sector 9,45030.00,Roads,04,02,09
+04.02.09,TRCP,-6631982.98,04-TRCP,Sector 9,45030.00,Roads,04,02,09
+04.02.10,TRCP,0.00,04-TRCP,Sector 10,45030.00,Roads,04,02,10
+04.02.10,TRCP,-10685.67,04-TRCP,Sector 10,45030.00,Roads,04,02,10
+04.02.10,TRCP,534.28,04-TRCP,Sector 10,45030.00,Roads,04,02,10
+04.02.10,TRCP,-3168237.17,04-TRCP,Sector 10,45030.00,Roads,04,02,10
+04.02.11,TRCP,0.00,04-TRCP,Sector 11,45030.00,Roads,04,02,11
+04.02.11,TRCP,-213720.05,04-TRCP,Sector 11,45030.00,Roads,04,02,11
+04.02.12,TRCP,0.00,04-TRCP,Sector 12,45030.00,Roads,04,02,12
+04.02.12,TRCP,-437648.89,04-TRCP,Sector 12,45030.00,Roads,04,02,12
+04.02.13,TRCP,0.00,04-TRCP,Sector 13,45030.00,Roads,04,02,13
+04.02.13,TRCP,-19123.38,04-TRCP,Sector 13,45030.00,Roads,04,02,13
+04.02.13,TRCP,956.17,04-TRCP,Sector 13,45030.00,Roads,04,02,13
+04.02.13,TRCP,-1090423.37,04-TRCP,Sector 13,45030.00,Roads,04,02,13
+04.02.15,TRCP,0.00,04-TRCP,Sector 15,45030.00,Roads,04,02,15
+04.02.15,TRCP,-8157.18,04-TRCP,Sector 15,45030.00,Roads,04,02,15
+04.02.15,TRCP,-16507.77,04-TRCP,Sector 15,45030.00,Roads,04,02,15
+04.02.26,TRCP,0.00,04-TRCP,Sector 26,45030.00,Roads,04,02,26
+04.02.26,TRCP,-1681953.74,04-TRCP,Sector 26,45030.00,Roads,04,02,26
+04.02.27,TRCP,0.00,04-TRCP,Sector 27,45030.00,Roads,04,02,27
+04.02.27,TRCP,-500615.66,04-TRCP,Sector 27,45030.00,Roads,04,02,27
+04.02.29,TRCP,0.00,04-TRCP,Sector 29,45030.00,Roads,04,02,29
+04.02.29,TRCP,-619.90,04-TRCP,Sector 29,45030.00,Roads,04,02,29
+04.02.29,TRCP,-743545.53,04-TRCP,Sector 29,45030.00,Roads,04,02,29
+04.02.30,TRCP,0.00,04-TRCP,Sector 30,45030.00,Roads,04,02,30
+04.02.30,TRCP,-36511.00,04-TRCP,Sector 30,45030.00,Roads,04,02,30
+04.02.30,TRCP,13.35,04-TRCP,Sector 30,45030.00,Roads,04,02,30
+04.02.30,TRCP,-779571.25,04-TRCP,Sector 30,45030.00,Roads,04,02,30
+04.02.31,TRCP,0.00,04-TRCP,Sector 31,45030.00,Roads,04,02,31
+04.02.31,TRCP,-369.30,04-TRCP,Sector 31,45030.00,Roads,04,02,31
+04.02.32,TRCP,0.00,04-TRCP,TRCP Sector 12a,45030.00,Roads,04,02,32
+04.02.32,TRCP,-257092.83,04-TRCP,TRCP Sector 12a,45030.00,Roads,04,02,32
+04.02.33,TRCP,0.00,04-TRCP,TRCP Sector 12b,45030.00,Roads,04,02,33
+04.02.33,TRCP,-381737.83,04-TRCP,TRCP Sector 12b,45030.00,Roads,04,02,33
+04.18.00,TRCP,0.00,04-TRCP,No Sector,45030.00,Extractive Industries,04,18,00
+04.18.00,TRCP,-2845.94,04-TRCP,No Sector,45030.00,Extractive Industries,04,18,00
+05.15.00,O/Space,-31038.55,05-O/Space,No Sector,45030.00,Casual Open Space,05,15,00
+05.15.00,O/Space,1173.39,05-O/Space,No Sector,45030.00,Casual Open Space,05,15,00
+05.15.00,O/Space,-711727.19,05-O/Space,No Sector,45030.00,Casual Open Space,05,15,00
+05.15.01,O/Space,-2.56,05-O/Space,Sector 1 - Tweed Heads,45030.00,Casual Open Space,05,15,01
+05.15.02,O/Space,-6.39,05-O/Space,Sector 2 - Murwillumbah,45030.00,Casual Open Space,05,15,02
+05.15.03,O/Space,-2.73,05-O/Space,Sector 3 - Kingscliff,45030.00,Casual Open Space,05,15,03
+05.15.04,O/Space,-1.00,05-O/Space,Sector 4 - Cabarita,45030.00,Casual Open Space,05,15,04
+05.15.05,O/Space,-5.92,05-O/Space,Sector 5 - Pottsville,45030.00,Casual Open Space,05,15,05
+05.15.07,O/Space,-14.91,05-O/Space,Sector 7,45030.00,Casual Open Space,05,15,07
+05.16.00,O/Space,0.00,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
+05.16.00,O/Space,-29486.67,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
+05.16.00,O/Space,1040.74,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
+05.16.00,O/Space,-830570.69,05-O/Space,No Sector,45030.00,Structured Open Space,05,16,00
+05.16.01,O/Space,0.00,05-O/Space,Sector 1 - Tweed Heads,45030.00,Structured Open Space,05,16,01
+05.16.01,O/Space,10094.33,05-O/Space,Sector 1 - Tweed Heads,45030.00,Structured Open Space,05,16,01
+05.16.02,O/Space,0.00,05-O/Space,Sector 2 - Murwillumbah,45030.00,Structured Open Space,05,16,02
+05.16.02,O/Space,232358.30,05-O/Space,Sector 2 - Murwillumbah,45030.00,Structured Open Space,05,16,02
+05.16.03,O/Space,0.00,05-O/Space,Sector 3 - Kingscliff,45030.00,Structured Open Space,05,16,03
+05.16.03,O/Space,319385.72,05-O/Space,Sector 3 - Kingscliff,45030.00,Structured Open Space,05,16,03
+05.16.04,O/Space,0.00,05-O/Space,Sector 4 - Cabarita,45030.00,Structured Open Space,05,16,04
+05.16.04,O/Space,11175.40,05-O/Space,Sector 4 - Cabarita,45030.00,Structured Open Space,05,16,04
+05.16.05,O/Space,0.00,05-O/Space,Sector 5 - Pottsville,45030.00,Structured Open Space,05,16,05
+05.16.05,O/Space,-3.43,05-O/Space,Sector 5 - Pottsville,45030.00,Structured Open Space,05,16,05
+05.16.06,O/Space,0.00,05-O/Space,Sector 6,45030.00,Structured Open Space,05,16,06
+05.16.06,O/Space,2132.38,05-O/Space,Sector 6,45030.00,Structured Open Space,05,16,06
+05.16.07,O/Space,0.00,05-O/Space,Sector 7,45030.00,Structured Open Space,05,16,07
+05.16.07,O/Space,-0.49,05-O/Space,Sector 7,45030.00,Structured Open Space,05,16,07
+05.16.08,O/Space,0.00,05-O/Space,Sector 8,45030.00,Structured Open Space,05,16,08
+05.16.08,O/Space,-0.74,05-O/Space,Sector 8,45030.00,Structured Open Space,05,16,08
+05.16.09,O/Space,0.00,05-O/Space,Sector 9,45030.00,Structured Open Space,05,16,09
+05.16.09,O/Space,-4913.31,05-O/Space,Sector 9,45030.00,Structured Open Space,05,16,09
+05.16.10,O/Space,0.00,05-O/Space,Sector 10,45030.00,Structured Open Space,05,16,10
+05.16.10,O/Space,-0.22,05-O/Space,Sector 10,45030.00,Structured Open Space,05,16,10
+06.08.00,Contribution Street Trees,0.00,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
+06.08.00,Contribution Street Trees,-6831.00,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
+06.08.00,Contribution Street Trees,683.10,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
+06.08.00,Contribution Street Trees,-303293.51,06-Contribution Street Trees,No Sector,45030.00,Street Trees,06,08,00
+07.01.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
+07.01.00,West K'Cliff,-7787.19,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
+07.01.00,West K'Cliff,389.36,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
+07.01.00,West K'Cliff,-254985.99,07-West K'Cliff,No Sector,45030.00,Drainage,07,01,00
+07.05.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
+07.05.00,West K'Cliff,-4393.00,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
+07.05.00,West K'Cliff,219.65,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
+07.05.00,West K'Cliff,-966180.74,07-West K'Cliff,No Sector,45030.00,Open Space,07,05,00
+07.06.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Community Facilities,07,06,00
+07.06.00,West K'Cliff,-4.57,07-West K'Cliff,No Sector,45030.00,Community Facilities,07,06,00
+07.07.00,West K'Cliff,0.00,07-West K'Cliff,No Sector,45030.00,Footpath/Cycleway,07,07,00
+07.07.00,West K'Cliff,3.10,07-West K'Cliff,No Sector,45030.00,Footpath/Cycleway,07,07,00
+09.14.00,Cobaki Lakes,0.00,09-Cobaki Lakes,No Sector,45030.00,Other,09,14,00
+09.14.00,Cobaki Lakes,0.62,09-Cobaki Lakes,No Sector,45030.00,Other,09,14,00
+10.14.00,Cobaki Lakes,0.00,10-Cobaki Lakes,No Sector,45030.00,Other,10,14,00
+10.14.00,Cobaki Lakes,1636.65,10-Cobaki Lakes,No Sector,45030.00,Other,10,14,00
+11.06.00,Libraries,0.00,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
+11.06.00,Libraries,-198735.77,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
+11.06.00,Libraries,3270.57,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
+11.06.00,Libraries,-1507900.72,11-Libraries,No Sector,45030.00,Community Facilities,11,06,00
+12.10.00,Bus Shelters,0.00,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
+12.10.00,Bus Shelters,-14687.08,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
+12.10.00,Bus Shelters,231.22,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
+12.10.00,Bus Shelters,-224518.38,12-Bus Shelters,No Sector,45030.00,Bus Shelters,12,10,00
+13.11.00,Cemeteries,0.00,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
+13.11.00,Cemeteries,-28046.38,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
+13.11.00,Cemeteries,455.71,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
+13.11.00,Cemeteries,-145501.72,13-Cemeteries,No Sector,45030.00,Cemeteries,13,11,00
+14.14.00,Mebbin Springs,0.00,14-Mebbin Springs,No Sector,45030.00,Other,14,14,00
+14.14.00,Mebbin Springs,-109447.67,14-Mebbin Springs,No Sector,45030.00,Other,14,14,00
+15.06.00,Community Facilities,0.00,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
+15.06.00,Community Facilities,-225149.31,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
+15.06.00,Community Facilities,2249.76,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
+15.06.00,Community Facilities,-2361518.52,15-Community Facilities,No Sector,45030.00,Community Facilities,15,06,00
+15.06.01,Community Facilities,0.00,15-Community Facilities,Sector 1 - Tweed Heads,45030.00,Community Facilities,15,06,01
+15.06.01,Community Facilities,-1196317.20,15-Community Facilities,Sector 1 - Tweed Heads,45030.00,Community Facilities,15,06,01
+15.06.02,Community Facilities,0.00,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
+15.06.02,Community Facilities,-23666.00,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
+15.06.02,Community Facilities,1183.30,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
+15.06.02,Community Facilities,416718.55,15-Community Facilities,Sector 2 - Murwillumbah,45030.00,Community Facilities,15,06,02
+16.12.00,Surf Lifesaving,0.00,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
+16.12.00,Surf Lifesaving,-4209.00,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
+16.12.00,Surf Lifesaving,210.45,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
+16.12.00,Surf Lifesaving,-607146.32,16-Surf Lifesaving,No Sector,45030.00,Surf Lifesaving,16,12,00
+16.12.02,Surf Lifesaving,0.00,16-Surf Lifesaving,Sector 2 - Murwillumbah,45030.00,Surf Lifesaving,16,12,02
+16.12.02,Surf Lifesaving,491521.46,16-Surf Lifesaving,Sector 2 - Murwillumbah,45030.00,Surf Lifesaving,16,12,02
+18.13.00,Council Admin - Tech Support,0.00,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
+18.13.00,Council Admin - Tech Support,-448087.18,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
+18.13.00,Council Admin - Tech Support,7388.14,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
+18.13.00,Council Admin - Tech Support,-1667995.85,18-Council Admin - Tech Support,No Sector,45030.00,Council Technical/Admin. Facilities,18,13,00
+19.05.00,Kings Beach,0.00,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
+19.05.00,Kings Beach,-69310.66,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
+19.05.00,Kings Beach,80.15,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
+19.05.00,Kings Beach,-88612.50,19-Kings Beach,No Sector,45030.00,Open Space,19,05,00
+19.06.00,Kings Beach,0.00,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
+19.06.00,Kings Beach,-101582.12,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
+19.06.00,Kings Beach,117.45,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
+19.06.00,Kings Beach,-1624602.79,19-Kings Beach,No Sector,45030.00,Community Facilities,19,06,00
+19.07.00,Kings Beach,0.00,19-Kings Beach,No Sector,45030.00,Footpath/Cycleway,19,07,00
+19.07.00,Kings Beach,-124493.46,19-Kings Beach,No Sector,45030.00,Footpath/Cycleway,19,07,00
+20.15.00,Seabreeze Estate,-839.45,20-Seabreeze Estate,No Sector,45030.00,Casual Open Space,20,15,00
+21.05.00,Terranora Village,0.00,21-Terranora Village,No Sector,45030.00,Open Space,21,05,00
+21.05.00,Terranora Village,-6962.59,21-Terranora Village,No Sector,45030.00,Open Space,21,05,00
+21.06.00,Terranora Village,0.00,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
+21.06.00,Terranora Village,-4815.00,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
+21.06.00,Terranora Village,240.75,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
+21.06.00,Terranora Village,-45543.61,21-Terranora Village,No Sector,45030.00,Community Facilities,21,06,00
+22.07.00,Shirewide Cycleways,0.00,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
+22.07.00,Shirewide Cycleways,-106469.65,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
+22.07.00,Shirewide Cycleways,1563.36,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
+22.07.00,Shirewide Cycleways,-723705.75,22-Shirewide Cycleways,No Sector,45030.00,Footpath/Cycleway,22,07,00
+23.04.00,Shirewide Carparking,0.00,23-Shirewide Carparking,No Sector,45030.00,Parking,23,04,00
+23.04.00,Shirewide Carparking,-179053.74,23-Shirewide Carparking,No Sector,45030.00,Parking,23,04,00
+23.04.01,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 1 - Tweed Heads,45030.00,Parking,23,04,01
+23.04.01,Shirewide Carparking,-192563.28,23-Shirewide Carparking,Sector 1 - Tweed Heads,45030.00,Parking,23,04,01
+23.04.01,Shirewide Carparking,-385708.28,23-Shirewide Carparking,Sector 1 - Tweed Heads,45030.00,Parking,23,04,01
+23.04.02,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 2 - Murwillumbah,45030.00,Parking,23,04,02
+23.04.02,Shirewide Carparking,386771.01,23-Shirewide Carparking,Sector 2 - Murwillumbah,45030.00,Parking,23,04,02
+23.04.03,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 3 - Kingscliff,45030.00,Parking,23,04,03
+23.04.03,Shirewide Carparking,-83974.89,23-Shirewide Carparking,Sector 3 - Kingscliff,45030.00,Parking,23,04,03
+23.04.04,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 4 - Cabarita,45030.00,Parking,23,04,04
+23.04.04,Shirewide Carparking,-672829.56,23-Shirewide Carparking,Sector 4 - Cabarita,45030.00,Parking,23,04,04
+23.04.05,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 5 - Pottsville,45030.00,Parking,23,04,05
+23.04.05,Shirewide Carparking,-230300.70,23-Shirewide Carparking,Sector 5 - Pottsville,45030.00,Parking,23,04,05
+23.04.06,Shirewide Carparking,0.00,23-Shirewide Carparking,Sector 6,45030.00,Parking,23,04,06
+23.04.06,Shirewide Carparking,-10882.41,23-Shirewide Carparking,Sector 6,45030.00,Parking,23,04,06
+25.05.00,Salt Development,0.00,25-Salt Development,No Sector,45030.00,Open Space,25,05,00
+25.05.00,Salt Development,106000.90,25-Salt Development,No Sector,45030.00,Open Space,25,05,00
+25.16.00,Salt Development,0.00,25-Salt Development,No Sector,45030.00,Structured Open Space,25,16,00
+25.16.00,Salt Development,-1160091.72,25-Salt Development,No Sector,45030.00,Structured Open Space,25,16,00
+26.15.00,Plan 26 Shirewide Open Space,-249197.91,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Casual Open Space,26,15,00
+26.15.00,Plan 26 Shirewide Open Space,4170.59,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Casual Open Space,26,15,00
+26.15.00,Plan 26 Shirewide Open Space,-5281664.03,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Casual Open Space,26,15,00
+26.16.00,Plan 26 Shirewide Open Space,0.00,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
+26.16.00,Plan 26 Shirewide Open Space,-838367.73,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
+26.16.00,Plan 26 Shirewide Open Space,12826.55,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
+26.16.00,Plan 26 Shirewide Open Space,-1187954.53,26-Plan 26 Shirewide Open Space,No Sector,45030.00,Structured Open Space,26,16,00
+27.16.00,Tweed Hds Masterplan & Streetscaping,0.00,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
+27.16.00,Tweed Hds Masterplan & Streetscaping,-58632.00,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
+27.16.00,Tweed Hds Masterplan & Streetscaping,1570.50,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
+27.16.00,Tweed Hds Masterplan & Streetscaping,-646224.71,27-Tweed Hds Masterplan & Streetscaping,No Sector,45030.00,Structured Open Space,27,16,00
+28.15.00,Seaside City,-56859.50,28-Seaside City,No Sector,45030.00,Casual Open Space,28,15,00
+28.16.00,Seaside City,-778156.73,28-Seaside City,No Sector,45030.00,Structured Open Space,28,16,00
+91.03.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Traffic Facilities,91,03,00
+91.03.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Traffic Facilities,91,03,00
+91.07.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Footpath/Cycleway,91,07,00
+91.07.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Footpath/Cycleway,91,07,00
+91.15.00,DCP14,0.00,91-DCP14,No Sector,45030.00,Casual Open Space,91,15,00
+92.05.00,Public Reserve Contributions,0.00,92-Public Reserve Contributions,No Sector,45030.00,Open Space,92,05,00
+92.05.00,Public Reserve Contributions,0.00,92-Public Reserve Contributions,No Sector,45030.00,Open Space,92,05,00
+92.15.00,Public Reserve Contributions,0.00,92-Public Reserve Contributions,No Sector,45030.00,Casual Open Space,92,15,00
+95.01.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Drainage,95,01,00
+95.01.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Drainage,95,01,00
+95.05.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Open Space,95,05,00
+95.05.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Open Space,95,05,00
+95.06.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Community Facilities,95,06,00
+95.06.00,Bilambil Heights,0.00,95-Bilambil Heights,No Sector,45030.00,Community Facilities,95,06,00
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
