@@ -27,8 +27,8 @@
 
     <!-- subtotal.js libs from ../dist, not available from a CDN -->
     <!-- base href= "/" -->
-    <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
-    <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
+    <script type="text/javascript" src="scripts/PivotJS-subtotal/subtotal.js"></script>
+    <link rel="stylesheet" type="text/css" href="scripts/PivotJS-subtotal/subtotal.css">
 
 
     <!-- needed to dl as Excel -->
@@ -276,7 +276,7 @@
     var discontinued = [];
 
    async function getDiscontinued() {
-    await fetch('/contributionspaid/data/discontinued.json')
+    await fetch('data/discontinued.json')
     .then((response) => response.json())
     .then((json) => discontinued = json);
 
@@ -287,7 +287,7 @@
    var dataDictionary = [];
 
     async function getDataDictionary() {
-    await fetch('/contributionspaid/data/datadictionary.json')
+    await fetch('data/datadictionary.json')
     .then((response) =>  response.json())
     .then((json) =>  dataDictionary = json);
     }
@@ -295,7 +295,7 @@
     getDataDictionary();
 
 
-var fileNameAndPath = "/contributionspaid/data/CurrentS94TransactionsMF.csv";
+var fileNameAndPath = "data/CurrentS94TransactionsMF.csv";
 
 var fromXlOne = false;
 
@@ -601,12 +601,12 @@ async function popup(DAText,appCtr) {
 
 
                     try {
-                        document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span class='blink_me'>" + JSON.stringify(config["inclusions"]) + "</span> ";
+                        document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span >" + JSON.stringify(config["inclusions"]) + "</span> ";
                         } catch (ex) {console.log("inclusions not found")};
 
                         //try {
                         txt = document.getElementById("inclusions").innerHTML;
-                        document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span class='blink_me'>" + JSON.stringify(config.aggregatorName) + "</span> ";
+                        document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span >" + JSON.stringify(config.aggregatorName) + "</span> ";
                     // } catch (ex) {console.log("vals not found")};
 
                         if(config.aggregatorName != "Multifact aggregator" && config.rendererName != "Table" ) {
