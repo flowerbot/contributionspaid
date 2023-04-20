@@ -499,6 +499,17 @@ function getFileDate(path) {
         var sum = $.pivotUtilities.aggregatorTemplates.sum;
         var numberFormat = $.pivotUtilities.numberFormat;
         var intFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
+        var curFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
+
+        var custom_aggregators = {
+
+            "AMOUNT": function() { return sum(curFormat)(["Amount"])},
+            "LEVIED": function() { return sum(curFormat)(["LEVIED"])},
+            "PAID": function() {  return sum(curFormat)(["PAID"])}, 
+            "BALANCE": function() {return sum(curFormat)(["BALANCE"])}
+
+            };
+
         var SubtotalDisableFrom = document.getElementById("subtotalto").value;
         var rendererOptions = {
         //rendererOptions: {
@@ -640,7 +651,8 @@ function getFileDate(path) {
                     showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
                     inclusions: (savedConfig) ? savedConfig.inclusions : { "Transaction Year": yearArray },
                     rendererName: (savedConfig) ? savedConfig.rendererName : "Table",
-                   aggregators:{
+                    aggregators: custom_aggregators,
+                  /* aggregators:{
       
                         "PAID": function() {
                             //consol
@@ -652,7 +664,7 @@ function getFileDate(path) {
                         }},
                         "BALANCE": function() {return sum(intFormat)(["BALANCE"])},
                         "LEVIED": function() { return sum(intFormat)(["LEVIED"])},
-                    }, 
+                    }, */
                     onRefresh: function (config) {
 
                 localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
