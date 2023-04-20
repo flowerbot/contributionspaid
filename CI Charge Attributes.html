@@ -31,8 +31,8 @@
      <!-- subtotal.js libs from ../dist -->
         <!-- base href= "/flowerbot/contributionspaid/blob/main/" -->
 	    <!-- base href= "/" -->
-        <script type="text/javascript" src="/contributionspaid/scripts/PivotJS-subtotal/subtotal.js"></script>
-        <link rel="stylesheet" type="text/css" href="/contributionspaid/scripts/PivotJS-subtotal/subtotal.css">
+        <script type="text/javascript" src="scripts/PivotJS-subtotal/subtotal.js"></script>
+        <link rel="stylesheet" type="text/css" href="scripts/PivotJS-subtotal/subtotal.css">
 
 
 <style>
@@ -95,7 +95,7 @@
 .pointer:hover, .popup:hover {
     color: blue;
     text-decoration: underline;
-    background: url("/contributionspaid/icons/yellow.gif");
+    background: url("icons/yellow.gif");
 }
 
 
@@ -110,6 +110,8 @@
     var config_copy = {};
   //  var amt = function(data,)
     ///prac/infrastructure/charts/Expected Contributions.csv
+
+    var fileNameAndPath = "data/ChargeTransactions Query.csv";
 
     $(function(){
 
@@ -380,10 +382,16 @@
 
         
 
-        Papa.parse("/contributionspaid/data/ChargeTransactions Query.csv", {
+        Papa.parse(fileNameAndPath, {
             download: true,
             skipEmptyLines: true,
             header: true,
+           /*
+           // implementing 'step' means nothing is available to 'complete'
+            step: function(results, parser) {
+                console.log("Row data:", results.data);
+                console.log("Row errors:", results.errors);
+            }, */
             complete: function(parsed){
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
                 //var fileDate = parsed.data[1][9];
@@ -403,16 +411,16 @@
                 var fileDate = "";
                 var localDate = "";
 
-                if(curPath.indexOf("github")>=0) {
+               /* if(curPath.indexOf("github")>=0) {
 
                     fileDate = "<a href='https://github.com/flowerbot/contributionspaid/blob/main/data/ChargeTransactions%20Query.csv' target='_blank'>See GitHub commit date</a>";
                     localDate = fileDate;
 
-                } else {
+                } else { */
 
                  fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
                 localDate = new Date(fileDate).toLocaleDateString('en-au', options);
-                }
+             /*   } */
 
 
                 document.getElementById("fileDate").innerHTML = localDate;
@@ -436,11 +444,16 @@
 
                // parsed[1].push("DateYear");
 
+
+               var totalRecs = dataObj.length;
+                document.getElementById("progressTotal").innerHTML = totalRecs;
+
                 $("#output").pivotUI(parsed.data, configobject);
               //  $("#output").pivotUI(dataObj, configobject);
                 dataCellListeners();
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+                document.getElementById("progress").innerHTML = totalRecs;
             }
         });
        // var jsonData = Papa.parse("/prac/infrastructure/siteassets/scripts/data/AccountBalance.csv");
@@ -559,15 +572,18 @@ function moreInfo() {
 function valueInfo() {
     //alert("something");
 
-    Papa.parse("/prac/infrastructure/charts/DAInfAtt Values Used.csv", {
+    Papa.parse("data/DAInfAtt Values Used.csv", {
             download: true,
             skipEmptyLines: true,
             complete: function(parsed){
 
                 attObj = parsed.data;
                 var tableTxt = "";
+
+                var recs = 0;
                 jQuery.each(attObj, function(k,val) {
                     console.log(val);
+
                     tableTxt += "<tr>";
                     val.forEach((v,i,arr) => {
                         tableTxt += ("<td>" + v + "</td>");
@@ -763,7 +779,7 @@ function cellLink(type,value) {
 
         </script>
              <div class="desc"><p>Data Date: <span id='fileDate'></span>.  Use the drop down arrow beside each parameter to filter the chart results. 
-                <a class="hidden" href="http://tscps/prac/infrastructure/SitePages/Upload%20Financial%20Data.aspx" target="_blank" title="Upload Excel File to update the data in this chart (Excel source: Paul Drew/Bryan Unwin)"><img src="/contributionspaid/images/excel.jpg" height="20" width="20" /></a> 
+                <a class="hidden" href="http://tscps/prac/infrastructure/SitePages/Upload%20Financial%20Data.aspx" target="_blank" title="Upload Excel File to update the data in this chart (Excel source: Paul Drew/Bryan Unwin)"><img src="images/excel.jpg" height="20" width="20" /></a> 
              </p>
                             
                             
