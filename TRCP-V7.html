@@ -418,10 +418,13 @@ document.getElementById("fileDate").innerHTML = lastModified.toString();
 
 var fileNameAndPath = "/contributionspaid/data/TRCP V7.csv";
 
+var gitHubPath = "https://api.github.com/repos/flowerbot/contributionspaid/commits?path=data/TRCP V7.csv&page=1&per_page=1"
+
 var client = new XMLHttpRequest();
-client.open("HEAD", fileNameAndPath, true);
+client.open("HEAD", gitHubPath, true);
 client.onreadystatechange = function() {
   if(this.readyState == 2) {
+    console.log(client.getAllResponseHeaders());
     console.log(client.getResponseHeader("Last-Modified"));
     document.getElementById("fileDate").innerHTML = client.getResponseHeader("Last-Modified");
   }
