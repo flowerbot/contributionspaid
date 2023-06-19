@@ -416,7 +416,7 @@ document.getElementById("fileDate").innerHTML = lastModified.toString();
 }
 
 
-var fileNameAndPath = "/contributionspaid/data/TRCP V7.csv";
+var fileNameAndPath = "data/TRCP V7.csv";
 
 // FULL GITHUB PATH REQUIRED TO GET THE REAL 'SAVE DATE' FOR THE CSV
 
@@ -429,7 +429,7 @@ var client = new XMLHttpRequest();
 if(curPath.indexOf("github")>=0) {
 client.open("HEAD", gitHubPath, true);
 } else {
-    client.open("HEAD", fileNameAndPath, true);
+    client.open("HEAD", fileNameAndPath);
 }
 
 client.onreadystatechange = function() {
