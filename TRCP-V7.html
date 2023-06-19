@@ -442,8 +442,8 @@ client.open("HEAD", gitHubPath, true);
 
 client.onreadystatechange = function() {
   if(this.readyState == 2) {
-    console.log(client.getAllResponseHeaders());
-    console.log(client.getResponseHeader("Last-Modified"));
+   // console.log(client.getAllResponseHeaders());
+   // console.log(client.getResponseHeader("Last-Modified"));
     var newDate = new Date(client.getResponseHeader("Last-Modified")).toLocaleDateString("en-AU", options);
     var newTime = new Date(client.getResponseHeader("Last-Modified")).toLocaleTimeString("en-AU");
     
