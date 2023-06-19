@@ -424,19 +424,32 @@ var gitHubPath = "https://api.github.com/repos/flowerbot/contributionspaid/commi
 
 var curPath = window.location.href;
 
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+
 var client = new XMLHttpRequest();
 
 if(curPath.indexOf("github")>=0) {
 client.open("HEAD", gitHubPath, true);
 } else {
     client.open("HEAD", fileNameAndPath);
+
 }
 
 client.onreadystatechange = function() {
   if(this.readyState == 2) {
     console.log(client.getAllResponseHeaders());
     console.log(client.getResponseHeader("Last-Modified"));
-    document.getElementById("fileDate").innerHTML = client.getResponseHeader("Last-Modified");
+    var newDate = new Date(client.getResponseHeader("Last-Modified")).toLocaleDateString("en-AU", options);
+    var newTime = new Date(client.getResponseHeader("Last-Modified")).toLocaleTimeString("en-AU");
+    
+    var dtString = newDate + " " + newTime;
+    console.log("NEW daTE:", newDate, "; NEW TIME:", newTime);
+    document.getElementById("fileDate").innerHTML = dtString;
   }
 }
 client.send();
