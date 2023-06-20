@@ -263,20 +263,17 @@ function ExcelDateToJSDate(serial) {
                 var params = {};
 
 
-                /*  params["Rows"] = config_copy["rows"];
-                params["Columns"] = config_copy["cols"];
-                params["Values"] = config_copy["vals"]; */
-                /*  params["Aggregator"] = config_copy["aggregatorName"];
-                params["Renderer"] = config_copy["rendererName"]; */
-               // try {
-              //  params["Inclusions"] = config_copy["inclusionsInfo"];
-              //  document.getElementById("inclusions").innerHTML = param["Inclusions"];
-              //  } catch (ex) {console.log("config_copy not found")};
-
                 try {
                // params["Inclusions"] = config["inclusionsInfo"];
                 document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) ;
+                
                 } catch (ex) {console.log("inclusions not found")};
+
+              //  try {
+                    hideShowNotes(config["inclusions"]["Ledger"], []);
+              //  } catch(ex2) { $("#")};
+
+                //console.log("Ledger:",configobject["inclusions"]["Ledger"]);
 
                 //  params["Exclusions"] = config_copy["exclusions"];
                 //console.log(params)
@@ -332,10 +329,15 @@ function ExcelDateToJSDate(serial) {
 
                    } */
 
+                   hideShowNotes(["DC21ACT", "DC23ACT"], configobject["exclusions"]["Ledger"]);
+
+
                 try {
                // params["Inclusions"] = config["inclusionsInfo"];
                 document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]) + " (Change the included Plan(s) below if required)";
-                } catch (ex) {console.log("inclusions not found")};
+                } catch (ex) {console.log("inclusions not found A")};
+
+                
 
             configobject.onRefresh = function (config) {
             console.log("new state called");
@@ -355,8 +357,11 @@ function ExcelDateToJSDate(serial) {
             try {
                // params["Inclusions"] = config["inclusionsInfo"];
                 document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
-                } catch (ex) {console.log("inclusions not found")};
+                //hideShowNotes(configobject["inclusions"]["Ledger"]);
+
+                } catch (ex) {console.log("inclusions not found B")};
             // add exclusions to params if necessary
+
 
             localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
                 console.log(config_copy) ;
@@ -515,6 +520,29 @@ $table.floatThead({
 }); 
 }
 
+function hideShowNotes(incArray, excArray) {
+  //  if(!configobject["inclusions"]["Ledger"].includes("DC21ACT")) {
+  //  if(inc == true) {
+        if(!incArray.includes("DC21ACT") || (excArray.includes("DC21ACT"))) {
+                    $("#DEC21").hide();
+
+                } else {
+                    $("#DEC21").show();
+                }
+
+                if(!incArray.includes("DC23ACT")|| (excArray.includes("DC23ACT"))) {
+                    $("#MAY23").hide();
+                } else {
+                    $("#MAY23").show();
+                }
+    } /*else {
+        console.log("Exclusions:",excArray);
+        if(excArray.includes("DC21ACT")) {
+
+        }
+    } */
+//}
+
 
 function revert() {
 
@@ -560,6 +588,7 @@ function saveState(config) {
      //delete some bulky default values
     // delete config_copy["rendererOptions"];
      delete config_copy["localeStrings"];
+     hideShowNotes(config_copy["inclusions"]["Ledger"], []);
      localStorage.setItem('pivotdatakey', JSON.stringify(config_copy, undefined, 2));
 }
 
@@ -576,8 +605,8 @@ function saveState(config) {
                         </div>
         <div id="output"></div>
         <div id="notes"><ul>
-            <li><span class="noteRed">DEC 21:</span> CP28.15 $99,332 forwarded to Richtech in accordance with Planning Agreement.  Total s7.11 developer contributions received for December 2020 $28,040 less $99,332 to Richtech equals $71,292 overdrawn for month.</li>
-            <li><span class="noteRed">MAY 23:</span>  includes $631,933.02 forwarded from CP28.15 to Richtech in accordance with Planning Agreement.</li>
+            <li id="DEC21"><span class="noteRed">DEC 21:</span> CP28.15 $99,332 forwarded to Richtech in accordance with Planning Agreement.  Total s7.11 developer contributions received for December 2020 $28,040 less $99,332 to Richtech equals $71,292 overdrawn for month.</li>
+            <li id="MAY23"><span class="noteRed">MAY 23:</span>  includes $631,933.02 forwarded from CP28.15 to Richtech in accordance with Planning Agreement.</li>
         </ul></div>
 
 
