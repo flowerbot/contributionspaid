@@ -141,12 +141,51 @@ p, .pvtVal, .pvtTotal, .pvtRowLabel, .pvtGrandTotal {
     }
 }
 
-var fileNameAndPath = "/contributionspaid/data/DC ReceiptsClean.csv";
+//var fileNameAndPath = "/contributionspaid/data/DC ReceiptsClean.csv";
 
 var fromXlOne = false;
 
 
-function ExcelDateToJSDate(serial) {
+
+var curPath = window.location.href;
+
+var fileNameAndPath = "data/DC ReceiptsClean.csv";
+
+var gitHubPath = "https://api.github.com/repos/flowerbot/contributionspaid/commits?path=data/DC ReceiptsClean.csv&page=1&per_page=1"
+
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+
+
+var client = new XMLHttpRequest();
+
+if(curPath.indexOf("github")>=0) {
+client.open("HEAD", gitHubPath, true);
+} else {
+    client.open("HEAD", fileNameAndPath);
+}
+
+client.onreadystatechange = function() {
+  if(this.readyState == 2) {
+   // console.log(client.getAllResponseHeaders());
+    //console.log(client.getResponseHeader("Last-Modified"));
+    var newDate = new Date(client.getResponseHeader("Last-Modified")).toLocaleDateString("en-AU", options);
+    var newTime = new Date(client.getResponseHeader("Last-Modified")).toLocaleTimeString("en-AU");
+    
+    var dtString = newDate + " " + newTime;
+    console.log("NEW daTE:", newDate, "; NEW TIME:", newTime);
+    document.getElementById("fileDate").innerHTML = dtString;
+  }
+}
+client.send();
+
+
+
+/*function ExcelDateToJSDate(serial) {
    var utc_days  = Math.floor(serial - 25569);
    var utc_value = utc_days * 86400;                                        
    var date_info = new Date(utc_value * 1000);
@@ -163,7 +202,7 @@ function ExcelDateToJSDate(serial) {
    var minutes = Math.floor(total_seconds / 60) % 60;
 
    return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
-}
+} */
 
 
     $(function(){
@@ -433,7 +472,7 @@ function ExcelDateToJSDate(serial) {
 
                 //console.log(fixedData);
 
-                fileDate= ExcelDateToJSDate(parseFloat(fixedData[0].DataDate));
+               // fileDate= ExcelDateToJSDate(parseFloat(fixedData[0].DataDate));
 
                 /*
                 if(curPath.indexOf("github")>=0) {
@@ -449,14 +488,14 @@ function ExcelDateToJSDate(serial) {
                 */
               // fileDate = fixedData[0].DataDate;
 
-                localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+               // localDate = new Date(fileDate).toLocaleDateString('en-au', options);
               //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
                // var fileDate = parsed.data[1][6];
 
 
                 var dataLen = fixedData.length;
 
-                document.getElementById("fileDate").innerHTML = localDate;
+                //document.getElementById("fileDate").innerHTML = localDate;
       
                 document.getElementById("progress").innerHTML = dataLen;
 
