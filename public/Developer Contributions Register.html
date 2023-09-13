@@ -1,0 +1,1139 @@
+<html>
+	<head>
+        <!-- AUTHOR: L KRAUSZ 
+             DATE:   1/3/2023  -->
+        <title>Developer Contributions Paid</title>
+    </head>
+    <body>
+        <!-- external libs from cdnjs -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+    <script type ="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly-basic.min.js"></script>
+<!-- script type="text/javascript" src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script -->
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/2.2.1/jquery.floatThead.min.js"></script>
+
+    <!-- PivotTable.js libs from ../dist -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/d3_renderers.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script>
+
+
+    <!-- subtotal.js libs from ../dist, not available from a CDN -->
+    <!-- base href= "/" -->
+    <script type="text/javascript" src="scripts/PivotJS-subtotal/subtotal.js"></script>
+    <link rel="stylesheet" type="text/css" href="scripts/PivotJS-subtotal/subtotal.css">
+
+
+    <!-- needed to dl as Excel -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<style>
+    body {font-family: Verdana;}
+
+
+    /*
+    .blink_me {
+  animation: blinker 1.5s linear infinite;
+        }
+
+        @keyframes blinker {
+        50% {
+            opacity: 0;
+        }
+        }
+*/
+    th.pvtRowLabel {
+        white-space: nowrap;
+    }
+
+    .ms-webpartPage-root {
+        border-spacing: 0px;
+    }
+
+    .desc {
+        padding-bottom: 10px;
+        width: 80vw;
+    }
+
+
+    .rotate {
+       height: 90px;/* fixed height . set fixed width to rotated elements */
+       width: 110px !important;/* a liitle less than parents height */
+       -webkit-transform: rotate(310deg);
+       -moz-transform: rotate(310deg);
+       -ms-transform: rotate(310deg);
+       -o-transform: rotate(310deg);
+       transform: rotate(310deg) translatex(-64%) translatey(56%);
+       transform-origin: top left;
+       margin-right: -73px;
+     }
+
+    #inclusions strong {
+        font-weight: 500;
+        color:lightseagreen;
+    }
+
+    /* extras for floating headers */
+    .floatThead-container {
+        overflow: hidden;
+    }
+
+    .pvtFilterBox {
+        z-index: 2001;
+    }
+    /* ************************* */
+
+    .pvtRowLabel {
+        font-weight: normal;
+    }
+
+
+    .hidden {
+        display: none;
+    }
+
+    .note {
+        font-size: smaller;
+        font-style: italic;
+        color: silver;
+    }
+
+    #progressHeading {
+    color: grey;
+    font-size: smaller;
+    }
+
+    table.pvtTable tbody tr th.pvtRowLabel.discontinued, .discontinued {
+        color:grey !important;
+        background-color: beige !important;
+    }
+
+    #header {
+        width: 100%;
+        background-color: lightblue;
+        height: 100px;
+    }
+
+    .excelImg {
+        width: 30px;
+        height: 30px;
+    }
+
+   /* table.pvtTable tbody tr th.pvtRowLabel {
+        min-width: 150px;
+    } */
+
+    table.pvtTable tbody tr th.pvtRowLabel.comFacCell, 
+    table.pvtTable thead tr th.pvtColLabel.comFacCell {
+        background-color: #F9DFE1 !important;
+    }
+
+    table.pvtTable tbody tr th.pvtRowLabel.osCell,
+    table.pvtTable thead tr th.pvtColLabel.osCell {
+        background-color:  #D4EBD4 !important;
+    }
+
+    table.pvtTable tbody tr th.pvtRowLabel.roadCell,
+    table.pvtTable thead tr th.pvtColLabel.roadCell {
+        background-color: #f1e8df !important;
+    }
+
+    table.pvtTable tbody tr th.pvtRowLabel.drainageCell,
+    table.pvtTable thead tr th.pvtColLabel.drainageCell {
+        background-color: #e4eef8 !important;
+    }
+
+    table.pvtTable tbody tr th.pvtRowLabel.otherCell,
+    table.pvtTable thead tr th.pvtColLabel.otherCell {
+        background-color: #EFEED8 !important;
+    }
+
+    #subTotalRowLimitDiv input{
+        width: 60px;
+    } 
+
+    #subTotalRowLimitDiv{
+        padding: 2px;
+        background-color: lightgrey;
+        font-size: smaller;
+    }
+
+    .rowWrap {
+        height: auto;
+    }
+
+    .cellWrap {
+        white-space: normal !important;
+        word-wrap: break-word;
+        word-break: break-all;
+        max-width: 200px;
+
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .intro {
+        font-size: smaller;
+        font-style:italic;
+        text-align:left;
+    }
+    table.dataTable {
+        border-collapse: collapse;
+    }
+
+    .dataTable tbody tr th {
+        text-align: left;
+    }
+
+    tr.dataDic td {
+        font-size: 12px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        padding: 8px;
+
+    }
+
+    tr.dataDic td cs {
+        font-weight:  600; 
+        color: #66b2b2;
+        text-shadow: 0 0 0 #66b2b2;
+    }
+    .dicDivider {
+        background-color:rgb(49, 76, 78);
+        color: white;
+    }
+
+    tr.dataDic:nth-child(even) {
+
+        background-color: #E6E6E3;
+
+    }
+
+    .thickLine {
+
+    border-top: 2pt solid black !important;
+
+    }
+
+    #altData {
+        font-size: smaller;
+        float: right;
+        display: inline;
+
+    }
+
+    #altData .button {
+            background-color: #EEEEEE;
+            padding: 8px 20px;
+            text-decoration:none;
+            font-weight:bold;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+</style>
+
+
+<script type="text/javascript">
+
+    debug = false;
+    var dataObj;
+    var config = {};
+
+    //var threeYearArray = [String(new Date().getFullYear()-2), String(new Date().getFullYear()-1), String(new Date().getFullYear())];
+    var twoYearArray = [String(new Date().getFullYear()-1), String(new Date().getFullYear())];
+    var yearArray = [String(new Date().getFullYear())];
+
+  
+
+    var configRenderer;
+
+    var storageTag = "-dcpaid2";  // make these unique to each chart
+
+    let configShowUI = localStorage.getItem('showUi'+storageTag) === null ? false : JSON.parse(localStorage.getItem('showUi'+storageTag));
+
+    var sorters = {
+        "Purpose": $.pivotUtilities.sortAs(
+            ["Community Facilities","Open Space", "Roads","Drainage"]
+        )
+
+    }
+
+    var pdObject = {};
+
+    var vals = ['AMOUNT']; //default
+
+    var sum = $.pivotUtilities.aggregatorTemplates.sum;
+    var numberFormat = $.pivotUtilities.numberFormat;
+    var intFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
+    var curFormat = numberFormat({digitsAfterDecimal: 0, prefix: '$'});
+
+    var custom_aggregators = {
+
+       "AMOUNT": function() { return sum(curFormat)(["Amount"])},
+       "LEVIED": function() { return sum(curFormat)(["LEVIED"])},
+       "PAID": function() {  return sum(curFormat)(["PAID"])}, 
+       "BALANCE": function() {return sum(curFormat)(["BALANCE"])}
+       
+    };
+
+    var discontinued = [];
+
+   async function getDiscontinued() {
+    await fetch('data/discontinued.json')
+    .then((response) => response.json())
+    .then((json) => discontinued = json);
+
+   }
+
+   getDiscontinued();
+
+   var dataDictionary = [];
+
+    async function getDataDictionary() {
+    await fetch('data/datadictionary.json')
+    .then((response) =>  response.json())
+    .then((json) =>  dataDictionary = json);
+    }
+    
+    getDataDictionary();
+
+
+var fileNameAndPath = "data/CurrentS94TransactionsMF.csv";
+
+var fromXlOne = false;
+
+
+function getFileDate(path) {
+
+        $.ajaxSetup({cache: false});
+        $.ajax({
+            type: "GET",
+            async: true,
+            timeout: 5000,
+            url : path,
+            dataType : "text",
+            success: function(data, textStatus, request){
+        var lastModified = new Date(request.getResponseHeader("Last-Modified"));
+        document.getElementById("fileDate").innerHTML = lastModified.toString();
+
+
+ },
+            error: function(ex) {
+                console.log(ex);
+            }
+        });
+}
+
+
+
+document.addEventListener('click', function (e) {
+
+                const cell = e.target.closest('th');
+
+                if (!cell) {return;} // Quit, not clicked on a cell
+                const row = cell.parentElement;
+                tmpData = dataObj[0];
+                rowIndex = tmpData.findIndex((el) => el == "Application ID");
+                tableRowIndex = savedConfig.rows.findIndex((el) => el == "Application ID");
+                pcIndex = tmpData.findIndex((el)=> el == "RAM_PROCESS_CTR");
+                tmpRows = document.querySelectorAll("table.pvtTable >tbody tr");
+                maxCols = tmpRows[0].cells.length;
+                appCtr = 0;
+                subtract = 0;
+                //totals = "Balance"
+                //record = [];
+                if(maxCols-row.cells.length != 0) subtract = maxCols-row.cells.length;
+
+                if(tableRowIndex > -1) {
+                           if( ["Table", "Heatmap", "Row Heatmap", "Col Heatmap"].indexOf(savedConfig.rendererName) > -1 ) {
+                                DAText = row.cells[tableRowIndex-subtract].innerHTML;
+
+
+                            console.log("row index:", rowIndex);
+
+                                appCtr = dataObj.filter(function(i) {
+                                    return (i[rowIndex]==DAText);
+                                })[0][pcIndex];
+
+
+                            } else {
+
+
+                                rName = savedConfig.rendererName;
+                                if(rName.indexOf("Table With Subtotal") > -1) {
+
+                             
+                                thisRow = e.target.closest('tr');
+                                sel = thisRow.getAttribute("class");
+
+                                
+
+                                try {
+
+                                    DAText = thisRow.querySelector('th.rowcol'+tableRowIndex).innerHTML.replace(/[^\w\/]+/g, "");
+
+                                        appCtr = dataObj.filter(function(i) {
+                                            return (i[rowIndex]==DAText);
+                                        })[0][pcIndex];
+
+
+                                    } catch (ex) {
+                                        appCtr = 0;
+                                    }
+
+                                }
+
+                            }
+
+                            
+                            if(appCtr > 0) {
+
+                            popup(DAText,appCtr);
+                                
+                           // if (window.confirm("View DA Tracker details for "+ DAText + " ?"))
+                           // {
+                            //    var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
+                            //    win.focus();
+                           // }
+                        }
+            }
+
+               
+
+            });
+
+
+function popupFieldInfo() {
+
+    var html = "<div class='intro'>For each developer contribution charge on an application, there will be up to 3 data rows represented in this chart - 1 for each of LEVIED, PAID (only if paid) and WIK CREDIT (only if credit applied).</div>";
+     html += "<div style='overflow-y:scroll; height:80vh'><table class='dataTable'><tr><th>Attribute</th><th>Description</th></tr>";
+      html += "<tr><td colspan=2 class='dicDivider'>Charge-related:</td></tr>" ;
+
+      dataDictionary.forEach(i =>{
+
+            if(i["Value"] == "Application ID") html += "<tr><td colspan=2 class='dicDivider'>Application-related:</td></tr>" ;
+            html += "<tr class='dataDic'><td style='min-width: 110px; vertical-align: top;'>" + i["Value"] + "</td><td>" + i["Description"] + "</td></tr>";
+        })
+        html += "</table></div>"
+    Swal.fire({
+                                //title: 'Go to the DA tracker?',
+                               // text: "View DA Tracker details for "+ DAText + "?",
+                               /* icon: 'question',
+                                iconHTML: 'YY?', */
+                                html: html,
+                               // confirmButtonText: 'OK',
+                                width: 700,
+                                heightAuto: false,
+                                showConfirmButton: false,
+                                showCloseButton: true,
+                                backdrop: true
+                                });
+
+}
+
+async function popup(DAText,appCtr) {
+
+  //  console.log(record);
+
+    const {value: accept }  =  await Swal.fire({
+                                //title: 'Go to the DA tracker?',
+                               // text: "View DA Tracker details for "+ DAText + "?",
+                               /* icon: 'question',
+                                iconHTML: 'YY?', */
+                                html: "View DA Tracker details for "+ DAText + "?",
+                                confirmButtonText: 'OK',
+                                showCancelButton: true,
+                                backdrop: false
+                                });
+
+                            if(accept) {
+
+                                var win = window.open('https://datracker.tweed.nsw.gov.au/Pages/XC.Track/SearchApplication.aspx?id='+appCtr, '_blank');
+                                win.focus();
+                            }
+
+}
+    
+
+    $(function(){
+
+
+
+
+        let selectedOption = localStorage.getItem('selectedOption'+storageTag) === null ? "focusOnApps" : localStorage.getItem('selectedOption'+storageTag);
+
+        $("#chartType").val(selectedOption);
+
+    var stRowLimit = localStorage.getItem("stRowLimit");
+
+    if(stRowLimit != null) document.getElementById("subtotalto").value = parseInt(stRowLimit);
+
+        var dataClass = $.pivotUtilities.SubtotalPivotData;
+        var renderers = $.extend($.pivotUtilities.renderers, 
+        $.pivotUtilities.plotly_renderers, 
+        $.pivotUtilities.subtotal_renderers, 
+        $.pivotUtilities.export_renderers);
+
+        var tpl = $.pivotUtilities.aggregatorTemplates;
+
+
+        var SubtotalDisableFrom = document.getElementById("subtotalto").value;
+        var rendererOptions = {
+            rowSubtotalDisplay: {
+                    collapseAt: 1,
+                    disableFrom: SubtotalDisableFrom
+                },
+                colSubtotalDisplay: {
+                    collapseAt: 1
+                },
+
+            heatmap: {
+                colorScaleGenerator: function(values) {
+                    return d3.scale.linear()
+                      .domain([-6000000, 0, 600000])
+                        .range(["#9AFF3D", "#FFFFFF", "#FF0000"])
+
+                }
+                },
+                localeStrings: {
+                        totals: "Balance"
+                    },
+ 
+        };
+
+   
+
+
+
+     
+
+
+
+        Papa.parse(fileNameAndPath, {
+            download: true,
+            skipEmptyLines: true,
+            complete: function(parsed){
+              console.log("records parsed: ", parsed.data.length);
+
+     
+              const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
+
+
+                var curPath = window.location.href;
+                var localDate = "";
+
+                getFileDate(fileNameAndPath);
+
+                 fixedData = [];
+
+                if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
+
+                    var emptyCols = [];
+         
+                dataObj = parsed.data;
+
+                console.log("records filtered to:", dataObj.length);
+
+                document.getElementById("progressTotal").innerHTML = dataObj.length;
+                document.getElementById("progress").innerHTML = dataObj.length;
+
+                let headerRow = dataObj[0];
+                let yearIndex = headerRow.indexOf("Approval Year");
+
+                let yearValues = dataObj.map(v => Number(v[yearIndex]));
+                let v2 = yearValues.splice(0,1);
+                var minYear = Math.min(...yearValues);
+
+                document.getElementById("earliestDate").innerHTML = minYear.toString();
+
+
+ 
+                savedConfig = JSON.parse(localStorage.getItem('pivotdatakey'+storageTag));
+
+
+                if(savedConfig) {
+
+                    toggleButtonText(savedConfig.showUI);
+
+
+                        } else {
+                            $("#subTotalRowLimitDiv").hide();
+
+                        }
+
+
+
+
+                $("#output").pivotUI(dataObj, {  
+                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO","RAM_PROCESS_CTR", "CHARGE_CTR"],
+                    dataClass: dataClass,
+                   rows: (savedConfig) ? savedConfig.rows : ["Application ID", "locality", "Short Description", "Determined By", "Determined", "Levy"], 
+                   cols: (savedConfig) ? savedConfig.cols : ["Purpose", "TR TYPE"],
+                    vals: (savedConfig) ? savedConfig.vals : ["AMOUNT"],
+                    derivedAttributes: {
+                        "Determined": function(d) {
+                            return (d["Approval Date"]).substring(0,10);
+                        }
+                    },
+                    renderers: renderers,
+                    rendererOptions: rendererOptions,
+                    menuLimit: 3000,
+                    sorters: sorters,
+                    exclusions: {"Determined By": [""]},
+                    aggregatorName: (savedConfig) ? savedConfig.aggregatorName : "AMOUNT",
+                    showUI: (savedConfig) ? savedConfig.showUI : false, //configShowUI,
+                    inclusions: (savedConfig) ? savedConfig.inclusions : { "Approval Year": yearArray },
+                    rendererName: (savedConfig) ? savedConfig.rendererName : "Table",
+                   aggregators: custom_aggregators,
+                    onRefresh: function (config) {
+
+                        savedConfig = config;
+                        vals = config.vals;
+
+                        localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config)); // Add callback function for onRefresh
+
+
+
+
+                    try {
+                        document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong><span >" + JSON.stringify(config["inclusions"]) + "</span> ";
+                        } catch (ex) {console.log("inclusions not found")};
+
+                        //try {
+                        txt = document.getElementById("inclusions").innerHTML;
+                        document.getElementById("inclusions").innerHTML = txt + "<strong>aggregator:</strong><span>" + JSON.stringify(config.aggregatorName) + "</span> ";
+                    // } catch (ex) {console.log("vals not found")};
+
+                        if(config.aggregatorName != "Multifact aggregator" && config.rendererName != "Table" ) {
+
+                        $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+
+                        } else {
+                            //this worked for a one attribute column array but nothing else, and the aggregator doesn't behave unless every column is
+                            // represented so best not to use it
+                        /*   $newHead = $('<thead></thead>').prependTo('table.pvtTable').append($('table.pvtTable tr:first'));
+                        $newHead.append($('table.pvtTable tr:nth-child(1)'));  */ 
+                                } 
+
+                        var $table = $('table.pvtTable');
+
+                try {
+                            $table.floatThead({
+                                scrollContainer: function($table){
+                                    return $table.closest('.wrapper');
+                                },
+                                position: 'auto',
+                                floatTableClass: 'pivotBody',
+                                autoReflow: true
+                            });
+                } catch(ex) {} 
+
+
+                    colorLevy();
+
+                    if(config.rendererName.indexOf("Table") > -1 || config.rendererName.indexOf("Heatmap") > -1) {
+                    
+                    wrapDescription();
+                    }
+         }
+
+                }, false, "en"); 
+
+
+                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+            }
+
+
+        }
+
+        
+        );
+
+
+
+
+
+     });
+
+
+function dataExport() {
+
+    var myWindow = (window.open("", "", "width=600,height=600,scrollbars=1"));
+    var tableTxt = "";
+    var exportTableTxt = "";
+
+    var tableId = "dataExportTable";
+
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+
+
+    var msgText = "<H2>JSON FORMAT:</H2><p>Save JSON to a text file, or copy it to a JSON viewer, like the one at <a href='https://jsongrid.com/json-grid'target='_blank'>jsongrid.com</a> </p>";
+
+    myWindow.document.title="Export ..";
+
+    myWindow.document.write(msgText + "<pre style='border:1px solid #dddddd;'>" + JSON.stringify(dataObj, null, "   ")+"</pre>");
+
+
+}
+
+
+function sheetJSWorkBook(type, fn, dl) {
+
+
+    var $table = $('table.pvtTable');
+    $table.floatThead('destroy');  // put it back together (unfloat it) for the excel dl
+
+    var elt = document.getElementsByClassName('pvtTable')[0];
+
+
+
+    var wb = XLSX.utils.table_to_book(elt, {sheet:"SWD Data"});
+
+    wb.SheetNames.push("Inclusions");
+
+    var inc = document.getElementById("inclusions").innerHTML;
+
+        var tempTable = document.createElement("table");
+    tempTable.innerHTML = "<tr><td>"+inc + "</td></tr>";
+
+    var ws = XLSX.utils.table_to_sheet(tempTable);
+
+    wb.Sheets["Inclusions"] = ws;
+
+
+    fixHeader(); // float it again
+
+
+    return dl ?
+        XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+        XLSX.writeFile(wb, fn || ('developer contributions.' + (type || 'xlsx')));
+}
+
+function revert() {
+
+
+localStorage.clear();
+location.reload();
+
+}
+
+
+function fixHeader() {
+
+    var $table = $('table.pvtTable');
+
+
+    $table.floatThead({
+    position: 'fixed',
+
+    }); 
+}
+
+
+function selectChange(el) {
+
+
+    var tConfig = $("#output").data("pivotUIOptions");
+
+
+    localStorage.setItem('selectedOption'+storageTag,el.value);
+//"Table"
+
+         
+    if(el.value == "TSV") {
+
+        delete tConfig["rendererName"];
+        tConfig["rendererName"] = "TSV Export";
+
+
+    } else
+
+        if(el.value == "focusOnApps") {
+                console.log("focus on apps triggered");
+
+                delete tConfig["rows"];
+                delete tConfig["cols"];
+                delete tConfig["rendererName"];
+                delete tConfig["inclusions"];
+                delete tConfig["aggregatorName"];
+                delete tConfig["vals"];
+
+
+
+                tConfig["rows"] = ["Application ID", "locality", "Short Description", "Determined By", "Determined", "Levy"];
+                tConfig["cols"] = ["Purpose", "TR TYPE"];
+                tConfig["rendererName"] = "Table";
+                tConfig["aggregatorName"] = "AMOUNT";
+                tConfig["inclusions"] = { "Approval Year": yearArray };
+                tConfig["vals"] = ["AMOUNT"];
+                
+            
+                
+            }
+        else
+
+        if(el.value == "LeviedPaid") {
+                console.log("focus on apps triggered");
+
+                delete tConfig["rows"];
+                delete tConfig["cols"];
+                delete tConfig["rendererName"];
+                delete tConfig["inclusions"];
+                delete tConfig["aggregatorName"];
+                delete tConfig["vals"];
+                console.log("format:", tConfig.format);
+
+                tConfig["rows"] = ["Application ID", "locality", "Short Description", "Locality", "Determined By", "Determined", "Purpose", "Levy"];
+                tConfig["cols"] = [];
+                tConfig["rendererName"] = "Multifact Table";
+                tConfig["aggregatorName"] = "Multifact aggregator"
+                tConfig["inclusions"] = { "Approval Year": yearArray };
+                tConfig["vals"] = ["LEVIED","PAID"];
+            
+                
+            }
+        else
+        
+    if(el.value == "Pies") {
+
+            console.log("pies triggered");
+
+                delete tConfig["rows"];
+                delete tConfig["cols"];
+                delete tConfig["rendererName"];
+                delete tConfig["inclusions"];
+                delete tConfig["vals"];
+                delete tConfig["aggregatorName"];
+
+                tConfig["rows"] = ["Purpose"];
+                tConfig["cols"] = ["locality"];
+                tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
+                tConfig["inclusions"] = {};
+                tConfig["aggregatorName"] = ["PAID"];
+                tConfig["vals"] = ["PAID"];
+
+
+
+            } else 
+        if(el.value == "all") {
+            console.log("all triggered");
+
+                delete tConfig["rows"];
+                delete tConfig["cols"];
+                delete tConfig["rendererName"];
+                delete tConfig["inclusions"];
+                delete tConfig["vals"];
+                delete tConfig["aggregatorName"];
+
+                tConfig["rows"] = ["Approval Year", "Purpose","Levy"];
+                tConfig["cols"] = ["TR TYPE"];
+                tConfig["rendererName"] = "Table With Subtotal";
+                tConfig["inclusions"] = { "Approval Year": yearArray};
+                tConfig["aggregatorName"] = ["AMOUNT"];
+                tConfig["vals"] = ["AMOUNT"];
+
+
+            } 
+
+            else 
+        if(el.value == "chartYear") {
+            console.log("year chart triggered");
+
+                delete tConfig["rows"];
+                delete tConfig["cols"];
+                delete tConfig["rendererName"];
+                delete tConfig["inclusions"];
+                delete tConfig["exclusions"];
+                delete tConfig["vals"];
+                delete tConfig["aggregatorName"];
+
+                tConfig["rows"] = ["Purpose"];
+                tConfig["cols"] = ["Approval Year"];
+                tConfig["rendererName"] = "Horizontal Stacked Bar Chart";
+                tConfig["inclusions"] = {};
+                tConfig["exclusions"] = {};
+                tConfig["aggregatorName"] = ["PAID"];
+                tConfig["vals"] = ["PAID"];
+
+            } 
+
+                localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
+
+            $("#output").pivotUI(dataObj, tConfig, true);
+
+    }
+
+    function toggleButtonText(val) {
+
+
+        if(val) {
+        document.getElementById('toggleHideUIButton').value= "Hide Chart Settings";
+        $('#subTotalRowLimitDiv').show();
+        } else {
+            document.getElementById('toggleHideUIButton').value= "Show Chart Settings";
+            $('#subTotalRowLimitDiv').hide();
+        }
+
+
+    }
+
+    function toggleConfigHide(obj, toggle) {
+        console.log('toggling new ', toggle);
+
+        var tConfig = $("#output").data("pivotUIOptions");
+   
+        console.log('showUi'+storageTag+":", localStorage.getItem('showUi'+storageTag))
+
+
+        var newVis = !JSON.parse(tConfig["showUI"]);
+        delete tConfig["showUI"];
+        tConfig["showUI"] = newVis;
+
+        toggleButtonText(newVis);
+
+        localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(tConfig)); // Add callback function for onRefresh
+
+        $("#output").pivotUI(dataObj, tConfig, true);
+        
+    }
+
+
+function colorLevy() {
+
+    var $levyLabels = $(".pvtRowLabel");
+
+    //const triangle =/\p{Black Lower Right Triangle}/gu;
+
+    for(k=0; k<$levyLabels.length; k++) {
+        var labelLookup = discontinued.filter(obj => {
+        return obj["Levy"] === $levyLabels[k].innerHTML;
+        });
+
+       
+        if (labelLookup.length > 0) {
+          //  console.log(labelLookup);
+            var dDate = labelLookup[0].DiscontinuedDate;
+            var dText = labelLookup[0].Discontinued;
+            $('.pvtRowLabel').eq(k).addClass("discontinued");
+            $('.pvtRowLabel').eq(k).attr("title",dText + " "+ dDate);
+        }
+
+       // if($levyLabels[k].innerHTML.match(/\p{U+25E2}\b Community Facilities/g)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+       // first one is for the subtotal collapse arrow
+        if($levyLabels[k].innerHTML.match(/^ \u25E2 Community Facilities/)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+        if($levyLabels[k].innerHTML.match(/^Community Facilities/)) $('.pvtRowLabel').eq(k).addClass("comFacCell");
+
+
+        if($levyLabels[k].innerHTML.match(/^ \u25E2 Open Space/)) $('.pvtRowLabel').eq(k).addClass("osCell");
+        if($levyLabels[k].innerHTML.match(/^Open Space/)) $('.pvtRowLabel').eq(k).addClass("osCell");
+
+        if($levyLabels[k].innerHTML.match(/^ \u25E2 Drainage/)) $('.pvtRowLabel').eq(k).addClass("drainageCell");
+        if($levyLabels[k].innerHTML.match(/^Drainage/)) $('.pvtRowLabel').eq(k).addClass("drainageCell");
+
+        if($levyLabels[k].innerHTML.match(/^ \u25E2 Roads/)) $('.pvtRowLabel').eq(k).addClass("roadCell");
+        if($levyLabels[k].innerHTML.match(/^Roads/)) $('.pvtRowLabel').eq(k).addClass("roadCell");
+
+
+        if($levyLabels[k].innerHTML.match(/^ \u25E2 Other/)) $('.pvtRowLabel').eq(k).addClass("otherCell");
+        if($levyLabels[k].innerHTML.match(/^Other/)) $('.pvtRowLabel').eq(k).addClass("otherCell");
+
+    }
+
+
+
+    var $colLabels = $(".pvtColLabel");
+
+
+for(i=0; i<$colLabels.length; i++) {
+
+   if($colLabels[i].textContent.match(/^ \u25E2 Community Facilities/)) $('.pvtColLabel').eq(i).addClass("comFacCell");
+    if($colLabels[i].textContent.match(/^Community Facilities/)) $('.pvtColLabel').eq(i).addClass("comFacCell");
+
+
+    if($colLabels[i].textContent.match(/^ \u25E2 Open Space/)) $('.pvtColLabel').eq(i).addClass("osCell");
+    if($colLabels[i].textContent.match(/^Open Space/)) $('.pvtColLabel').eq(i).addClass("osCell");
+
+    if($colLabels[i].textContent.match(/^ \u25E2 Drainage/)) $('.pvtColLabel').eq(i).addClass("drainageCell");
+    if($colLabels[i].textContent.match(/^Drainage/)) $('.pvtColLabel').eq(i).addClass("drainageCell");
+
+    if($colLabels[i].textContent.match(/^ \u25E2 Roads/)) $('.pvtColLabel').eq(i).addClass("roadCell");
+    if($colLabels[i].textContent.match(/^Roads/)) $('.pvtColLabel').eq(i).addClass("roadCell");
+
+
+    if($colLabels[i].textContent.match(/^ \u25E2 Other/)) $('.pvtColLabel').eq(i).addClass("otherCell");
+    if($colLabels[i].textContent.match(/^Other/)) $('.pvtColLabel').eq(i).addClass("otherCell");
+
+
+}
+
+}
+
+function wrapDescription() {
+
+    applicationColNum = savedConfig.rows.findIndex((el) => ["Application ID"].indexOf(el) > -1);
+    descriptionColNum = savedConfig.rows.findIndex((el) => ["Short Description"].indexOf(el) > -1);
+    tmpRows = document.querySelectorAll("table.pvtTable >tbody tr");
+    maxCols = tmpRows[0].cells.length;
+    headerLen = savedConfig.rows.length;
+
+    if(descriptionColNum > -1) {
+
+        tmpData = dataObj[0];
+
+            appRowIndex = tmpData.findIndex((e) =>  ["Application ID"].indexOf(e) > -1);
+
+
+            descRowIndex = tmpData.findIndex((f) => ["Application Description"].indexOf(f) > -1);
+      
+
+        
+        skipColNum = maxCols-headerLen;
+
+    
+        tmpRows.forEach(r => {
+
+            var thisRowLen = r.cells.length;
+            if((maxCols - thisRowLen) == 0 )  {
+
+                $(r).addClass("thickLine");
+             
+                index = applicationColNum;
+                descIndex = descriptionColNum;
+                
+                DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
+
+                try {
+                    appCtr = dataObj.filter(function(i) {
+                                            return (i[appRowIndex] == DAText2);
+                                        })[0][descRowIndex]; 
+
+                    r.cells[descIndex].setAttribute("title", appCtr);
+                    r.setAttribute("title","click to go to DA Tracker");
+
+                } catch(ex) {}
+                
+
+                        } else {
+
+                        if((thisRowLen < (maxCols)) ) {
+
+
+                            var subtract = maxCols - thisRowLen;
+
+                            index = applicationColNum - subtract;
+                            descIndex = descriptionColNum - subtract;
+
+                        try {
+                            DAText2 = r.cells[index].innerHTML != undefined ? r.cells[index].innerHTML : null;
+
+
+                            appCtr = dataObj.filter(function(i) {
+                                                    return (i[appRowIndex] == DAText2);
+                                                })[0][descRowIndex]; 
+
+                            r.cells[descIndex].setAttribute("title", appCtr);
+                                        } catch(ex) {}
+                                            }
+
+
+
+                        }
+
+                       
+
+
+
+         
+        });
+
+    }
+
+}
+
+function rowLimitChange(el)  {
+
+    localStorage.setItem("stRowLimit", el.value);
+    location.reload();
+
+}
+
+        </script>
+        <div id="header" class="hidden">Header/branding goes here</div>
+            <h3>Developer Contributions Register</h3>
+          
+                    <div>
+                            <p>How to use: Select a preset from the menu, or click 'Show Chart Settings' and drag data elements to the required axis/use the drop down arrow beside each data element to filter the chart results.  </p>
+
+<div>
+    <div id="altData">
+        <a class="button" href="csvViewer" target="_blank" title="view recent transactions in a simple table">simple table</a> ~ 
+        <a class="button" href="data/CurrentS94TransactionsMF.csv" target="_blank" title="Download full CSV dataset">full CSV dataset</a></div>
+
+                            <div id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span><br />
+                                Data Date: <span id='fileDate'></span>.
+                            </div>
+
+                            </div>  
+
+                            </div>
+
+                            <div>
+                            <input type="button" class="hidden" value="Export JSON" onClick="dataExport()" /> 
+                            <input type="button" value="Revert" onClick="revert()" title="click to clear saved settings and revert to defaults"/>
+                            <input type="button" value="Show Chart Settings" uivisible=false id="toggleHideUIButton" onclick="toggleConfigHide(this, true)" title="Click to toggle hide/show chart settings" /> 
+                            <select id="chartType" onchange="selectChange(this)">
+                                <option value=""></option>
+                                <option value="all">Summary View</option>
+                                <option value="focusOnApps">Focus on Applications</option>
+                                <option value="LeviedPaid" class="hidden">Applications - Levied and Paid</option>
+                                <option value="Pies">Bar Chart by Locality</option>
+                                <option value="chartYear">Bar Chart by Approval Year</option>
+                                <option value="TSV">Export Selected Data</option>
+
+                            </select>
+
+                            <input type="image" class='excelImg' value="Visible to Excel"  src="images/excel.jpg"  onclick="sheetJSWorkBook('xlsx')" title="Click to download visible table as Excel file" />
+
+                            <input type="button" value="Dictionary" style="float: right;" onClick="popupFieldInfo()" />
+                        </div>
+                            <div id='subTotalRowLimitDiv'> Subtotal row limit <input id="subtotalto" onChange="javascript:rowLimitChange(this)" type="number" value= "2" title="change this to increase the depth when viewing subtotal views" /><em>Change this to increase the depth when viewing subtotal views.</em></div>
+
+                    </div>
+        <div id="output"></div>
+
+
+        <div class="note">Note: 
+            <ul>
+                <li>Data provided in accordance with Cl 217 of the EP&A Regulation 2021.</li>
+                <li>Dataset contains developer contributions levied on approved applications recorded in Council's Property and Rating system, introduced in 2002. The earliest 'Approval Year' included in this dataset is <span id='earliestDate'></span>.</li>
+                <li>Some levies and/or sectors have since been discontinued/consolidated - <span class="discontinued">these are shown highlighted</span>.</li>
+                </ul>
+                <div>Powered by <a target='_blank' href='https://pivottable.js.org/examples/'>Pivot.js</a> and <a href='https://nagarajanchinnasamy.github.io/subtotal/examples/' target='_blank'>Subtotal.js</a>. </div>
+                </div>
+
+
+    </body>
+</html>
