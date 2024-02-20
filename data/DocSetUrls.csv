@@ -2,7 +2,7 @@ site,description,latlong,sharelink
 Site 1,Acacia Street off Fraser Drive,"-28.196326,153.521904",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EkWjyLxWEw5GpEPgM2yHf-8BMaW6t7G-qQUw5wsv3G_YQw
 Site 225,Kings Street east of Factory Lane,"-28.329005, 153.397571",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EgjbQBF3KxxIpRNitgueS4gB5uXrMjlDlqyCb0B2GtDSIQ
 Site 789,M.R.450 Coast Road north of Morton Street,"-28.246199, 153.554093",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EnIaDqfgBBpPuaVvbNSWtZ8Bfq6lF5Od94xzN5dOQ8m3uw
-Site 544,Minjungbal Drive south of Shallow Bay Drive ,"-28.206619, 153.544616",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EssIm5sy5AFJoHV26yI6o1ABgCX7hEkujTSPAO2P1cqEIQ
+Site 544,Minjungbal Drive south of Shallow Bay Drive,"-28.206619, 153.544616",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EssIm5sy5AFJoHV26yI6o1ABgCX7hEkujTSPAO2P1cqEIQ
 Site 340,Minjungbal Drive south of Boyds Bay Bridge,"-28.186519,153.53938",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Eoghu3-uxUdJr3BnxE254hMB1YkXw6NlBo7hfURm92AXdQ
 Site 633,Dulguigan Road at No 809,"-28.266115,153.447459",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EqNqazqQS9JOtKBhB5EJpcgBIpesb1PdydVTLfv4Fk5AhA
 Site 761,No 27 Charles Street Murwillumbah,"-28.179862,153.535893",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Eiv2qYNc22hAqazEl83XYF0BSIPOxnfBbuRjYW02HV3w6Q
@@ -83,8 +83,7 @@ Site 174,FRASER DRIVE south of LEISURE DRIVE,"-28.215544, 153.52214",https://twe
 Site 175,FRASER DRIVE off TERANORA ROAD,"-28.232443, 153.526656",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Ervi8ntVNelMjqGdVcI-UocBwH49QpoOCtA-bSS4kBgxDw
 Site 176,GRASS  TREE CIRCUIT at No 12,"-28.341777, 153.568668",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Ej9LlLeR_E5JpBPvCX_cqD8B57mW3blTiukgAXFkLTm30g
 Site 177,GRAY STREET off KENNEDY DRIVE,"-28.187663, 153.519009",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EnsdporwcZxLlAg61c8l_EwBeHraC3Sunvdj_7qykDVkTw
-Site 178,"GREENWAY DRIVE north of DARLINGTON DRIVE (north of Leisure Dr)
-","-28.212012, 153.53429",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/El6WT8fU3FFAg_5O6arccHkBJGJlS-zcDwzD9qxd86vHtA
+Site 178,GREENWAY DRIVE north of DARLINGTON DRIVE (north of Leisure Dr),"-28.212012, 153.53429",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/El6WT8fU3FFAg_5O6arccHkBJGJlS-zcDwzD9qxd86vHtA
 Site 179,GREENWAY DRIVE under Motor Way,"-28.202997, 153.535998",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EjjgBQnZe9dJuxqb_0e_0v8BAUwiQXqY_eo40F-L1irrrQ
 Site 18,BARRETT STREET just off KENNEDY DRIVE,"-28.187177, 153.523357",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EoRUWvrmWTxHjP-qllT-CXcBEBEzhsPflXaFrWs4OqYPCw
 Site 181,GLEN AYRE DRIVE at No 10,"-28.229344, 153.527273",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EpEMhRg_EjNFoOnsDhgMBVMBB_flqMcSVz2WNNaATw_2Lg
@@ -220,7 +219,7 @@ Site 312,M.R.541 TERRANORA ROAD at No 577,"-28.240282, 153.506502",https://tweed
 Site 313,M.R.541 TERRANORA ROAD at No 29,"-28.234162, 153.52325",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Ek598f-NKk1Pguw-q2sF1woB9iSKg7wmgGgmCWkVEnhiHQ
 Site 314,M.R.541 TERRANORA ROAD at No 304,"-28.232717, 153.527962",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Elwy-kThiF5FhMv0K_9ZkAABACWMZ44o0wskVwCE-dNZKA
 Site 315,M.R.541 TERRANORA ROAD at No 10,"-28.221768, 153.546232",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Egjruu1Dx85Pj3ksOLBf-M4B4o7UThxAxDIxpi8VEDZtkg
-Site 316, TWEED BYPASS,"-28.202547, 153.535619",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EoFsBySnmrxMj5UWSju5THcBdboCQR_4D27v-xCHyjbxIQ
+Site 316,TWEED BYPASS,"-28.202547, 153.535619",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EoFsBySnmrxMj5UWSju5THcBdboCQR_4D27v-xCHyjbxIQ
 Site 317,M.R.679 Tweed Vally Way BARNEY'S POINT BRIDGE,"0, 0",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Eu92YatdQFtCp1A_QemsELYBSCpHlBMyT7fvNMrPhImIgA
 Site 318,M.R.679 Tweed Vally Way Before CHINDERAH RD off RAMP,"0, 0",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EnzoKME2yB5EhR3La5_wdSoB-pJvWoPXFC5fXh7OwKTMtw
 Site 319,M.R.679 Tweed Vally Way at STOTTS CREEK,"-28.275173, 153.488446",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Evg2FjKPeLdKvE9a-YtfFlQBQqUUXHC5eLrVgItNjn84Xw
@@ -565,7 +564,7 @@ Site 667,EVIRON ROAD 200 metres north of NORTHS LANE,"-28.310768, 153.466985",ht
 Site 668,CASUARINA WAY at No 421,"-28.292313, 153.572607",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Eo_efEc2uK5GlCs1LrBA9poB8ykocU-xJSRIEeL_mIr5ng
 Site 67,CHILLCOTTS ROAD eastern end,"-28.311991, 153.32163",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EsbabKSO9DFAqtXyg1aTcDsB7Z22BerydujN6MvnNZP3Pw
 Site 671B,M.R.142 KYOGLE ROAD at No 2757 KUNGHUR VILLAGE,"-28.470265, 153.2534",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EtZtvxJuoVZGvFXGuHOuXQEB9P_9fkdUTeOtqp9quEWYBw
-Site 672,FLORENCE STREET west of PEARL STREET,"-28.1157, 153.537956",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/ElZtZR18HMVGuEnAxFlPl0YBXL_awwys0HESPq46GiuaBw
+Site 672,FLORENCE STREET west of PEARL STREET,"-28.175256,153.537956",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/ElZtZR18HMVGuEnAxFlPl0YBXL_awwys0HESPq46GiuaBw
 Site 673B,RECREATION STREET at No 12,"-28.176194, 153.538778",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EkqxRKcAtSZIjFpcy2JHjUkB3_0ot546Eeg1KKjU8Jqzhw
 Site 674,MCALLISTERS ROAD at No 31,"-28.214483, 153.478876",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Eh481mXBDr5Kqru-XplKL5YBlbpsSUygTwUR1EepRjk0Wg
 Site 675,SEASIDE DRIVE at No 44,"-28.285723, 153.574672",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EsXUp71LgSxOqXmEKMAxttQBTYPllqESFLNJdYmRi8A2yg
@@ -618,7 +617,7 @@ Site 724,FARRANTS ROAD at No 119,"-28.31627, 153.478515",https://tweednswgovau.s
 Site 725,NORTH ARM ROAD west of SCHOOL ROUNDABOUT,"-28.334692, 153.361956",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Er-WtGqNJB1Clm85hGN6ewcBlRnXle6F1X3ydc4gRwwUZw
 Site 726,NORTH ARM ROAD east of SCHOOL DROP OFF BAY,"-28.33522, 153.36357",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EtzKy5metMFEs4k9VrBxd0ABr5d4q-QsAEAM6dS5du7o0Q
 Site 727,NORTH ARM ROAD east of OLD LISMORE ROAD,"-28.337001, 153.365841",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EtoIVCoIvb9Evw2cSrP358gBEQjShFBfRMoXnwr5TlgQow
-Site 728,TOM MERCHANT DRIVE  ,"-28.383835, 153.554675",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EibFClagnmdJulJszIoRhf8BOKSM_LtlJVvyvPdaB4IGdA
+Site 728,TOM MERCHANT DRIVE,"-28.383835, 153.554675",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EibFClagnmdJulJszIoRhf8BOKSM_LtlJVvyvPdaB4IGdA
 Site 729,BILAMBIL ROAD south of SCHOOL CROSSING,"-28.222811, 153.458876",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EgdPL6NBpsJAgqsJQyaip8cBYxdPhWAQM370tIs5G77tkg
 Site 73,CHINDERAH ROAD northbound on ramp to MOTORWAY,"-28.243715, 153.554498",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Esc2K9RERDRArxJuZR-CjrwBkfhLGM905wcuRZe2x0Clng
 Site 731,CASUARINA WAY at No 598,"-28.30483, 153.57094",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EkeJh6t79iRIgBqcKivgtBABFuE9xMT5mRe5UHjjF7dkVw
@@ -679,8 +678,7 @@ Site 520,M.R.679 Tweed Valley Way at No 508,"-28.345207,153.401141",https://twee
 Site 623A,DARLINGTON DRIVE at No 160,"-28.224364,153.540456",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EmqDa5folVJOnpB3P1z3dGEBbmjI17CHO7GkM7tT2vbM3g
 Site 609A,ROUND MOUNTAIN ROAD at No 229,"-28.359415,153.553221",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Et2IajBDoc9Ntfegdp7_4HMBS6dSuRhiJIQ-Eg5VPkP35Q
 Site 620A,POTTSVILLE ROAD at No 943,"-28.392754,153.541002",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Em-I8GnYvB5OmArxnqIiFpcBiAL1cDidu-JBqqVEcVvVUQ
-Site 620B,"NULLUM STREET at No 8
-","-28.326841,153.393574",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EkG3NN4nY6RKhJQz9Hg1Bf4BH89mro8gVo6qVHCFF6y7-g
+Site 620B,NULLUM STREET at No 8,"-28.326841,153.393574",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EkG3NN4nY6RKhJQz9Hg1Bf4BH89mro8gVo6qVHCFF6y7-g
 Site 567A,M.R.450 CORONATION AVENUE at No 20,"-28.389833,153.562555",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EnIk2t7hEPVDsKW2ZrBdZ0MBEyqPCQwwL9HxhXywz2c3BQ
 Site 574B,PIONEER PARADE at No 101,"-28.223546,153.544213",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EsuJRV8sTvJEseQLiHmU57MBEcTfB7O9kuyQc8URMO5oSQ
 Site 599B,M.R.679 Tweed Valley Way north of CLOTHIERS CREEK ROAD,"-28.310408,153.436578",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Em-mdnplZTBHl0Xg1yfsnokBye4A-KOJjQSXXY9LWAXBsw
@@ -787,3 +785,15 @@ Site 670,EUNGA STREET at No 3,"-28.19721, 153.545435",https://tweednswgovau.shar
 Site 690,M.R.679 Tweed Valley Way north of HOWARDS ROAD,"-28.41844, 153.455715",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EspccqZ65PpAhMk7Wg7zvi0B67aivp3rppRDrEvKpD49Tg
 Site 760,M.R.679 Tweed Valy Way at No 8752,"-28.272675, 153.469755",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EtgFz27OnVhKpRGGmy0mOuAB6GR8MW6bkeiY58W0rey9BA
 Site 593B,PIGGABEEN RD at No 15,"-28.189956,153.504298",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EvNEk0pEo-VFh6_TXm6hyW8BrulQ_8R87A5Qb6GCtKbLyg
+Site 563-BZ,M.R.399 NUMINBAH ROAD at No 2038-1996,"-28.273430,153.251941",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EjhA5PL3sJlDoD_LxKIVj1cBZ_YxlF8_GQIh5jaIPA4b5g
+Site 430-BZ,"S.H.10 Pacific Mwy, Cudgen - north of Cudgen Road","-28.267420,153.525009",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EkFWMOa4cuxKiyx7-WmSejoB4x2lHSNquCmwJnGcvG4ubw
+Site 305-BZ,"M.R.450 Tweed Coast Rd, Cudgen - south of Cudgen Rd","-28.271160,153.560804",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EtCrtladd1pGuxGh1wOU6MQBzKzjl1Ts2GtSflka472LbQ
+Site 64-BZ,CASUARINA WAY north of Elliston St,"-28.271390,153.577050",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EljGc6IDGiNBpyBLP0joKzUBq47ZGeJDJD8TKxvCDEYjXg
+Site 299-BZ,M.R.450 COAST ROAD at Pottsville Bowls,"-28.385350,153.566390",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EvaGcxFH8lhPifnJq46SPr4BykxGMHnnc1F2hmqqSGNvcg
+Site 295-BZ,S.H.10 Pacific Mwy north of Cudgera Creek Rd Cudgera Creek,"-28.384700,153.523500",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EraVb5_Kl-FPmRvHp9W38P8B7LMsFpU0L_a2OtjEgQ6Ubg
+Site 757-BZ,M.R.142 KYOGLE ROAD north of Smiths Creek Rd Uki,"-28.410800,153.338970",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/Eho9UpPVS0pHrNRMpaOI5lgB4D0oRzP4X95DPy4yMy9LwQ
+Site 341-BZ,"M.R.679 Tweed Valley Way north of Minnows Rd, Fernvale","-28.377350,153.418120",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EvkeP5BduJlIgx4rLtqcHw4BIiTckV_XFpye2RnMOnFFxw
+Site 329-BZ,"M.R.679 Tweed Valley Way north of Wooyung Rd, Mooball","-28.446540,153.500500",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EuDJRSMBxZZOrxg423P8el8Bz6aTK-mbdnP-G63VLlFW8g
+Site 329M-BZ,"S.H.10 Pacific Mway north of Wooyung Rd, Mooball","-28.445612,153.502786",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EuENQhJxn1lEiEp7p6K71boBeQa-49dbs4PsrK5AmsUTeQ
+Site 536-BZ,"M.R.450 Tweed Coast Road north of Wooyung Rd, Wooyung","-28.450140,153.554210",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/EjKbPWxANI9Imwc1a0J455QBuNuSh37qcapayw2QZMvQJw
+Site 283-BZ,"M.R.143 Tomewin Road south of border, Tomewin","-28.260610,153.370140",https://tweednswgovau.sharepoint.com/:f:/s/Traffic/ErPkvXp94LRCm3XJ9cZ6oCAB_u2bC-WWFeDxXXSnAd8DpA
