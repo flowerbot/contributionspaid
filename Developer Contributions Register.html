@@ -532,6 +532,27 @@ function popupFieldInfo() {
 
 }
 
+
+function ExcelDateToJSDate(serialTxt) {
+    var serial = parseInt(serialTxt);
+   var utc_days  = Math.floor(serial - 25569);
+   var utc_value = utc_days * 86400;                                        
+   var date_info = new Date(utc_value * 1000);
+
+   var fractional_day = serial - Math.floor(serial) + 0.0000001;
+
+   var total_seconds = Math.floor(86400 * fractional_day);
+
+   var seconds = total_seconds % 60;
+
+   total_seconds -= seconds;
+
+   var hours = Math.floor(total_seconds / (60 * 60));
+   var minutes = Math.floor(total_seconds / 60) % 60;
+
+   return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+}
+
 async function popup(DAText,appCtr) {
 
   //  console.log(record);
@@ -631,6 +652,10 @@ async function popup(DAText,appCtr) {
                 var curPath = window.location.href;
                 var localDate = "";
 
+
+                //TODO: new variable;
+                var maxYear = null;
+
                // getFileDate(fileNameAndPath);
 
                  fixedData = [];
@@ -641,6 +666,52 @@ async function popup(DAText,appCtr) {
          
                 dataObj = parsed.data;
 
+            //TODO: NEW CODE STARTS HERE
+
+            dataObj.forEach(row => {
+                     const rawDate = row[17];
+                   //  console.log(row);
+                     const date = new Date(rawDate);
+
+                     //console.log("date:", date);
+
+                     
+                    let jsDate = date;
+
+                    if (!(date instanceof Date) || isNaN(date.getTime())) {
+                    // Try converting from Excel serial number
+                    jsDate = ExcelDateToJSDate(date);
+                   // console.log("jsDate:",jsDate);
+
+  
+                     //}
+                     
+
+                    //if (!isNaN(date.getTime())) {
+
+                    }
+
+                    const year = jsDate.getFullYear();
+                     if (!maxYear || year > maxYear) {
+                     maxYear = year;
+                     }
+                //  console.log("maxYear:", maxYear);
+
+                    }
+
+                  
+
+  );
+
+                     if (maxYear) {
+                     console.log('Maximum Year:', maxYear);
+                      twoYearArray = [String(maxYear-1), String(maxYear)];
+                      yearArray = [String(maxYear)];
+                     } else {
+                     console.log('No valid years found.');
+                     }
+
+                //TODO: NEW CODE ENDS HERE
                 console.log("records filtered to:", dataObj.length);
 
                 document.getElementById("progressTotal").innerHTML = dataObj.length;
@@ -674,7 +745,8 @@ async function popup(DAText,appCtr) {
 
 
                 $("#output").pivotUI(dataObj, {  
-                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO","RAM_PROCESS_CTR", "CHARGE_CTR"],
+                    //TODO:  2 new value added to hiddenAttributes:  LotSecDP and LotSecDPArcGIS
+                    hiddenAttributes: ["CHARGE_TYPE", "APPLICATION_NO","RAM_PROCESS_CTR", "CHARGE_CTR", "LotSecDP", "LotSecDPArcGIS"],
                     dataClass: dataClass,
                    rows: (savedConfig) ? savedConfig.rows : ["Application ID", "locality", "Short Description", "Determined By", "Determined", "Levy"], 
                    cols: (savedConfig) ? savedConfig.cols : ["Purpose", "TR TYPE"],
