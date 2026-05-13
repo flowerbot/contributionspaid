@@ -22,7 +22,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/plotly_renderers.min.js"></script>
 <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/export_renderers.min.js'></script>
 
-<!-- TODO:  NOT COMPLETE, MUCH TO DO -->
+
         <!-- subtotal.js libs from ../dist -->
         <!-- base href= "/flowerbot/contributionspaid/blob/main/" -->
 	    <!-- base href= "/" -->
@@ -368,7 +368,7 @@ tr.ActualCost td
     // IE, EVERYTHING EXCEPT 'EXCL'
     var configIncTRCPProgram = {"In V7":["Yes"]};
 
-    var storageTag = "-TRCPV72026";  // make these unique to each chart
+    var storageTag = "-TRCPV7";  // make these unique to each chart
 
 
 
@@ -417,7 +417,7 @@ document.getElementById("fileDate").innerHTML = lastModified.toString();
 }
 
 
-var fileNameAndPath = "data/Tweed Road Contribution Plan Works Schedule Web Data.csv";
+var fileNameAndPath = "data/TRCP V7.csv";
 
 // FULL GITHUB PATH REQUIRED TO GET THE REAL 'SAVE DATE' FOR THE CSV
 
@@ -690,7 +690,7 @@ var fromXlOne = false;
               //  if(uiVis == "true" || uiVis == undefined) {
                 btn = document.getElementById("toggleHideUIButton");
               //  if(localStorage.getItem('uivisible'))  $(btn).attr("uivisible", uiVis);
-             //TODO:     toggleHide(btn, false); //RE-ENABLE THIS IF NEED TO RE-HIDE THE SETTINGS
+                toggleHide(btn, false);
               //  }
 
                 colorHeadings();
@@ -710,18 +710,9 @@ var fromXlOne = false;
             configobject["inclusions"] = configInc; // {Plan:["19"]};
             configobject["exclusions"] ={ "High Level":["Total"], trainingProject:["true"]};
             configobject["hiddenAttributes"] = hiddenAttributes;
-            //configobject["rows"] = configRows;
-           // configobject["cols"] = configCols;
-            //configobject["vals"] = ["SUBTOTALS($)"];
-            configobject.rows = ["Tweed Road Contribution Projects"];   // or whatever identifies a project
-            configobject.vals = [
-            "Preliminaries - Cost ($)",
-            "Traffic Control - Cost ($)",
-            "Contingency - Cost ($)",
-            "Escalation - Cost ($)"
-            ];
-configobject.aggregatorName = "Sum";
-configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
+            configobject["rows"] = configRows;
+            configobject["cols"] = configCols;
+            configobject["vals"] = ["SUBTOTALS($)"];
             configobject["sorters"] = sorters;
             //configobject["comments"] = "Total"; //want to skip the Total line .. doesn't wokr
 
@@ -801,7 +792,7 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                         console.log("toggling from new");
                         btn = document.getElementById("toggleHideUIButton");
                       //  if(localStorage.getItem('uivisible'))  $(btn).attr("uivisible", uiVis);
-                       //TODO:     toggleHide(btn, false); //RE-ENABLE THIS IF NEED TO RE-HIDE THE SETTINGS
+                        toggleHide(btn, false);
                // }
 
                     colorHeadings();
@@ -823,145 +814,70 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
         Papa.parse(fileNameAndPath, {
             download: true,
             skipEmptyLines: true,
-            header: false,   // ✅ IMPORTANT
-            complete: function (parsed) {
+            header: true,
+           // newline: "\r\n",
+            complete: function(parsed){
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+              console.log("Parsed:");
+              console.log(parsed.data);
+              const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZoneName: 'short'
+                    };
 
-                console.log("Raw parsed rows:");
-                console.log(parsed.data);
-
-                const rows = parsed.data;
-
-                // rows[0] discard
-                const groupRow = rows[1];     // merged group headers (e.g. "Preliminaries", blanks, blanks...)
-                const subRow   = rows[2];     // subheaders (e.g. "Rate", "Cost ($)")
-
-                function cleanText(v) {
-                if (v === null || v === undefined) return "";
-                return String(v)
-                    // remove BOM, NBSP, zero-width + other invisible chars
-                    .replace(/\uFEFF/g, "")
-                    .replace(/\u00A0/g, " ")
-                    .replace(/[\u200B-\u200F\u202A-\u202E\u2060]/g, "")
-                    // remove control characters (includes odd “box” glyphs from CR/LF)
-                    .replace(/[\u0000-\u001F\u007F-\u009F]/g, "")
-                    // common Excel/encoding fallout (if it shows up)
-                    .replace(/â‚¬|€/g, "$")
-                    .replace(/\s+/g, " ")
-                    .trim();
-                }
-
-                // Forward-fill merged group headers across blank cells
-                let currentGroup = "";
-                const groups = groupRow.map((g, i) => {
-                const cg = cleanText(g);
-
-                if (cg) {
-                    currentGroup = cg;
-                    return currentGroup;
-                }
-
-                // Heuristic: last column is often the grand total "Cost ($)" with no group label
-                if (!cg && i === groupRow.length - 1) return "Total";
-
-                return currentGroup; // fill blanks under merged cells
-                });
-
-                // Build final headers: "Group - Subheader" (or just one if other missing)
-                let headers = groups.map((grp, i) => {
-                const g = cleanText(grp);
-                const s = cleanText(subRow[i]);
-
-                if (g && s) return `${g} - ${s}`;
-                if (g) return g;
-                return s; // worst case
-                });
-
-                // Ensure unique column names (you WILL have repeats of "Cost ($)" otherwise)
-                const seen = new Map();
-                headers = headers.map((h, i) => {
-                const key = h || `Column_${i+1}`;
-                const n = (seen.get(key) || 0) + 1;
-                seen.set(key, n);
-                return n === 1 ? key : `${key} (${n})`;
-                });
-
-                // Convert data rows to objects (data begins at row index 3)
-                const data = rows.slice(3).map(r => {
-                const obj = {};
-                headers.forEach((h, i) => obj[h] = r[i] ?? null);
-                return obj;
-                });
-
-                // Drop totally-empty rows (optional but sensible)
-                const cleanedData = data.filter(row =>
-                Object.values(row).some(v => v !== null && v !== "")
-                );
-
-                dataObj = cleanedData;
-
-
-                // 1) List the columns you want to behave as numeric measures
-                    const measureCols = [
-                    "Preliminaries - Cost ($)",
-                    "Traffic Control - Cost ($)",
-                    "Contingency - Cost ($)",
-                    "Escalation - Cost ($)",
-                    "Professional & Principal Costs - Cost ($)",
-                    "Preliminaries - Rate",
-                    "Traffic Control - Rate",
-                    "Contingency - Rate",
-                    "Escalation - Rate",
-                    "Professional & Principal Costs - Rate",
-                    "Total - Cost ($)" // optional (or omit if you’re deriving totals)
-                    ];
-
-                    // 2) Robust string → number coercion (handles $ , spaces, parentheses negatives)
-                    function toNumber(v) {
-                    if (v === null || v === undefined) return 0;
-                    let s = String(v).trim();
-
-                    if (!s) return 0;
-
-                    // handle accounting negatives like (1,234.56)
-                    const isNeg = /^\(.*\)$/.test(s);
-                    s = s.replace(/^\(|\)$/g, "");
-
-                    // strip currency, commas, spaces, and any stray non-numeric chars except . and -
-                    s = s.replace(/[$,\s]/g, "");
-                    s = s.replace(/[^\d.\-]/g, "");
-
-                    const n = Number(s);
-                    if (!Number.isFinite(n)) return 0;
-
-                    return isNeg ? -n : n;
-                    }
-
-                    // 3) Apply coercion
-                    cleanedData.forEach(row => {
-                    measureCols.forEach(c => {
-                        if (c in row) row[c] = toNumber(row[c]);
-                    });
-
-                    // Optional: derived total so you can ignore provided Total column
-                    row.TotalDerived = (measureCols.includes("Preliminaries - Cost ($)") ? row["Preliminaries - Cost ($)"] : 0)
-                                    + (measureCols.includes("Traffic Control - Cost ($)") ? row["Traffic Control - Cost ($)"] : 0)
-                                    + (measureCols.includes("Contingency - Cost ($)") ? row["Contingency - Cost ($)"] : 0)
-                                    + (measureCols.includes("Escalation - Cost ($)") ? row["Escalation - Cost ($)"] : 0)
-                                    + (measureCols.includes("Professional & Principal Costs - Cost ($)") ? row["Professional & Principal Costs - Cost ($)"] : 0);
-                    });
 
                 
-                console.log(
-                "Type check:",
-                typeof cleanedData[0]["Preliminaries - Cost ($)"],
-                cleanedData[0]["Preliminaries - Cost ($)"]
-                );
+                var fileDate = "";
+                var localDate = "";
 
-                $("#output").pivotUI(cleanedData, configobject);
+                /*
+                if(curPath.indexOf("github")>=0) {
+
+                    fileDate = "<a href='https://github.com/flowerbot/contributionspaid/blob/main/data/TRCP%20V7.csv' target='_blank'>See GitHub commit date</a>";
+                    localDate = fileDate;
+
+                } else {
+
+                 fileDate = fetchHeader(fileNameAndPath, "Last-Modified");
+                localDate = new Date(fileDate).toLocaleDateString('en-au', options);
+                }
+*/
+
+              //  console.log(parsed.data[1][6]);  // THIS SHOULD BE THE FILE DATE
+               // var fileDate = parsed.data[1][6];
+             //  getFileDate(fileNameAndPath);
+              //  document.getElementById("fileDate").innerHTML = localDate;
+
+               // console.log("First Balance:" + parsed.data[1][1]);
+                var fixedData = [];
+
+               // console.log(parsed);
+
+            //    if (parsed.data[0][0] == "FORMAT XLONE REPORT") fromXLOne = true;
+
+               // dataObj = parsed.data;
+                    var emptyCols = [];
+
+                    document.getElementById("progressTotal").innerHTML = parsed.data.length;
+                    document.getElementById("progress").innerHTML = parsed.data.length;
+   
+
+                dataObj = parsed.data;
+
+       
+
+               // parsed[1].push("DateYear");
+
+                $("#output").pivotUI(parsed.data, configobject);
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             }
-            });
+        });
        // var jsonData = Papa.parse("/prac/infrastructure/siteassets/scripts/data/AccountBalance.csv");
        // console.log(jsonData.data);
      });
