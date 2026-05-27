@@ -248,6 +248,19 @@ tr.ActualCost td
 
 }
 
+/* pivot table value cells */
+.pvtTable td.pvtVal,
+.pvtTable td.pvtTotal,
+.pvtTable td.pvtGrandTotal {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums; /* nicer lining digits */
+}
+
+/* optional: keep row labels left */
+.pvtTable td.pvtRowLabel,
+.pvtTable td.pvtColLabel {
+  text-align: left;
+}
 
 
 @media print {
@@ -281,17 +294,41 @@ tr.ActualCost td
     var configIncDefault = {}; // {Plan: ["19"],
                    // Type: ["Admin Levy","Expenditure recoupment"]};
 
-    var configRowsDefault = ["High Level","TRCP SECTOR"];
-    var configColsDefault = [];
-    var configIncDefault = {};
-    var hiddenAttributes = ["#22","#23","#24","#25","#26",
+    // A) “Sector Summary” equivalent (now by Project / TRDS Item)
+var configRowsDefault = ["Tweed Road Contribution Projects"];
+var configColsDefault = ["Active"];
+var configRendererDefault = "Table";
+
+// B) “Project details”
+var configRowsDetails = ["ID+Projects", "TRDS Item"];
+var configColsDetails = ["Active"];
+var configRendererDetails = "Table";
+
+// C) “Cost components” (stacked or grouped bar) – per project
+var configRowsStacked = ["Tweed Road Contribution Projects"];
+var configColsStacked = []; // keep blank for charts
+var configRendererStacked = "Stacked Bar Chart";
+var configIncStacked = {};  // optional
+
+// D) “Rates view”
+var configRowsRates = ["Tweed Road Contribution Projects"];
+var configColsRates = ["TRDS Item"];
+var configRendererRates = "Table";
+
+// E) “Escalation by Year”
+var configRowsEsc = ["Escalation - Year"];
+var configColsEsc = ["ID+Projects"];
+var configRendererEsc = "Table";
+
+
+var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
                             "NET SUBTOTAL COST TO TWEED SHIRE COUNCIL TRCP - CONTRIBUTION FROM CONTRIBUTOR",
                             "NOTES Actual / Assumed Percentage Contribution from Contributor",
                             "NET AREA TOTALS COST TO TWEED SHIRE COUNCIL TRCP",
                             "Acquisition/Resumption Costs/Environmental Land Bank (Class 34)Zoning",
                             "TOTALS"
                         ];
-    var configRendererDefault = "Table";
+
     var configRowsFull;
 
     // NB:  TODO: MAKE LOOKUP TABLE FOR TRCP SECTOR IN EXCEL, (SECTOR 3 HAS A SPACE AT THE END), THEN REMOVE SPACE FROM END OF TRCP SECTOR ENTRIES
@@ -306,17 +343,26 @@ tr.ActualCost td
             "SECTOR 7 - DURANBAH/ CABARITA","SECTOR 8 - POTTSVILLE", "SECTOR 9 - MURWILLUMBAH",
             "SECTOR 10 - KIELVALE","SECTOR 12 - RURAL INNER","LAC 1", "LAC 2", "LAC 3", "LAC 4"]
         ),
-        "Status": $.pivotUtilities.sortAs(
-            ["TRDS-New","Not Started","Commenced","Completed"]
+        "Active": $.pivotUtilities.sortAs(
+            ["Yes","Partially completed","Completed", "EXCLUDE"]
         ),
-        "TRDS2017-TRCP": $.pivotUtilities.sortAs(
-            ["Existing","New","EXCL"]
-        )
+
+        
+ // ✅ ADD THIS
+    "Cost Type": $.pivotUtilities.sortAs([
+        "Preliminaries - Cost ($)",
+        "Traffic Control - Cost ($)",
+        "Contingency - Cost ($)",
+        "Escalation - Cost ($)",
+        "Professional & Principal Costs - Cost ($)"
+ 
+    ])
+
 
     }
 
 
-    var configRowsDetails = ["TRCP SECTOR","Id+Tag","Status","TRDS2017-ID"];
+    var configRowsDetails = ["Item+Project","Status","TRDS Item"];
     var configColsDetails = ["In V7"];
     var configRendererDetails="Table With Subtotal";
 
@@ -350,8 +396,8 @@ tr.ActualCost td
     var configIncTRDS = {};
 
 
-    var configRowsTRDSSummary = ["Status"];
-    var configColsTRDSSummary = ["TRDS2017-TRCP"];
+    var configRowsTRDSSummary = ["TRDS Item", "Project Short"];
+    var configColsTRDSSummary = ["Active"];
    // var configRendererCorridor = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
     var configRendererTRDSSummary = "Table";
 
@@ -421,7 +467,7 @@ var fileNameAndPath = "data/Tweed Road Contribution Plan Works Schedule Web Data
 
 // FULL GITHUB PATH REQUIRED TO GET THE REAL 'SAVE DATE' FOR THE CSV
 
-var gitHubPath = "https://api.github.com/repos/flowerbot/contributionspaid/commits?path=data/TRCP V7.csv&page=1&per_page=1"
+var gitHubPath = "https://api.github.com/repos/flowerbot/contributionspaid/commits?path=data/Tweed Road Contribution Plan Works Schedule Web Data.csv&page=1&per_page=1"
 
 var curPath = window.location.href;
 
@@ -495,18 +541,40 @@ var fromXlOne = false;
         var sum = $.pivotUtilities.aggregatorTemplates.sum;
         var numberFormat = $.pivotUtilities.numberFormat;
         var intFormat = numberFormat({digitsAfterDecimal: 0});
+
+        
+            var aggregators = $.extend({}, $.pivotUtilities.aggregators, {
+            "Integer Sum": function () { return tpl.sum(intFormat)(arguments[0] || []); }
+            });
+
        /* var aggregators = {
             "Amount": function() {
               return sum(intFormat)(["Amount"]);
           } */
 
           var amtSum = function() {
-            return sum(intFormat)(["Amount"]);
+            return sum(intFormat)(["Value"]);
           };
           
         // "Balance": function() {return sum(["Balance"])},
         // "Expected": function() { return sum(intFormat)(["Expected"])},
     //}  
+
+    function formatPivotNumbers() {
+    // value/total cells in pivottable.js
+    $("table.pvtTable td.pvtVal, table.pvtTable td.pvtTotal, table.pvtTable td.pvtGrandTotal").each(function () {
+        const txt = $(this).text().trim();
+        if (!txt) return;
+
+        // remove commas and $ etc to test numeric
+        const n = Number(txt.replace(/[$,\s]/g, "").replace(/[^\d.\-]/g, ""));
+        if (!Number.isFinite(n)) return;
+
+        // format as integer with thousands separators (AU-style commas)
+        $(this).text(n.toLocaleString("en-AU", { maximumFractionDigits: 0 }));
+        $(this).css("text-align", "right");
+    });
+    }
 
         var rendererOptions = {
         //rendererOptions: {
@@ -622,6 +690,8 @@ var fromXlOne = false;
                // delete configobject["inclusions"]["Type"]; // revert to all vals
             }
 
+            normalizeValuesAxis(configobject);   // <--- add this line
+
                 //  console.log(JSON.stringify(configobject));
             console.log(configobject);
             configobject.onRefresh = function (config) {
@@ -694,6 +764,8 @@ var fromXlOne = false;
               //  }
 
                 colorHeadings();
+                applyProjectShortTitles(config);
+                formatPivotNumbers();
 
        
          }
@@ -713,6 +785,18 @@ var fromXlOne = false;
             //configobject["rows"] = configRows;
            // configobject["cols"] = configCols;
             //configobject["vals"] = ["SUBTOTALS($)"];
+            
+
+            configobject.vals = [
+               // "TotalDerived",
+                "Preliminaries - Cost ($)",
+                "Traffic Control - Cost ($)",
+                "Contingency - Cost ($)",
+                "Escalation - Cost ($)"
+                ];
+
+  
+
             configobject.rows = ["Tweed Road Contribution Projects"];   // or whatever identifies a project
             configobject.vals = [
             "Preliminaries - Cost ($)",
@@ -805,6 +889,8 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                // }
 
                     colorHeadings();
+                    applyProjectShortTitles(config);
+                    formatPivotNumbers();
 
 
                    }
@@ -819,6 +905,40 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
         }
 
 
+        function normalizeValuesAxis(cfg) {
+        if (!cfg) return;
+
+        const rn = (cfg.rendererName || "").toLowerCase();
+        const isTable = rn.indexOf("table") >= 0;   // catches "Table", "Table With Subtotal", etc.
+
+        cfg.rows = cfg.rows || [];
+        cfg.cols = cfg.cols || [];
+        cfg.vals = cfg.vals || [];
+
+        // If not a table renderer, remove "Values" if present (prevents chart weirdness)
+        if (!isTable) {
+            cfg.rows = cfg.rows.filter(x => x !== "Values");
+            cfg.cols = cfg.cols.filter(x => x !== "Values");
+            return;
+        }
+
+        // Table renderer: only add "Values" when you actually have multiple measures
+        if (cfg.vals.length > 1) {
+            const hasValuesAlready =
+            cfg.rows.indexOf("Values") >= 0 || cfg.cols.indexOf("Values") >= 0;
+
+            if (!hasValuesAlready) {
+            // preserve your existing column split (e.g. Active), then append Values
+            cfg.cols = cfg.cols.concat(["Values"]);
+            }
+        } else {
+            // single measure: don't keep Values hanging around
+            cfg.rows = cfg.rows.filter(x => x !== "Values");
+            cfg.cols = cfg.cols.filter(x => x !== "Values");
+        }
+        }
+
+
 
         Papa.parse(fileNameAndPath, {
             download: true,
@@ -830,6 +950,15 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                 console.log(parsed.data);
 
                 const rows = parsed.data;
+
+                
+                    // total “data rows” = rows after your 3 header rows
+                    const totalDataRows = Math.max(0, rows.length - 3);
+                    document.getElementById("progressTotal").textContent = totalDataRows;
+
+                    // if you build everything in one go, “read” == total
+                    document.getElementById("progress").textContent = totalDataRows;
+
 
                 // rows[0] discard
                 const groupRow = rows[1];     // merged group headers (e.g. "Preliminaries", blanks, blanks...)
@@ -867,33 +996,52 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                 });
 
                 // Build final headers: "Group - Subheader" (or just one if other missing)
-                let headers = groups.map((grp, i) => {
-                const g = cleanText(grp);
-                const s = cleanText(subRow[i]);
+                // Build final headers...
+    let headers = groups.map((grp, i) => {
+    const g = cleanText(grp);
+    const s = cleanText(subRow[i]);
 
-                if (g && s) return `${g} - ${s}`;
-                if (g) return g;
-                return s; // worst case
-                });
+    if (g && s) return `${g} - ${s}`;
+    if (g) return g;
+    return s;
+    });
 
-                // Ensure unique column names (you WILL have repeats of "Cost ($)" otherwise)
-                const seen = new Map();
-                headers = headers.map((h, i) => {
-                const key = h || `Column_${i+1}`;
-                const n = (seen.get(key) || 0) + 1;
-                seen.set(key, n);
-                return n === 1 ? key : `${key} (${n})`;
-                });
+    // Ensure unique column names...
+    const seen = new Map();
+    headers = headers.map((h, i) => {
+    const key = h || `Column_${i+1}`;
+    const n = (seen.get(key) || 0) + 1;
+    seen.set(key, n);
+    return n === 1 ? key : `${key} (${n})`;
+    });
 
-                // Convert data rows to objects (data begins at row index 3)
-                const data = rows.slice(3).map(r => {
-                const obj = {};
-                headers.forEach((h, i) => obj[h] = r[i] ?? null);
-                return obj;
-                });
+    // ✅ DROP THESE COLUMNS (by name)
+    const dropCols = new Set(["Column1", "Column2"]);
+
+    // Build a list of column indexes we’re keeping
+    const keepIndexes = [];
+    const keepHeaders = [];
+    headers.forEach((h, i) => {
+    if (!dropCols.has(h)) {
+        keepIndexes.push(i);
+        keepHeaders.push(h);
+    }
+    });
+    headers = keepHeaders;
+
+    // Convert data rows to objects (data begins at row index 3)
+    const data = rows.slice(3).map(r => {
+    const obj = {};
+    keepIndexes.forEach((srcIdx, newIdx) => {
+        const h = headers[newIdx];
+        obj[h] = r[srcIdx] ?? null;
+    });
+    return obj;
+    });
+
 
                 // Drop totally-empty rows (optional but sensible)
-                const cleanedData = data.filter(row =>
+                let cleanedData = data.filter(row =>
                 Object.values(row).some(v => v !== null && v !== "")
                 );
 
@@ -912,7 +1060,10 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                     "Contingency - Rate",
                     "Escalation - Rate",
                     "Professional & Principal Costs - Rate",
-                    "Total - Cost ($)" // optional (or omit if you’re deriving totals)
+                    "Total - Cost ($)", // optional (or omit if you’re deriving totals)
+                    "Cost Estimate" //, 
+                    //"TOTAL",
+                    //"Total"
                     ];
 
                     // 2) Robust string → number coercion (handles $ , spaces, parentheses negatives)
@@ -937,18 +1088,112 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                     }
 
                     // 3) Apply coercion
-                    cleanedData.forEach(row => {
-                    measureCols.forEach(c => {
-                        if (c in row) row[c] = toNumber(row[c]);
-                    });
+ // Build lookup ONCE (before processing rows)
+const fullByProjectShort = {};
 
-                    // Optional: derived total so you can ignore provided Total column
-                    row.TotalDerived = (measureCols.includes("Preliminaries - Cost ($)") ? row["Preliminaries - Cost ($)"] : 0)
-                                    + (measureCols.includes("Traffic Control - Cost ($)") ? row["Traffic Control - Cost ($)"] : 0)
-                                    + (measureCols.includes("Contingency - Cost ($)") ? row["Contingency - Cost ($)"] : 0)
-                                    + (measureCols.includes("Escalation - Cost ($)") ? row["Escalation - Cost ($)"] : 0)
-                                    + (measureCols.includes("Professional & Principal Costs - Cost ($)") ? row["Professional & Principal Costs - Cost ($)"] : 0);
-                    });
+cleanedData.forEach(r => {
+    const full  = String(r["Tweed Road Contribution Projects"] || "").trim();
+    const short = full.length > 100 ? full.substring(0, 100) : full;
+
+    if (full && short && full !== short) {
+        if (!fullByProjectShort[short]) {
+            fullByProjectShort[short] = full;
+        }
+    }
+});
+
+
+        // Process rows
+        cleanedData.forEach(row => {
+
+            delete row["TOTAL"];
+            delete row["Total"];
+
+            // Trim project name
+            const proj = String(row["Tweed Road Contribution Projects"] || "").trim();
+
+            row["Project Short"] = proj.length > 100
+                ? proj.substring(0, 100)
+                : proj;
+
+            row["Item+Project"] =
+                (row["Item No."] || "") + " - " + (row["Project Short"] || "");
+
+            // ✅ Robust numeric coercion (pattern-based, not exact match)
+            Object.keys(row).forEach(k => {
+                if (/- Cost \(\$\)/.test(k) || /- Rate$/.test(k) ||
+                    k === "Cost Estimate" || k === "Construction Cost") {
+                    row[k] = toNumber(row[k]);
+                }
+            });
+
+            // ✅ Derived total (no dependency on measureCols list)
+           /* row.TotalDerived =
+                toNumber(row["Preliminaries - Cost ($)"]) +
+                toNumber(row["Traffic Control - Cost ($)"]) +
+                toNumber(row["Contingency - Cost ($)"]) +
+                toNumber(row["Escalation - Cost ($)"]) +
+                toNumber(row["Professional & Principal Costs - Cost ($)"]); */
+        });
+
+
+                    
+                cleanedData = cleanedData.filter(row => {
+                const v = String(row["Tweed Road Contribution Projects"]).trim();
+                return v !== "0" && v !== "New Project Template";
+                });
+
+
+
+
+
+                const longData = [];
+
+cleanedData.forEach(row => {
+
+  const base = {
+    "Item No.": row["Item No."],
+    "Project": row["Item+Project"],
+    "Active": row["Active"],
+    "TRDS Item": row["TRDS Item"]
+  };
+
+  // define your measure columns ONCE
+  const measures = [
+    "Preliminaries - Cost ($)",
+    "Traffic Control - Cost ($)",
+    "Contingency - Cost ($)",
+    "Escalation - Cost ($)",
+    "Professional & Principal Costs - Cost ($)"
+  ];
+
+  measures.forEach(type => {
+  // 1) derive a nice label from the *string* in measures
+  const costType = String(type).replace(/\s*-\s*Cost\s*\(\$\)\s*$/i, "");
+
+  // 2) pull the value; if the key doesn't exist, treat as 0
+  const raw = (type in row) ? row[type] : 0;
+  const val = toNumber(raw);
+
+  // 3) OPTIONAL: don't filter zeros while you are still debugging charts
+  //    (filtering can produce empty datasets for some views/renderers)
+  longData.push({
+    ...base,
+    "Cost Type": costType,
+    "Value": val
+  });
+});
+  // Optional: include derived total as just another "type"
+  if (row.TotalDerived != null) {
+    longData.push({
+      ...base,
+      "Cost Type": "TotalDerived",
+      "Value": row.TotalDerived
+    });
+  }
+});
+
+
 
                 
                 console.log(
@@ -957,7 +1202,10 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                 cleanedData[0]["Preliminaries - Cost ($)"]
                 );
 
-                $("#output").pivotUI(cleanedData, configobject);
+                console.log("Fields:", Object.keys(cleanedData[0] || {}));
+
+                normalizeValuesAxis(configobject);
+                $("#output").pivotUI(longData, configobject);
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             }
@@ -1226,7 +1474,26 @@ function saveState(config) {
 
 }
 
+function applyProjectShortTitles(config) {
+  // Only do this when Project Short is being used as a row field
+  const rows = (config && config.rows) ? config.rows : [];
+  if (!rows.includes("Project Short")) return;
 
+  const $labels = $(".pvtRowLabel");
+
+  for (let k = 0; k < $labels.length; k++) {
+    const labelText = $labels[k].textContent.trim();
+    const full = fullByProjectShort[labelText];
+
+    if (full) {
+      $('.pvtRowLabel').eq(k).addClass("hasLongTitle");
+      $('.pvtRowLabel').eq(k).attr("title", full);
+    } else {
+      // optional: clear any old titles if you switch views
+      $('.pvtRowLabel').eq(k).removeAttr("title").removeClass("hasLongTitle");
+    }
+  }
+}
 
 function colorHeadings() {
 
@@ -1255,8 +1522,9 @@ function colorHeadings() {
         if ($headLabels[k].innerHTML.match(/LAC 4/g)) $('.pvtColLabel').eq(k).addClass("LAC4");
 
 
-        if ($headLabels[k].innerHTML.match(/Commenced/)) $('.pvtColLabel').eq(k).addClass("DetailedEstimate");
+        if ($headLabels[k].innerHTML.match(/Yes/)) $('.pvtColLabel').eq(k).addClass("DetailedEstimate");
         if ($headLabels[k].innerHTML.match(/Completed/)) $('.pvtColLabel').eq(k).addClass("Completed");
+        if ($headLabels[k].innerHTML.match(/EXCLUDE/)) $('.pvtColLabel').eq(k).addClass("TRDSNew");
 
     }
     
@@ -1309,7 +1577,7 @@ function colorHeadings() {
             </span>
              </p>
 
-                            <p class="noprint">Data source is CSV file derived from Excel Schedule and is named TRCP V7.csv (export to csv in 'ms-dos mode') - note that macro removes new lines from the CSV - this must be done if wanting to export the CSV manually .</p>
+                            <p class="noprint">Data source is CSV file derived from Excel Schedule and is named <i>Tweed Road Contribution Plan Works Schedule Web Data.csv</i> (export to csv in 'ms-dos mode') - note that macro removes new lines from the CSV - this must be done if wanting to export the CSV manually .</p>
                             
                             <p id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span></p>  
                             <div class="noprint">
@@ -1320,9 +1588,9 @@ function colorHeadings() {
                                 <option value=""></option>
                                 <option value="all">Sector Summary</option>
                                 <option value="recOnly">Project details</option>
-                                <option value="TRCPProgram">TRCP Program ('In V7') </option>
+                                <!--option value="TRCPProgram">TRCP Program ('In V7') </option -->
                                 <option value="Corridor" title="Change to 'Table with Subtotal' after render, for more flexibility">By Road Corridor</option>
-                                <option value="TRDS" "view by Tweed Road Devt Strategy">TRDS View</option>
+                                <!-- option value="TRDS" "view by Tweed Road Devt Strategy">TRDS View</option -->
                                 <option value="TRDSSummary">TRDS Summary</option>
 
                                 <option value="Pies">Multiple Pies</option>
@@ -1339,4 +1607,3 @@ function colorHeadings() {
        
 
 </body>
-</html>

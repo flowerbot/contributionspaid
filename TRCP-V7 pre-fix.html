@@ -343,21 +343,12 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
             "SECTOR 7 - DURANBAH/ CABARITA","SECTOR 8 - POTTSVILLE", "SECTOR 9 - MURWILLUMBAH",
             "SECTOR 10 - KIELVALE","SECTOR 12 - RURAL INNER","LAC 1", "LAC 2", "LAC 3", "LAC 4"]
         ),
-        "Active": $.pivotUtilities.sortAs(
-            ["Yes","Partially completed","Completed", "EXCLUDE"]
+        "Status": $.pivotUtilities.sortAs(
+            ["TRDS-New","Not Started","Commenced","Completed"]
         ),
-
-        
- // ✅ ADD THIS
-    "Cost Type": $.pivotUtilities.sortAs([
-        "Preliminaries - Cost ($)",
-        "Traffic Control - Cost ($)",
-        "Contingency - Cost ($)",
-        "Escalation - Cost ($)",
-        "Professional & Principal Costs - Cost ($)"
- 
-    ])
-
+        "TRDS2017-TRCP": $.pivotUtilities.sortAs(
+            ["Existing","New","EXCL"]
+        )
 
     }
 
@@ -553,7 +544,7 @@ var fromXlOne = false;
           } */
 
           var amtSum = function() {
-            return sum(intFormat)(["Value"]);
+            return sum(intFormat)(["Amount"]);
           };
           
         // "Balance": function() {return sum(["Balance"])},
@@ -788,7 +779,7 @@ var fromXlOne = false;
             
 
             configobject.vals = [
-               // "TotalDerived",
+                "TotalDerived",
                 "Preliminaries - Cost ($)",
                 "Traffic Control - Cost ($)",
                 "Contingency - Cost ($)",
@@ -1128,12 +1119,12 @@ cleanedData.forEach(r => {
             });
 
             // ✅ Derived total (no dependency on measureCols list)
-           /* row.TotalDerived =
+            row.TotalDerived =
                 toNumber(row["Preliminaries - Cost ($)"]) +
                 toNumber(row["Traffic Control - Cost ($)"]) +
                 toNumber(row["Contingency - Cost ($)"]) +
                 toNumber(row["Escalation - Cost ($)"]) +
-                toNumber(row["Professional & Principal Costs - Cost ($)"]); */
+                toNumber(row["Professional & Principal Costs - Cost ($)"]);
         });
 
 
@@ -1142,57 +1133,6 @@ cleanedData.forEach(r => {
                 const v = String(row["Tweed Road Contribution Projects"]).trim();
                 return v !== "0" && v !== "New Project Template";
                 });
-
-
-
-
-
-                const longData = [];
-
-cleanedData.forEach(row => {
-
-  const base = {
-    "Item No.": row["Item No."],
-    "Project": row["Item+Project"],
-    "Active": row["Active"],
-    "TRDS Item": row["TRDS Item"]
-  };
-
-  // define your measure columns ONCE
-  const measures = [
-    "Preliminaries - Cost ($)",
-    "Traffic Control - Cost ($)",
-    "Contingency - Cost ($)",
-    "Escalation - Cost ($)",
-    "Professional & Principal Costs - Cost ($)"
-  ];
-
-  measures.forEach(type => {
-  // 1) derive a nice label from the *string* in measures
-  const costType = String(type).replace(/\s*-\s*Cost\s*\(\$\)\s*$/i, "");
-
-  // 2) pull the value; if the key doesn't exist, treat as 0
-  const raw = (type in row) ? row[type] : 0;
-  const val = toNumber(raw);
-
-  // 3) OPTIONAL: don't filter zeros while you are still debugging charts
-  //    (filtering can produce empty datasets for some views/renderers)
-  longData.push({
-    ...base,
-    "Cost Type": costType,
-    "Value": val
-  });
-});
-  // Optional: include derived total as just another "type"
-  if (row.TotalDerived != null) {
-    longData.push({
-      ...base,
-      "Cost Type": "TotalDerived",
-      "Value": row.TotalDerived
-    });
-  }
-});
-
 
 
                 
@@ -1205,7 +1145,7 @@ cleanedData.forEach(row => {
                 console.log("Fields:", Object.keys(cleanedData[0] || {}));
 
                 normalizeValuesAxis(configobject);
-                $("#output").pivotUI(longData, configobject);
+                $("#output").pivotUI(cleanedData, configobject);
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
             }
@@ -1607,3 +1547,4 @@ function colorHeadings() {
        
 
 </body>
+</html>
