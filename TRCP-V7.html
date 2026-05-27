@@ -295,23 +295,23 @@ tr.ActualCost td
                    // Type: ["Admin Levy","Expenditure recoupment"]};
 
     // A) “Sector Summary” equivalent (now by Project / TRDS Item)
-var configRowsDefault = ["Tweed Road Contribution Projects"];
+var configRowsDefault = ["Project"];
 var configColsDefault = ["Active"];
 var configRendererDefault = "Table";
 
 // B) “Project details”
-var configRowsDetails = ["ID+Projects", "TRDS Item"];
+var configRowsDetails = ["TRDS Item", "Project"];
 var configColsDetails = ["Active"];
 var configRendererDetails = "Table";
 
 // C) “Cost components” (stacked or grouped bar) – per project
-var configRowsStacked = ["Tweed Road Contribution Projects"];
-var configColsStacked = []; // keep blank for charts
+var configRowsStacked = ["Project"];
+var configColsStacked = ["Cost Type"]; // keep blank for charts
 var configRendererStacked = "Stacked Bar Chart";
 var configIncStacked = {};  // optional
 
 // D) “Rates view”
-var configRowsRates = ["Tweed Road Contribution Projects"];
+var configRowsRates = ["Project"];
 var configColsRates = ["TRDS Item"];
 var configRendererRates = "Table";
 
@@ -334,15 +334,7 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
     // NB:  TODO: MAKE LOOKUP TABLE FOR TRCP SECTOR IN EXCEL, (SECTOR 3 HAS A SPACE AT THE END), THEN REMOVE SPACE FROM END OF TRCP SECTOR ENTRIES
     // TODO: (2) remove the 'Total' row from the csv before it gets here
     var sorters = {
-        "High Level": $.pivotUtilities.sortAs(
-            ["URBAN ROADS","COASTAL RURAL ROADS","INLAND RURAL ROADS","LOCAL AREA WORKS"]
-        ), 
-        "TRCP SECTOR": $.pivotUtilities.sortAs(
-            ["SECTOR 1 - TWEED HEADS","SECTOR 2 - TWEED SOUTH","SECTOR 3 - COBAKI", "SECTOR 3 - COBAKI ",
-            "SECTOR 4 - BILAMBIL HEIGHTS","SECTOR 5 - TERRANORA", "SECTOR 6 - KINGSCLIFF", 
-            "SECTOR 7 - DURANBAH/ CABARITA","SECTOR 8 - POTTSVILLE", "SECTOR 9 - MURWILLUMBAH",
-            "SECTOR 10 - KIELVALE","SECTOR 12 - RURAL INNER","LAC 1", "LAC 2", "LAC 3", "LAC 4"]
-        ),
+      
         "Active": $.pivotUtilities.sortAs(
             ["Yes","Partially completed","Completed", "EXCLUDE"]
         ),
@@ -350,11 +342,11 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
         
  // ✅ ADD THIS
     "Cost Type": $.pivotUtilities.sortAs([
-        "Preliminaries - Cost ($)",
-        "Traffic Control - Cost ($)",
-        "Contingency - Cost ($)",
-        "Escalation - Cost ($)",
-        "Professional & Principal Costs - Cost ($)"
+        "Preliminaries",
+        "Traffic Control",
+        "Contingency",
+        "Escalation",
+        "Professional & Principal Costs"
  
     ])
 
@@ -362,8 +354,8 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
     }
 
 
-    var configRowsDetails = ["Item+Project","Status","TRDS Item"];
-    var configColsDetails = ["In V7"];
+    var configRowsDetails = ["TRDS Item","Project"];
+    var configColsDetails = ["Active"];
     var configRendererDetails="Table With Subtotal";
 
     var configRowsScatter = ["High Level","TRCP SECTOR"];
@@ -371,8 +363,8 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
     var configIncScatter = {};
     var configRendererScatter="Scatter Chart";
     //var configIncDetailsType = ["Admin Levy","Expenditure recoupment"];
-    var configRowsPies = ["TRCP SECTOR","In V7"];
-    var configColsPies = ["Status"];
+    var configRowsPies = ["Project","Active"];
+    var configColsPies = ["Cost Type"];
     var configRendererPies = "Multiple Pie Chart";
     var configIncPies = {};
 
@@ -396,7 +388,7 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
     var configIncTRDS = {};
 
 
-    var configRowsTRDSSummary = ["TRDS Item", "Project Short"];
+    var configRowsTRDSSummary = ["TRDS Item", "Project"];
     var configColsTRDSSummary = ["Active"];
    // var configRendererCorridor = $.pivotUtilities.subtotal_renderers["Table With Subtotal"];
     var configRendererTRDSSummary = "Table";
@@ -789,20 +781,20 @@ var fromXlOne = false;
 
             configobject.vals = [
                // "TotalDerived",
-                "Preliminaries - Cost ($)",
-                "Traffic Control - Cost ($)",
+                "Value",
+             /*   "Traffic Control - Cost ($)",
                 "Contingency - Cost ($)",
-                "Escalation - Cost ($)"
+                "Escalation - Cost ($)" */
                 ];
 
   
 
             configobject.rows = ["Tweed Road Contribution Projects"];   // or whatever identifies a project
             configobject.vals = [
-            "Preliminaries - Cost ($)",
-            "Traffic Control - Cost ($)",
+            "Value",
+            /* "Traffic Control - Cost ($)",
             "Contingency - Cost ($)",
-            "Escalation - Cost ($)"
+            "Escalation - Cost ($)" */
             ];
 configobject.aggregatorName = "Sum";
 configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
@@ -1047,10 +1039,11 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
 
                 dataObj = cleanedData;
 
-
+                    // not doing anything?
                 // 1) List the columns you want to behave as numeric measures
                     const measureCols = [
-                    "Preliminaries - Cost ($)",
+                        "Value"
+                    /*"Preliminaries - Cost ($)",
                     "Traffic Control - Cost ($)",
                     "Contingency - Cost ($)",
                     "Escalation - Cost ($)",
@@ -1061,7 +1054,7 @@ configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
                     "Escalation - Rate",
                     "Professional & Principal Costs - Rate",
                     "Total - Cost ($)", // optional (or omit if you’re deriving totals)
-                    "Cost Estimate" //, 
+                    "Cost Estimate" //, */
                     //"TOTAL",
                     //"Total"
                     ];
@@ -1577,7 +1570,7 @@ function colorHeadings() {
             </span>
              </p>
 
-                            <p class="noprint">Data source is CSV file derived from Excel Schedule and is named <i>Tweed Road Contribution Plan Works Schedule Web Data.csv</i> (export to csv in 'ms-dos mode') - note that macro removes new lines from the CSV - this must be done if wanting to export the CSV manually .</p>
+                            <p class="noprint">Data source is CSV file derived from Excel Schedule and is named <i>Tweed Road Contribution Plan Works Schedule Web Data.csv</i> (export to csv in 'ms-dos mode').</p>
                             
                             <p id="progressHeading">Read <span id="progress">x</span> of <span id="progressTotal">xx</span> data rows.  <span id="inclusions"></span></p>  
                             <div class="noprint">
@@ -1591,7 +1584,7 @@ function colorHeadings() {
                                 <!--option value="TRCPProgram">TRCP Program ('In V7') </option -->
                                 <option value="Corridor" title="Change to 'Table with Subtotal' after render, for more flexibility">By Road Corridor</option>
                                 <!-- option value="TRDS" "view by Tweed Road Devt Strategy">TRDS View</option -->
-                                <option value="TRDSSummary">TRDS Summary</option>
+                                <!--option value="TRDSSummary">TRDS Summary</option-->
 
                                 <option value="Pies">Multiple Pies</option>
                                 <option value="Stacked">Stacked Bar Chart</option>
