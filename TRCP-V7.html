@@ -7,6 +7,8 @@
 
 <script type ="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly-basic.min.js"></script>
 <!-- script type="text/javascript" src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script -->
+<!-- script type ="text/javascript" src="https://cdn.plot.ly/plotly-1.33.1.min.js"></script -->
+
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
@@ -295,7 +297,7 @@ tr.ActualCost td
                    // Type: ["Admin Levy","Expenditure recoupment"]};
 
     // A) “Sector Summary” equivalent (now by Project / TRDS Item)
-var configRowsDefault = ["Project"];
+var configRowsDefault = ["TRDS Item", "Project"];
 var configColsDefault = ["Active"];
 var configRendererDefault = "Table";
 
@@ -305,8 +307,8 @@ var configColsDetails = ["Active"];
 var configRendererDetails = "Table";
 
 // C) “Cost components” (stacked or grouped bar) – per project
-var configRowsStacked = ["Project"];
-var configColsStacked = ["Cost Type"]; // keep blank for charts
+var configRowsStacked = ["Cost Type"];
+var configColsStacked = ["Project"]; // keep blank for charts
 var configRendererStacked = "Stacked Bar Chart";
 var configIncStacked = {};  // optional
 
@@ -355,7 +357,7 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
 
 
     var configRowsDetails = ["TRDS Item","Project"];
-    var configColsDetails = ["Active"];
+    var configColsDetails = ["Cost Type"];
     var configRendererDetails="Table With Subtotal";
 
     var configRowsScatter = ["High Level","TRCP SECTOR"];
@@ -363,16 +365,16 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
     var configIncScatter = {};
     var configRendererScatter="Scatter Chart";
     //var configIncDetailsType = ["Admin Levy","Expenditure recoupment"];
-    var configRowsPies = ["Project","Active"];
+    var configRowsPies = ["Project"];
     var configColsPies = ["Cost Type"];
     var configRendererPies = "Multiple Pie Chart";
     var configIncPies = {};
 
 
-    var configRowsStacked = ["Group"];
-    var configColsStacked = ["TRCP SECTOR"];
-    var configRendererStacked = "Stacked Bar Chart";
-    var configIncStacked = {};
+    //var configRowsStacked = ["Group"];
+    //var configColsStacked = ["TRCP SECTOR"];
+   // var configRendererStacked = "Stacked Bar Chart";
+    //v/ar configIncStacked = {};
 
     var configRowsCorridor = ["TRCP SECTOR","Road Corridor","Group"];
     var configColsCorridor = ["High Level"];
@@ -759,142 +761,90 @@ var fromXlOne = false;
                 applyProjectShortTitles(config);
                 formatPivotNumbers();
 
+
+                if (config.rendererName === "Multiple Pie Chart") {
+                    setTimeout(patchBuiltInMultiplePies, 0);
+                }
+
+
        
          }
 
 
 
         } else {
-        
-            // no config found, make it from scratch
 
-            
+// no config found, make it from scratch using defaults
+configobject = {};
+configobject["inclusions"] = configInc;
+configobject["exclusions"] = { "High Level": ["Total"], trainingProject: ["true"] };
+configobject["hiddenAttributes"] = hiddenAttributes;
 
-            configobject = {};
-            configobject["inclusions"] = configInc; // {Plan:["19"]};
-            configobject["exclusions"] ={ "High Level":["Total"], trainingProject:["true"]};
-            configobject["hiddenAttributes"] = hiddenAttributes;
-            //configobject["rows"] = configRows;
-           // configobject["cols"] = configCols;
-            //configobject["vals"] = ["SUBTOTALS($)"];
-            
+configobject["rows"] = configRows;
+configobject["cols"] = configCols;
+configobject["vals"] = ["Value"];
+configobject["aggregatorName"] = "Integer Sum";
+configobject["rendererName"] = configRenderer;
+configobject["sorters"] = sorters;
+configobject["renderers"] = renderers;
+configobject["rendererOptions"] = rendererOptions;
+configobject["dataClass"] = dataClass;
 
-            configobject.vals = [
-               // "TotalDerived",
-                "Value",
-             /*   "Traffic Control - Cost ($)",
-                "Contingency - Cost ($)",
-                "Escalation - Cost ($)" */
-                ];
+normalizeValuesAxis(configobject);
 
-  
+try {
+    document.getElementById("inclusions").innerHTML =
+        "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]);
+} catch (ex) {
+    console.log("inclusions not found");
+}
 
-            configobject.rows = ["Tweed Road Contribution Projects"];   // or whatever identifies a project
-            configobject.vals = [
-            "Value",
-            /* "Traffic Control - Cost ($)",
-            "Contingency - Cost ($)",
-            "Escalation - Cost ($)" */
-            ];
-configobject.aggregatorName = "Sum";
-configobject.rendererName = "Grouped Column Chart"; // Plotly renderer
-            configobject["sorters"] = sorters;
-            //configobject["comments"] = "Total"; //want to skip the Total line .. doesn't wokr
+configobject.onRefresh = function (config) {
+    console.log("new state called");
 
-            //configobject["unusedAttrsVertical"] = false;
-            configobject["aggregatorName"] = "Integer Sum";
-           // configobject["aggregator"] = ["Amount"];
-           // configobject["aggregators"] = {"Amount": ["Amount"] };
-         /*   configobject["aggregators"] = {
-                    "Amount": function() {
-                    return sum(intFormat)(["Amount"]);
-                }
-                }*/
-            configobject["rendererName"] =    "Table";
+    var config_copy = JSON.parse(JSON.stringify(config));
+    delete config_copy["aggregators"];
+    delete config_copy["renderers"];
+    delete config_copy["rendererOptions"];
+    delete config_copy["localeStrings"];
 
-            configobject["renderers"] = renderers;
-            //configobject["filter"] = filterFun;
-            configobject["rendererOptions"] = rendererOptions;
-            configobject["dataClass"] = dataClass;
-           /* configobject["onRefresh"] =  function(config) {
-                                           console.log(JSON.parse(JSON.stringify(config)));
-                                           console.log(config.cols[0]);
-                                           $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
+    try {
+        document.getElementById("inclusions").innerHTML =
+            "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) +
+            " (Change the included Plan(s) below if required)";
+    } catch (ex) {
+        console.log("inclusions not found");
+    }
 
-                   } */
+    localStorage.setItem('pivotdatakey' + storageTag, JSON.stringify(config_copy, undefined, 2));
+    console.log(config_copy);
 
-                try {
-               // params["Inclusions"] = config["inclusionsInfo"];
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(configobject["inclusions"]);
-                } catch (ex) {console.log("inclusions not found")};
+    $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
 
-                configobject.onRefresh = function (config) {
-                console.log("new state called");
+    var $table = $('table.pvtTable');
+    try {
+        $table.floatThead({
+            scrollContainer: function($table){
+                return $table.closest('.wrapper');
+            },
+            position: 'auto',
+            floatTableClass: 'pivotBody',
+            autoReflow: true
+        });
+    } catch(ex) {}
 
-                var config_copy = JSON.parse(JSON.stringify(config));
-            //var config_copy = configobject;
-                //delete some values which are functions
-                delete config_copy["aggregators"];
-                delete config_copy["renderers"];
-                //delete some bulky default values
-                delete config_copy["rendererOptions"];
-                delete config_copy["localeStrings"];
+    btn = document.getElementById("toggleHideUIButton");
 
-            var params = {};
+    colorHeadings();
+    applyProjectShortTitles(config);
+    formatPivotNumbers();
 
-
-            try {
-               // params["Inclusions"] = config["inclusionsInfo"];
-                document.getElementById("inclusions").innerHTML = "<strong>Inclusions:</strong>" + JSON.stringify(config["inclusions"]) + " (Change the included Plan(s) below if required)";
-                } catch (ex) {console.log("inclusions not found")};
-            // add exclusions to params if necessary
-
-            localStorage.setItem('pivotdatakey'+storageTag, JSON.stringify(config_copy, undefined, 2)); // Add callback function for onRefresh
-                console.log(config_copy) ;
-
-                $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
-
-
-
-                var $table = $('table.pvtTable');
-               // console.log($table.closest('.wrapper'));
-               try { 
-                    $table.floatThead({
-                        scrollContainer: function($table){
-                            return $table.closest('.wrapper');
-                        },
-                        position: 'auto',
-                        floatTableClass: 'pivotBody',
-                        autoReflow: true
-                      
-                    });
-                } catch(ex) {};
-
-                  //  uiVis = localStorage.getItem('uivisible');
-                // console.log("uiVis from new:" + uiVis);
-
-                    
-                        console.log("toggling from new");
-                        btn = document.getElementById("toggleHideUIButton");
-                      //  if(localStorage.getItem('uivisible'))  $(btn).attr("uivisible", uiVis);
-                       //TODO:     toggleHide(btn, false); //RE-ENABLE THIS IF NEED TO RE-HIDE THE SETTINGS
-               // }
-
-                    colorHeadings();
-                    applyProjectShortTitles(config);
-                    formatPivotNumbers();
-
-
-                   }
-
-          
-
-
-
-
-
-
+    if (config.rendererName === "Multiple Pie Chart") {
+            setTimeout(patchBuiltInMultiplePies, 0);
         }
+
+};
+}
 
 
         function normalizeValuesAxis(cfg) {
@@ -1166,15 +1116,16 @@ cleanedData.forEach(row => {
 
   // 2) pull the value; if the key doesn't exist, treat as 0
   const raw = (type in row) ? row[type] : 0;
-  const val = toNumber(raw);
+let val = toNumber(raw);
 
-  // 3) OPTIONAL: don't filter zeros while you are still debugging charts
-  //    (filtering can produce empty datasets for some views/renderers)
-  longData.push({
-    ...base,
-    "Cost Type": costType,
-    "Value": val
-  });
+// skip bad values completely
+if (!Number.isFinite(val) || val === 0) return;
+
+longData.push({
+  ...base,
+  "Cost Type": costType,
+  "Value": val
+});
 });
   // Optional: include derived total as just another "type"
   if (row.TotalDerived != null) {
@@ -1197,7 +1148,23 @@ cleanedData.forEach(row => {
 
                 console.log("Fields:", Object.keys(cleanedData[0] || {}));
 
+
                 normalizeValuesAxis(configobject);
+                console.log(
+                    Array.from(new Set(longData.map(d => d.Project))).length,
+                    "unique projects"
+                    );
+
+                    console.log(
+                    longData.filter(d => !Number.isFinite(d.Value)).length,
+                    "invalid values"
+                    );
+
+                    if (localStorage.getItem("customPieMode") === "true") {
+                        renderMultiplePies(longData);
+                        return;
+                    }
+
                 $("#output").pivotUI(longData, configobject);
 
                 $(".pvtColLabel").wrapInner("<div class='rotate'></div>");
@@ -1288,6 +1255,8 @@ function selectChange(el) {
 
     localStorage.setItem("selectChange",el.value);
 
+    localStorage.removeItem("customPieMode");
+
 
     if(el.value.length >0) {
 	localStorage.setItem("selectSet"+storageTag,el.value);
@@ -1311,8 +1280,14 @@ function selectChange(el) {
 			
         }
     else
+
+    if (el.value == "Pies") {
+    localStorage.setItem("customPieMode", "true");
+    location.reload();
+} else
+
     
- if(el.value == "Pies") {
+/* if(el.value == "Pies") {
         configRowsFull = configobject["rows"];
 
         localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsPies, undefined, 2));
@@ -1330,7 +1305,7 @@ function selectChange(el) {
 
 
 
-		} else 
+		} else */
 	if(el.value == "Scatter") {
 		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
         localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsScatter, undefined, 2));
@@ -1394,6 +1369,447 @@ function selectChange(el) {
 
 
 }
+
+
+
+function wrapText(str, maxLen) {
+    if (!str) return "";
+    const words = String(str).split(" ");
+    const lines = [];
+    let line = "";
+
+    words.forEach(word => {
+        const testLine = (line + " " + word).trim();
+        if (testLine.length > maxLen) {
+            if (line) lines.push(line);
+            line = word;
+        } else {
+            line = testLine;
+        }
+    });
+
+    if (line) lines.push(line);
+    return lines.join("<br>");
+}
+
+function formatMoney(n) {
+    const num = Number(n) || 0;
+    return num.toLocaleString("en-AU", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    });
+}
+
+function getShortCostTypeLabel(fullLabel) {
+    const map = {
+        "Preliminaries": "Preliminaries",
+        "Traffic Control": "Traffic Control",
+        "Contingency": "Contingency",
+        "Escalation": "Escalation",
+        "Professional & Principal Costs": "P&P<br>Costs"
+    };
+    return map[fullLabel] || fullLabel;
+}
+
+
+
+function renderMultiplePies(data) {
+    // -----------------------------
+    // 1) Group flat data into one pie per project
+    // -----------------------------
+    const byProject = {};
+
+    data.forEach(d => {
+        const project = String(d.Project || "").trim();
+        const costType = String(d["Cost Type"] || "").trim();
+        const value = Number(d.Value) || 0;
+
+        if (!project || !costType || !Number.isFinite(value) || value <= 0) return;
+
+        if (!byProject[project]) byProject[project] = {};
+        byProject[project][costType] = (byProject[project][costType] || 0) + value;
+    });
+
+    const projectNames = Object.keys(byProject);
+
+    if (!projectNames.length) {
+        document.getElementById("output").innerHTML = "<p>No pie data available.</p>";
+        return;
+    }
+
+    // -----------------------------
+    // 2) Fixed order + fixed colours
+    // -----------------------------
+    const costTypeOrder = [
+        "Preliminaries",
+        "Traffic Control",
+        "Contingency",
+        "Escalation",
+        "Professional & Principal Costs"
+    ];
+
+    const colorMap = {
+        "Preliminaries": "#4F81BD",
+        "Traffic Control": "#C0504D",
+        "Contingency": "#9BBB59",
+        "Escalation": "#8064A2",
+        "Professional & Principal Costs": "#F79646"
+    };
+
+    // -----------------------------
+    // 3) Totals per project for sorting / subtle scaling
+    // -----------------------------
+    const totals = {};
+    projectNames.forEach(project => {
+        totals[project] = Object.values(byProject[project]).reduce((a, b) => a + b, 0);
+    });
+
+    const maxTotal = Math.max(...Object.values(totals));
+
+    // Sort projects descending by total
+    const shownProjects = projectNames.sort((a, b) => totals[b] - totals[a]);
+
+    // -----------------------------
+    // 4) Grid layout
+    // -----------------------------
+    const cols = 2;
+    const rows = Math.ceil(shownProjects.length / cols);
+
+    const traces = [];
+    const annotations = [];
+
+    shownProjects.forEach((project, i) => {
+        const r = Math.floor(i / cols);
+        const c = i % cols;
+
+        // Tile bounds in Plotly "paper" coordinates
+        const tileX0 = c / cols;
+        const tileX1 = (c + 1) / cols;
+        const tileY1 = 1 - (r / rows);
+        const tileY0 = 1 - ((r + 1) / rows);
+
+        const tileWidth = tileX1 - tileX0;
+        const tileHeight = tileY1 - tileY0;
+
+        // -----------------------------
+        // 5) Spacing relative to tile size
+        //    This fixes the "pie drifting into next row" issue
+        // -----------------------------
+        const sidePad = tileWidth * 0.08;
+        const bottomPad = tileHeight * 0.06;
+        const titleBand = tileHeight * 0.22;
+        const gapBelowTitle = tileHeight * 0.03;
+
+        const pieAreaX0 = tileX0 + sidePad;
+        const pieAreaX1 = tileX1 - sidePad;
+        const pieAreaY0 = tileY0 + bottomPad;
+        const pieAreaY1 = tileY1 - titleBand - gapBelowTitle;
+
+        // -----------------------------
+        // 6) Very subtle size variation only
+        //    (nearly same size, but not perfectly identical)
+        // -----------------------------
+        const total = totals[project];
+
+        // widen the usable range a bit
+        const minScale = 0.45;
+        const maxScale = 1.85;
+
+        // log base
+        const logTotal = Math.log10(total + 1);
+        const logMax = Math.log10(maxTotal + 1);
+        const ratio = logTotal / logMax;
+
+        // KEY CHANGE: boost mid-range values
+        // → slightly >1 exponent expands mids relative to top
+        const midBoost = Math.pow(ratio, 0.95);
+
+        // AND add a gentle linear component (helps separation)
+        const mix = (midBoost * 0.7) + (ratio * 0.3);
+
+        let scale = minScale + (maxScale - minScale) * mix;
+        scale = Math.max(minScale, Math.min(maxScale, scale));
+
+        // keep same positioning
+        const cx = (pieAreaX0 + pieAreaX1) / 2;
+        //const cy = pieAreaY1 - ((pieAreaY1 - pieAreaY0) * 0.30);
+        const cy = pieAreaY1 - ((pieAreaY1 - pieAreaY0) * 0.50);
+
+        // slightly larger footprint to make differences visible
+        const radiusFactor = 0.30;
+
+        const halfWidth = (pieAreaX1 - pieAreaX0) * scale * radiusFactor;
+        const halfHeight = (pieAreaY1 - pieAreaY0) * scale * radiusFactor;
+
+        const domainX0 = cx - halfWidth;
+        const domainX1 = cx + halfWidth;
+        const domainY0 = cy - halfHeight;
+        const domainY1 = cy + halfHeight;
+
+        // -----------------------------
+        // 7) Build slice arrays in fixed order
+        // -----------------------------
+        const projectSlices = byProject[project];
+        const labels = [];
+        const values = [];
+        const displayTexts = [];
+        const colours = [];
+
+        costTypeOrder.forEach(ct => {
+            const v = Number(projectSlices[ct] || 0);
+            if (v <= 0) return;
+
+            labels.push(ct);
+            values.push(v);
+            colours.push(colorMap[ct] || "#999999");
+
+            const shortLabel = getShortCostTypeLabel(ct);
+            displayTexts.push(shortLabel + "<br>$" + formatMoney(v));
+        });
+
+        if (!values.length) return;
+
+        traces.push({
+            type: "pie",
+            name: project,
+            labels: labels,
+            values: values,
+            domain: {
+                x: [domainX0, domainX1],
+                y: [domainY0, domainY1]
+            },
+            sort: false,
+            direction: "clockwise",
+            text: displayTexts,
+            textinfo: "text",
+            textposition: "inside",
+            insidetextorientation: "auto",
+            textfont: {
+                size: 10,
+                color: "#ffffff"
+            },
+            marker: {
+                colors: colours,
+                line: {
+                    color: "#ffffff",
+                    width: 1
+                }
+            },
+            hoverinfo: "text",
+            hovertext: labels.map((lbl, idx) =>
+                "<b>" + project + "</b><br>" +
+                lbl + "<br>" +
+                "Share: " + ((values[idx] / total) * 100).toFixed(1) + "%"
+            ),
+
+            automargin: true,
+            showlegend: false,
+            hole: 0
+        });
+
+        // -----------------------------
+        // 8) Heading above each pie, relative to tile height
+        // -----------------------------
+        annotations.push({
+            x: (tileX0 + tileX1) / 2,
+            y: tileY1 - (tileHeight * 0.04),
+            xref: "paper",
+            yref: "paper",
+            showarrow: false,
+            xanchor: "center",
+            yanchor: "top",
+            align: "center",
+            font: {
+                size: 10,
+                color: "#222"
+            },
+            text:
+                wrapText(project, 42) +
+                "<br><b>$" + formatMoney(total) + "</b>"
+        });
+    });
+
+    // -----------------------------
+    // 9) Final plot
+    //    Slightly taller rows so headings + pies don't collide
+    // -----------------------------
+    Plotly.newPlot(
+        "output",
+        traces,
+        {
+            margin: { t: 12, r: 20, b: 12, l: 20 },
+            annotations: annotations,
+            showlegend: false,
+            height: Math.max(420, rows * 260),
+            paper_bgcolor: "#ffffff",
+            plot_bgcolor: "#ffffff"
+        },
+        {
+            responsive: true,
+            displayModeBar: true
+        }
+    );
+}
+
+
+function patchBuiltInMultiplePies() {
+    const gd = document.querySelector('#output .js-plotly-plot');
+    if (!gd || !gd.data) return;
+
+    const pieIndexes = [];
+    gd.data.forEach((t, i) => {
+        if (t.type === 'pie') pieIndexes.push(i);
+    });
+
+    const pieCount = pieIndexes.length;
+    if (!pieCount) return;
+
+    // ---------- layout constants ----------
+    const MAX_COLUMNS = 4;
+
+    const PER_ROW_PX_LARGE = 240;   // > 60 pies
+    const PER_ROW_PX_MED = 260;     // > 30 pies
+    const PER_ROW_PX_SMALL = 290;   // <= 30 pies
+
+    const SIDE_PAD_RATIO = 0.01;
+    const BOTTOM_PAD_RATIO = 0.06;
+    const TITLE_BAND_RATIO = 0.1; //0.24;
+    const GAP_BELOW_TITLE_RATIO = 0.03;
+
+    const TITLE_WRAP_2COL = 44;
+    const TITLE_WRAP_3COL = 42;
+    const TITLE_WRAP_4COL = 40; // this is what determines how many chars the title goes for
+
+    const TEXT_SIZE_4COL = 10;
+    const TEXT_SIZE_OTHER = 12;
+
+    const MARGIN_TOP = 40;
+    const MARGIN_RIGHT = 15;
+    const MARGIN_BOTTOM = 20;
+    const MARGIN_LEFT = 15;
+    // -------------------------------------
+
+    const columns =
+        pieCount <= 4 ? 2 :
+        pieCount <= 12 ? 3 :
+        MAX_COLUMNS;
+
+    const rows = Math.ceil(pieCount / columns);
+
+    const perRowPx =
+        pieCount > 60 ? PER_ROW_PX_LARGE :
+        pieCount > 30 ? PER_ROW_PX_MED :
+        PER_ROW_PX_SMALL;
+
+    const titleWrap =
+        columns === 2 ? TITLE_WRAP_2COL :
+        columns === 3 ? TITLE_WRAP_3COL :
+        TITLE_WRAP_4COL;
+
+    const textSize =
+        columns === 4 ? TEXT_SIZE_4COL : TEXT_SIZE_OTHER;
+
+    const newData = gd.data.map(t => ({ ...t }));
+    const annotations = [];
+
+    function wrapTitle(str, maxLen) {
+        if (!str) return "";
+        const words = String(str).split(" ");
+        const lines = [];
+        let line = "";
+
+        words.forEach(word => {
+            const testLine = (line + " " + word).trim();
+            if (testLine.length > maxLen) {
+                if (line) lines.push(line);
+                line = word;
+            } else {
+                line = testLine;
+            }
+        });
+
+        if (line) lines.push(line);
+        return lines.join("<br>");
+    }
+
+    pieIndexes.forEach((traceIndex, k) => {
+        const r = Math.floor(k / columns);
+        const c = k % columns;
+
+        const cellX0 = c / columns;
+        const cellX1 = (c + 1) / columns;
+        const cellY1 = 1 - (r / rows);
+        const cellY0 = 1 - ((r + 1) / rows);
+
+        const cellW = cellX1 - cellX0;
+        const cellH = cellY1 - cellY0;
+
+        const sidePad = cellW * SIDE_PAD_RATIO;
+        const bottomPad = cellH * BOTTOM_PAD_RATIO;
+        const titleBand = cellH * TITLE_BAND_RATIO;
+        const gapBelowTitle = cellH * GAP_BELOW_TITLE_RATIO;
+
+        const pieX0 = cellX0 + sidePad;
+        const pieX1 = cellX1 - sidePad;
+        const pieY0 = cellY0 + bottomPad;
+        const pieY1 = cellY1 - titleBand - gapBelowTitle;
+
+        newData[traceIndex].domain = {
+            x: [pieX0, pieX1],
+            y: [pieY0, pieY1]
+        };
+
+        newData[traceIndex].textinfo = "label";
+        newData[traceIndex].textposition = "inside";
+        newData[traceIndex].insidetextorientation = "auto";
+        newData[traceIndex].textfont = {
+            size: textSize
+        };
+
+        newData[traceIndex].hovertemplate =
+            "<b>%{fullData.name}</b><br>" +
+            "%{label}: %{value}<extra></extra>";
+
+        const titleText = newData[traceIndex].name || newData[traceIndex].title || "";
+
+        annotations.push({
+            x: (cellX0 + cellX1) / 2,
+            y: cellY1 - (cellH * 0.03),
+            xref: "paper",
+            yref: "paper",
+            text: wrapTitle(titleText, titleWrap),
+            showarrow: false,
+            xanchor: "center",
+            yanchor: "top",
+            align: "center",
+            font: {
+                size: textSize,
+                color: "#222"
+            }
+        });
+    });
+
+    const newLayout = {
+        ...gd.layout,
+        height: Math.max(900, rows * perRowPx),
+        margin: {
+            t: MARGIN_TOP,
+            r: MARGIN_RIGHT,
+            b: MARGIN_BOTTOM,
+            l: MARGIN_LEFT
+        },
+        showlegend: false,
+        hovermode: "closest",
+        annotations: annotations
+    };
+
+    delete newLayout.grid;
+
+    Plotly.newPlot(gd, newData, newLayout, gd._context || {});
+}
+
+
+
 
 function freshToggle() {
 
