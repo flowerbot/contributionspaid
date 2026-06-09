@@ -365,8 +365,8 @@ var hiddenAttributes = ["0","#22","#23","#24","#25","#26",
     var configIncScatter = {};
     var configRendererScatter="Scatter Chart";
     //var configIncDetailsType = ["Admin Levy","Expenditure recoupment"];
-    var configRowsPies = ["Project"];
-    var configColsPies = ["Cost Type"];
+    var configRowsPies = ["Cost Type"];
+    var configColsPies = ["Project"];
     var configRendererPies = "Multiple Pie Chart";
     var configIncPies = {};
 
@@ -1090,7 +1090,7 @@ cleanedData.forEach(r => {
 
 
 
-                const longData = [];
+const longData = [];
 
 cleanedData.forEach(row => {
 
@@ -1107,12 +1107,16 @@ cleanedData.forEach(row => {
     "Traffic Control - Cost ($)",
     "Contingency - Cost ($)",
     "Escalation - Cost ($)",
-    "Professional & Principal Costs - Cost ($)"
+    "Professional & Principal Costs - Cost ($)",
+    "Construction Cost"
   ];
 
   measures.forEach(type => {
   // 1) derive a nice label from the *string* in measures
-  const costType = String(type).replace(/\s*-\s*Cost\s*\(\$\)\s*$/i, "");
+  //const costType = String(type).replace(/\s*-\s*Cost\s*\(\$\)\s*$/i, "");
+  const costType = String(type)
+  .replace(/\s*-\s*Cost \(\$\)\s*$/i, "")
+  .replace(/\s*Cost$/i, "");
 
   // 2) pull the value; if the key doesn't exist, treat as 0
   const raw = (type in row) ? row[type] : 0;
@@ -1287,7 +1291,7 @@ function selectChange(el) {
 } else
 
     
-/* if(el.value == "Pies") {
+ if(el.value == "Pies2") {
         configRowsFull = configobject["rows"];
 
         localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsPies, undefined, 2));
@@ -1305,7 +1309,7 @@ function selectChange(el) {
 
 
 
-		} else */
+		} else 
 	if(el.value == "Scatter") {
 		configRows = (configRowsFull) ? configRowsFull : configRowsDefault;
         localStorage.setItem('pivotdatarows'+storageTag,JSON.stringify(configRowsScatter, undefined, 2));
@@ -1444,8 +1448,10 @@ function renderMultiplePies(data) {
         "Preliminaries",
         "Traffic Control",
         "Contingency",
+        "Construction",
         "Escalation",
         "Professional & Principal Costs"
+        
     ];
 
     const colorMap = {
@@ -1453,7 +1459,8 @@ function renderMultiplePies(data) {
         "Traffic Control": "#C0504D",
         "Contingency": "#9BBB59",
         "Escalation": "#8064A2",
-        "Professional & Principal Costs": "#F79646"
+        "Professional & Principal Costs": "#F79646",
+        "Construction": "#00AEEF"   // pick whatever suits
     };
 
     // -----------------------------
@@ -1770,14 +1777,22 @@ function patchBuiltInMultiplePies() {
             "<b>%{fullData.name}</b><br>" +
             "%{label}: %{value}<extra></extra>";
 
+
+            const values = newData[traceIndex].values || [];
+            const total = values.reduce((a, b) => a + (Number(b) || 0), 0);
+
         const titleText = newData[traceIndex].name || newData[traceIndex].title || "";
+
+        const wrappedTitle = wrapTitle(titleText, titleWrap);
+        const lineCount = (wrappedTitle.match(/<br>/g) || []).length + 1;
+        const TITLE_LINE_HEIGHT_RATIO = 0.05;
 
         annotations.push({
             x: (cellX0 + cellX1) / 2,
             y: cellY1 - (cellH * 0.03),
             xref: "paper",
             yref: "paper",
-            text: wrapTitle(titleText, titleWrap),
+            text: wrappedTitle,
             showarrow: false,
             xanchor: "center",
             yanchor: "top",
@@ -1785,6 +1800,29 @@ function patchBuiltInMultiplePies() {
             font: {
                 size: textSize,
                 color: "#222"
+            }
+        });
+
+
+
+        annotations.push({
+            x: (cellX0 + cellX1) / 2,
+            //y: cellY1 - (cellH * 0.12),   // below title
+            
+        y: cellY1 - (
+            cellH * (0.03 + lineCount * TITLE_LINE_HEIGHT_RATIO + 0.04)),
+
+            xref: "paper",
+            yref: "paper",
+            text: formatCurrency(total),
+            showarrow: false,
+            xanchor: "center",
+            yanchor: "top",
+            align: "center",
+            font: {
+                size: columns === 4 ? 8 : 9,
+                color: "#444",
+                weight: "bold"
             }
         });
     });
@@ -1809,6 +1847,9 @@ function patchBuiltInMultiplePies() {
 }
 
 
+function formatCurrency(n) {
+    return "$" + Math.round(n).toLocaleString();
+}
 
 
 function freshToggle() {
@@ -2001,8 +2042,8 @@ function colorHeadings() {
                                 <option value="Corridor" title="Change to 'Table with Subtotal' after render, for more flexibility">By Road Corridor</option>
                                 <!-- option value="TRDS" "view by Tweed Road Devt Strategy">TRDS View</option -->
                                 <!--option value="TRDSSummary">TRDS Summary</option-->
-
-                                <option value="Pies">Multiple Pies</option>
+                                <option value="Pies2">Multiple Pies</option>
+                                <option value="Pies">Multiple Pies Custom</option>
                                 <option value="Stacked">Stacked Bar Chart</option>
                                 <option value="Scatter">Scatter Chart</option>
                             </select>
